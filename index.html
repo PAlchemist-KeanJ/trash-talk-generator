@@ -1,0 +1,3071 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trash Talk Generator</title>
+    <!-- Expanded Google Fonts for mood-based random selection - Updated with new fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&amp;family=Fredoka:wght@400;600;700&amp;family=Pacifico&amp;family=Permanent+Marker&amp;family=Satisfy&amp;family=Caveat:wght@600;700&amp;family=Indie+Flower&amp;family=Dancing+Script:wght@600;700&amp;family=Lobster&amp;family=Shadows+Into+Light&amp;family=Gloock&amp;family=Sedgwick+Ave+Display&amp;family=Luckiest+Guy&amp;family=Chewy&amp;family=Rubik+Storm&amp;family=Rampart+One&amp;family=Codystar&amp;family=Rubik+Vinyl&amp;family=Chokokutai&amp;family=Faster+One&amp;family=Barrio&amp;family=Imperial+Script&amp;family=Fontdiner+Swanky&amp;family=Rubik+Puddles&amp;family=Honk&amp;family=Knewave&amp;family=Megrim&amp;family=Playwrite+GB+J:wght@400&amp;family=Kalnia+Glaze:wght@400&amp;family=Coral+Pixels&amp;family=Bungee&amp;family=Bungee+Shade&amp;family=Righteous&amp;family=Archivo+Black&amp;family=Titan+One&amp;family=Lemon&amp;family=Alfa+Slab+One&amp;family=Londrina+Solid&amp;family=Shrikhand&amp;family=Lilita+One&amp;family=Fredericka+the+Great&amp;family=Creepster&amp;family=Special+Elite&amp;family=Rock+Salt&amp;family=Reenie+Beanie&amp;family=Amatic+SC:wght@700&amp;family=Gloria+Hallelujah&amp;family=Patrick+Hand&amp;family=Architects+Daughter&amp;family=Coming+Soon&amp;family=Pangolin&amp;family=Mali:wght@600&amp;family=Sriracha&amp;family=Charm:wght@700&amp;family=Itim&amp;family=Athiti:wght@600&amp;family=Sawarabi+Gothic&amp;family=M+PLUS+Rounded+1c:wght@700&amp;family=Kosugi+Maru&amp;family=Zen+Maru+Gothic:wght@700&amp;family=ZCOOL+KuaiLe&amp;family=ZCOOL+QingKe+HuangYou&amp;family=Ma+Shan+Zheng&amp;family=Liu+Jian+Mao+Cao&amp;family=Zhi+Mang+Xing&amp;family=Hanalei+Fill&amp;family=Kirang+Haerang&amp;family=Black+Han+Sans&amp;family=Do+Hyeon&amp;family=Jua&amp;family=Gaegu&amp;family=Gamja+Flower&amp;family=Noto+Sans+SC:wght@700&amp;family=Noto+Sans+TC:wght@300;700&amp;family=Slackey&amp;family=Foldit:wght@400;700&amp;family=Fleur+De+Leah&amp;family=Cherry+Bomb+One&amp;family=Bungee+Spice&amp;family=Audiowide&amp;family=Nabla&amp;family=Jacquard+12&amp;family=Blaka&amp;family=Playwrite+GB+S:wght@400&amp;family=Dela+Gothic+One&amp;display=swap" rel="stylesheet">
+    <!-- SentyCreamPuff is a custom font - using CSS @font-face -->
+    <style>
+        @font-face {
+            font-family: 'SentyCreamPuff';
+            src: url('https://cdn.jsdelivr.net/gh/nickymartorell/fonts@main/SentyCreamPuff.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/nickymartorell/fonts@main/SentyCreamPuff.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <style>
+        :root {
+            --bg-primary: #2A0031;
+            --bg-secondary: #1a0020;
+            --accent: #FF6B6B;
+            --accent-dark: #E05555;
+            --text-dark: #ffffff;
+            --outline: #ffffff;
+            --bin-yellow: #FFD93D;
+            --bin-dark: #0a0a0a;
+        }
+
+        .dark {
+            --bg-primary: #2A0031;
+            --bg-secondary: #1a0020;
+            --accent: #FF6B6B;
+            --accent-dark: #E05555;
+            --text-dark: #ffffff;
+            --outline: #ffffff;
+            --bin-yellow: #FFD93D;
+            --bin-dark: #0a0a0a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #2A0031;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .subtitle {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* Text input area */
+        .input-container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: #3a0045;
+            border: 3px solid #2DE897;
+            border-radius: 12px;
+            padding: 16px;
+            padding-bottom: 32px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            color: var(--text-dark);
+            resize: vertical;
+        }
+
+        textarea::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #2DE897;
+            box-shadow: 0 0 20px rgba(45, 232, 151, 0.3);
+        }
+
+        .submit-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #FFE566 0%, #2DE897 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(45, 232, 151, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 229, 102, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.95);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Canvas for generation */
+        #generatorCanvas {
+            display: none;
+        }
+
+        /* Counter display */
+        .counter-display {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #2DE897;
+            border-radius: 20px;
+            padding: 8px 20px;
+            color: #2DE897;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .counter-display .count {
+            font-size: 1.2rem;
+            color: #FFD93D;
+        }
+
+        .header-image {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+        }
+
+        .recycle-note {
+            position: absolute;
+            bottom: 12px;
+            left: 16px;
+            font-size: 0.8rem;
+            color: #2DE897;
+            font-weight: 500;
+        }
+
+        .recycle-note .blink {
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Image fade in animation */
+        @keyframes imageFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .image-fade-in {
+            animation: imageFadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="counter-display">
+            Total of Trash Talk "Recycled": <span class="count" id="trashCounter">0</span>
+        </div>
+
+        <img src="https://pfst.cf2.poecdn.net/base/image/1430260ac99ff653787186cf273d86e87ea24070bf60bc77c98edc36437a7368?w=3517&amp;h=1148" alt="Drop Your Trash Talk" class="header-image">
+
+        <div class="input-container">
+            <textarea id="trashText" placeholder="let your trash talk recycle into treasure talk ♻️"></textarea>
+            <div class="recycle-note">We will "recycle" 20 trash talk for you per day <span class="blink">✨</span><span class="blink" style="animation-delay: 0.2s">✨</span></div>
+            <button class="submit-btn" id="generateBtn" title="Submit">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" transform="rotate(90 12 12)"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Empty space image - shown before generation -->
+        <img id="emptySpaceImage" src="https://pfst.cf2.poecdn.net/base/image/5cdfa8707fe96509a1cea09d4f322d3d4d3d674fe54930e81724aa580c359e7d?w=1146&h=1314" alt="Trash Talk Bins" style="max-width: 300px; width: 80%; height: auto; margin-top: 10px;">
+
+        <!-- Transform section - shown after generation -->
+        <div id="transformSection" style="display: none; width: 100%; max-width: 600px; animation: fadeIn 0.5s ease;">
+            <!-- Main editing area with vertical sliders on sides -->
+            <div style="display: flex; align-items: stretch; gap: 3px; margin-bottom: 4px;">
+                <!-- LEFT: Font Size + Rotation Vertical Sliders - spread across full height -->
+                <div class="transform-left-col" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: #1a0020; border-radius: 6px; padding: 4px 1px;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                        <span class="bar-title">SIZE</span>
+                        <input type="range" id="transformFontSize" min="50" max="250" value="100" class="vertical-slider" style="writing-mode: vertical-lr; direction: rtl; flex: 1; width: 10px;">
+                        <span id="tFontSizeVal" class="bar-value">100%</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; margin-top: 4px;">
+                        <span class="bar-title-sm">ROTATE</span>
+                        <input type="range" id="transformRotation" min="-180" max="180" value="0" class="vertical-slider" style="writing-mode: vertical-lr; direction: rtl; flex: 1; width: 10px;">
+                        <span id="tRotationVal" class="bar-value">0°</span>
+                    </div>
+                </div>
+
+                <!-- CENTER: Canvas with drag instruction and buttons row -->
+                <div id="transformImageContainer" style="flex: 1; background: #1a0020; border-radius: 8px; padding: 8px;">
+                    <canvas id="transformCanvas" style="width: 100%; border-radius: 8px;"></canvas>
+                    <!-- Row: drag text left, buttons right -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                        <p style="font-size: 0.9rem; color: #888; margin: 0; text-align: left;">drag to position</p>
+                        <div style="display: flex; gap: 6px;">
+                            <button id="restartBtn" style="background: linear-gradient(135deg, #2DE897, #1a9960); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(45, 232, 151, 0.4);" title="Restart">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                    <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
+                                </svg>
+                            </button>
+                            <button id="transformDownload" style="background: linear-gradient(135deg, #FF4CBC, #902B8D); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(255, 76, 188, 0.4);" title="Download">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+                                </svg>
+                            </button>
+                            <button id="transformShare" style="background: linear-gradient(135deg, #00AAE9, #0088CC); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0, 170, 233, 0.4);" title="Share">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"></path>
+                                </svg>
+                            </button>
+                            <button id="transformExplore" style="background: linear-gradient(135deg, #FAAF40, #FF8C00); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(250, 175, 64, 0.4);" title="Explore">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#2A0031">
+                                    <path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Font + Lines + Line Spacing - 50% each -->
+                <div class="transform-right-col" style="display: flex; flex-direction: column; align-items: center; background: #1a0020; border-radius: 6px; padding: 4px 1px;">
+                    <!-- Font + Lines together = 50% of height -->
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                        <!-- Font Selector (vertical) - 4 options -->
+                        <span class="bar-title-sm">FONT</span>
+                        <div id="fontFamilySelector" style="display: flex; flex-direction: column; gap: 3px; margin-top: 2px;">
+                            <button class="font-btn active" data-font-index="0" style="border-radius: 50%; border: 1px solid #2DE897; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">1</button>
+                            <button class="font-btn" data-font-index="1" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">2</button>
+                            <button class="font-btn" data-font-index="2" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">3</button>
+                            <button class="font-btn" data-font-index="3" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">4</button>
+                        </div>
+                        <!-- Lines Selector (vertical) - 4 options -->
+                        <span class="bar-title-sm" style="margin-top: 4px;">LINES</span>
+                        <div id="lineCountSelector" style="display: flex; flex-direction: column; gap: 3px; margin-top: 2px;">
+                            <button class="line-btn" data-line-count="1" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">1</button>
+                            <button class="line-btn" data-line-count="2" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">2</button>
+                            <button class="line-btn" data-line-count="3" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">3</button>
+                            <button class="line-btn active" data-line-count="0" style="border-radius: 50%; border: 1px solid #FF4CBC; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold;">A</button>
+                        </div>
+                        <!-- Alignment Selector -->
+                        <span class="bar-title-sm" style="margin-top: 4px;">ALIGN</span>
+                        <div id="alignmentSelector" style="display: flex; flex-direction: column; gap: 3px; margin-top: 2px;">
+                            <button class="align-btn" data-align="left" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold; font-size: 10px;">◀</button>
+                            <button class="align-btn active" data-align="center" style="border-radius: 50%; border: 1px solid #FF4CBC; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold; font-size: 10px;">●</button>
+                            <button class="align-btn" data-align="right" style="border-radius: 50%; border: 1px solid #555; background: #6b4d7a; color: #fff; cursor: pointer; font-weight: bold; font-size: 10px;">▶</button>
+                        </div>
+                    </div>
+                    <!-- Line Spacing = 50% of height -->
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                        <span class="bar-title-sm">SPACING</span>
+                        <input type="range" id="transformSpacing" min="50" max="200" value="100" class="vertical-slider" style="writing-mode: vertical-lr; direction: rtl; flex: 1; width: 8px;">
+                        <span id="tSpacingVal" class="bar-value">100%</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <canvas id="generatorCanvas"></canvas>
+
+    <style>
+        .transform-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #6b4d7a;
+            border-radius: 4px;
+        }
+        .transform-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #FF4CBC;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .vertical-slider {
+            -webkit-appearance: none;
+            background: #6b4d7a;
+            border-radius: 4px;
+        }
+        .vertical-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #2DE897;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .vertical-slider::-webkit-slider-runnable-track {
+            background: #6b4d7a;
+            border-radius: 4px;
+        }
+        .font-btn {
+            transition: all 0.2s ease;
+        }
+        .font-btn:hover {
+            transform: scale(1.1);
+        }
+        .font-btn.active {
+            border-color: #2DE897 !important;
+            background: #2DE897 !important;
+            color: #1a0020 !important;
+        }
+        .line-btn {
+            transition: all 0.2s ease;
+        }
+        .line-btn:hover {
+            transform: scale(1.1);
+        }
+        .line-btn.active {
+            border-color: #FF4CBC !important;
+            background: #FF4CBC !important;
+            color: #1a0020 !important;
+        }
+        /* Responsive styles for transform section */
+        .bar-title {
+            font-weight: 600;
+            color: #2DE897;
+        }
+        .bar-title-sm {
+            font-weight: 600;
+            color: #2DE897;
+        }
+        /* Mobile default (smaller) */
+        .bar-title { font-size: 0.5rem; }
+        .bar-title-sm { font-size: 0.45rem; }
+        .bar-value { font-size: 0.35rem; color: #FF4CBC; }
+        .transform-left-col { min-width: 18px; width: 18px; }
+        .transform-right-col { min-width: 18px; width: 18px; }
+        .font-btn, .line-btn, .align-btn { width: 16px; height: 16px; }
+
+        /* Desktop (larger titles - 150% bigger) */
+        @media (min-width: 600px) {
+            .bar-title { font-size: 0.85rem; }
+            .bar-title-sm { font-size: 0.75rem; }
+            .bar-value { font-size: 0.55rem; }
+            .transform-left-col { min-width: 36px; width: 36px; padding: 6px 3px; }
+            .transform-right-col { min-width: 36px; width: 36px; padding: 6px 3px; }
+            .vertical-slider { width: 16px !important; }
+            .font-btn, .line-btn, .align-btn { width: 22px !important; height: 22px !important; font-size: 0.55rem !important; }
+            #fontFamilySelector { gap: 4px !important; }
+            #lineCountSelector { gap: 4px !important; }
+            #alignmentSelector { gap: 4px !important; }
+        }
+    </style>
+
+    <script>
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Trash Talk Counter API
+        const COUNTER_API_URL = 'https://script.google.com/macros/s/AKfycbwKYe9BLaE6lQhecnuQKtKseGCbSctq3ITjEJnbqz_GjmVeOsPngpnNocAMtdp2S8M/exec';
+
+        // Track if external APIs are blocked by CSP
+        let externalAPIsBlocked = false;
+
+        // Fetch and display the total count on page load (GET request)
+        async function fetchTrashTalkCount() {
+            try {
+                // Use redirect: 'follow' to handle Google's redirect
+                const response = await fetch(COUNTER_API_URL, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                const data = await response.json();
+                if (data && typeof data.total === 'number') {
+                    document.getElementById('trashCounter').textContent = data.total.toLocaleString();
+                }
+            } catch (err) {
+                console.error('Failed to fetch trash talk count:', err);
+                // Check if this is a CSP/fetch block
+                if (err.message && err.message.includes('Failed to fetch')) {
+                    externalAPIsBlocked = true;
+                    // Show friendly fallback - use a sparkle instead of broken counter
+                    document.getElementById('trashCounter').textContent = '✨';
+                    console.log('External APIs blocked by CSP. Click "Allow all" for full features.');
+                } else {
+                    // Try JSONP fallback for other cross-origin issues
+                    fetchTrashTalkCountJSONP();
+                }
+            }
+        }
+
+        // JSONP fallback for environments with strict CORS (like Wix)
+        function fetchTrashTalkCountJSONP() {
+            try {
+                const callbackName = 'trashTalkCallback_' + Date.now();
+                window[callbackName] = function(data) {
+                    if (data && typeof data.total === 'number') {
+                        document.getElementById('trashCounter').textContent = data.total.toLocaleString();
+                    }
+                    // Cleanup
+                    delete window[callbackName];
+                    const script = document.querySelector('script[data-jsonp="' + callbackName + '"]');
+                    if (script) script.remove();
+                };
+                const script = document.createElement('script');
+                script.setAttribute('data-jsonp', callbackName);
+                script.src = COUNTER_API_URL + '?callback=' + callbackName;
+                script.onerror = function() {
+                    // JSONP also failed, show fallback
+                    document.getElementById('trashCounter').textContent = '✨';
+                    externalAPIsBlocked = true;
+                };
+                document.head.appendChild(script);
+            } catch (err) {
+                document.getElementById('trashCounter').textContent = '✨';
+                externalAPIsBlocked = true;
+            }
+        }
+
+        // Increment the counter (POST request) and update display
+        async function incrementTrashTalkCount() {
+            try {
+                // For POST, we need to use no-cors mode due to Google Apps Script limitations
+                // Create a form submission approach for better cross-origin support
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = COUNTER_API_URL;
+                form.target = 'counter_iframe';
+                form.style.display = 'none';
+
+                // Create hidden iframe to receive response
+                let iframe = document.getElementById('counter_iframe');
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = 'counter_iframe';
+                    iframe.name = 'counter_iframe';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+
+                // Fetch updated count after a short delay
+                setTimeout(fetchTrashTalkCount, 500);
+            } catch (err) {
+                console.error('Failed to increment trash talk count:', err);
+            }
+        }
+
+        // Fetch count on page load
+        fetchTrashTalkCount();
+
+        // Background templates with mood keywords, typography, and layout settings
+        // fonts: array of font families (one will be randomly selected)
+        // textArea: { x, y, width, height } as percentages of canvas dimensions
+        // align: 'center', 'left', or 'right'
+        // UPDATED with new fonts from config
+        const backgrounds = [
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/d55f00f4293021f0d16eb587e1ec5e28381ff0c60addc039a4a8baa16b0ff908?w=3544&h=4725',
+                moods: ['beautiful', 'confident', 'confidence', 'girl power', 'queen', 'slay', 'boss', 'fierce', 'fabulous', 'prettiest'],
+                fonts: ['Fontdiner Swanky', 'Shadows Into Light', 'Chokokutai', 'Playwrite GB S'],
+                textArea: { x: 0.1, y: 0.16, width: 0.8, height: 0.13 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/2d21d57462837d8ffb3d1795966636602fad0cd32cc44e2eb9ddd0ae0dc86e3a?w=3544&h=4725',
+                moods: ['beauty', 'competition', 'girl', 'rose', 'pretty', 'gorgeous', 'stunning', 'elegant'],
+                fonts: ['Coral Pixels', 'Rubik Puddles', 'Pacifico', 'Kalnia Glaze'],
+                textArea: { x: 0.3, y: 0.165, width: 0.4, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/9bcb2b2b291d163862407577434a475a5687e071403b48c34ead587ff8e450f1?w=3544&h=4725',
+                moods: ['carefree', 'relax', 'happy', 'joy', 'vibes', 'good', 'great', 'awesome', 'peaceful'],
+                fonts: ['Permanent Marker', 'Slackey', 'Chewy', 'Coral Pixels'],
+                textArea: { x: 0.1, y: 0.24, width: 0.8, height: 0.4 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/2a41a66b4cce2736f92401ef496bbfd871b091ed0bb6f20fc77dafc90338696e?w=3544&h=4725',
+                moods: ['chill', 'drink', 'melt', 'relax', 'calm', 'fart', 'lazy', 'weekend', 'beer'],
+                fonts: ['Shadows Into Light', 'Rubik Storm', 'Slackey'],
+                textArea: { x: 0.15, y: 0.13, width: 0.7, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/398f8a72eeb1f95d315269ca464c8437186374232c7b786fb390ce881427e0dc?w=3544&h=4725',
+                moods: ['clueless', 'sad', 'down', 'cry', 'emotional', 'desperate', 'helpless', 'confused', 'lost'],
+                fonts: ['Lobster', 'Foldit', 'Fleur De Leah'],
+                textArea: { x: 0.15, y: 0.15, width: 0.7, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/9001f41a677aac60dd1de510f0a33ddc844a8d72fd22c139f5ddbd6fe3bdb88d?w=3544&h=4725',
+                moods: ['clueless', 'sad', 'down', 'cry', 'emotional', 'desperate', 'helpless', 'why'],
+                fonts: ['Caveat', 'Cherry Bomb One', 'Bungee Spice'],
+                textArea: { x: 0.15, y: 0.1, width: 0.7, height: 0.2 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/3bae77badef2f4d752b9b5137626836e003b949391607706e9a18d112e471dab?w=3544&h=4725',
+                moods: ['clueless', 'wondering', 'why', 'handsome', 'attitude', 'what', 'huh', 'question'],
+                fonts: ['Indie Flower', 'Rampart One', 'Permanent Marker'],
+                textArea: { x: 0.15, y: 0.15, width: 0.7, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/f1db3fc2dd230888604b9de35f183fff66a6b4aad9ed1ecee36b5919a22a13b1?w=3544&h=4725',
+                moods: ['fart', 'chill', 'joy', 'relax', 'dirty', 'gross', 'eww', 'smelly', 'stink'],
+                fonts: ['Codystar', 'Bangers', 'Rubik Vinyl'],
+                textArea: { x: 0.15, y: 0.15, width: 0.7, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/bf343ff2dda3ce00e55f55c70bd6a257b3340a5313b0301122fdfca124be1d20?w=3544&h=4725',
+                moods: ['friendship', 'recycle', 'friends', 'bestie', 'bff', 'together', 'group', 'squad', 'eco', 'green', 'earth', 'planet', 'environment', 'reuse', 'reduce', 'reject', 'sustainable', 'nature', 'climate', 'warming'],
+                fonts: ['Rubik Vinyl', 'Fredoka', 'Nabla'],
+                textArea: { x: 0.1, y: 0.24, width: 0.8, height: 0.3 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/ac89c1f1f15d9281c90e28e878d38ddec33fd54b177d5cef14a81f1bd7f27b31?w=3544&h=4725',
+                moods: ['frustrated', 'blood', 'truth', 'dare', 'drinking', 'angry', 'mad', 'annoyed', 'ugh'],
+                fonts: ['Satisfy', 'Imperial Script', 'Permanent Marker'],
+                textArea: { x: 0.15, y: 0.16, width: 0.7, height: 0.44 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/498633046aa576a1150509a59db5e4aaafc02f7a5857ede4df944e3d3b2c091e?w=3544&h=4725',
+                moods: ['happy', 'surprise', 'congratulate', 'congrats', 'yay', 'wow', 'amazing', 'excited', 'celebration'],
+                fonts: ['Faster One', 'Barrio', 'Bangers', 'Rampart One'],
+                textArea: { x: 0.15, y: 0.1, width: 0.7, height: 0.15 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/e956e905432cc17fee0cc9909bfc96131c9df2037bbd66561745fbf23df4be5d?w=3544&h=4725',
+                moods: ['pretty', 'rose', 'blackpink', 'beautiful', 'wine', 'fancy', 'elegant', 'classy', 'drink'],
+                fonts: ['Coral Pixels', 'Satisfy', 'Imperial Script'],
+                textArea: { x: 0.2, y: 0.15, width: 0.6, height: 0.2 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/56a6426ed63204036f48eca56485d721e0706ff205649153415b35be6e0ad3cf?w=3544&h=4725',
+                moods: ['rest', 'sleep', 'tired', 'sick', 'lost', 'exhausted', 'sleepy', 'zzz', 'nap'],
+                fonts: ['Fontdiner Swanky', 'Shadows Into Light', 'Chokokutai'],
+                textArea: { x: 0.1, y: 0.24, width: 0.8, height: 0.4 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/5b41aaeb94fb7adb5113bdbbf3c4311f602ad870ea0f09d8f7d680578d48a496?w=3544&h=4725',
+                moods: ['rest', 'tired', 'sleep', 'sleepy', 'dead', 'frustrated', 'done', 'over'],
+                fonts: ['Indie Flower', 'Fontdiner Swanky', 'Megrim'],
+                textArea: { x: 0.1, y: 0.16, width: 0.8, height: 0.4 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/1a41e9ae1ef6f8e79c25c276fd109607dfe1ac25ac698c4b346d25c27b7dcd2a?w=3544&h=4725',
+                moods: ['shopping', 'joy', 'friendship', 'happy', 'buy', 'money', 'spend', 'retail', 'therapy'],
+                fonts: ['Audiowide', 'Rubik Puddles', 'Pacifico'],
+                textArea: { x: 0.3, y: 0.16, width: 0.4, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/92e3ebb963b07d32c7cf52285d6aab2dd962e55b61ed3b2b99d423938ab1e5a1?w=3544&h=4725',
+                moods: ['strong', 'positive', 'energy', 'energetic', 'excited', 'power', 'motivation', 'gym', 'workout', 'flex'],
+                fonts: ['Rubik Vinyl', 'Fredoka', 'Nabla', 'Honk'],
+                textArea: { x: 0.1, y: 0.13, width: 0.8, height: 0.33 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/37abe25c06c51b65657722457e709e8dd93b6bb183d05c81a82a9b00cd8b8f2b?w=3544&h=4725',
+                moods: ['surprised', 'congratulations', 'gossip', 'omg', 'shock', 'tea', 'spill', 'drama'],
+                fonts: ['Rubik Puddles', 'Permanent Marker', 'Knewave'],
+                textArea: { x: 0.15, y: 0.24, width: 0.7, height: 0.2 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/4fa9aeab1ab247e451dbf20383bca834fd431415e12e00eb400aa5e591051015?w=3544&h=4725',
+                moods: ['wtf', 'clueless', 'paper', 'shopping', 'confused', 'what', 'huh', 'box', 'delivery', 'package'],
+                fonts: ['Megrim', 'Caveat', 'Barrio', 'Gloock', 'Kalnia Glaze', 'Jacquard 12'],
+                textArea: { x: 0.1, y: 0.16, width: 0.8, height: 0.32 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/7dddcdef0c5c80d64d00c02b0864c51b9d843194e22010adaee59ef708c55791?w=3544&h=4725',
+                moods: ['love', 'romance', 'romantic', 'heart', 'crush', 'date', 'boyfriend', 'girlfriend', 'kiss', 'valentine', 'couple', 'relationship', 'babe', 'darling', 'sweetheart', 'honey', 'marry', 'wedding', 'forever', 'soulmate'],
+                fonts: ['Dancing Script', 'Coral Pixels', 'Knewave'],
+                textArea: { x: 0.15, y: 0.25, width: 0.7, height: 0.25 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/06bbf61b3a15cef86200153196210ab0545cacc37b40ba586173b74c83279f3e?w=3544&h=4725',
+                moods: ['wedding', 'congratulations', 'sweet', 'bride', 'groom', 'anniversary', 'engaged', 'proposal', 'faith', 'god', 'grace', 'blessed', 'prayer', 'jesus', 'hope', 'believe', 'christian', 'church', 'worship', 'grateful', 'thankful', 'mercy', 'forgiven'],
+                fonts: ['Dancing Script', 'Imperial Script', 'Fleur De Leah'],
+                textArea: { x: 0.15, y: 0.15, width: 0.7, height: 0.35 },
+                align: 'center'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/331c5ac60cb87f6d17d7d771123cefba80827caf42b45c616c0eda1ac23e5c1a?w=3544&h=4725',
+                moods: ['lady', 'jazz', 'sophisticated', 'classy', 'wine'],
+                fonts: ['Gloock', 'Playwrite GB J', 'Imperial Script', 'Kalnia Glaze', 'Jacquard 12'],
+                textArea: { x: 0.08, y: 0.08, width: 0.48, height: 0.55 },
+                align: 'left'
+            },
+            {
+                url: 'https://pfst.cf2.poecdn.net/base/image/e341ebec1071e9772c3c4cf07f4846573a491625dce60afe6b18cb4b55152b07?w=3544&h=4725',
+                moods: ['numb', 'drained', 'burnt out', 'overwhelmed', 'give up', 'hopeless', 'no energy'],
+                fonts: ['Sedgwick Ave Display', 'Honk', 'Knewave', 'Blaka', 'Bungee Spice'],
+                textArea: { x: 0.1, y: 0.12, width: 0.8, height: 0.4 },
+                align: 'center'
+            },
+            {
+                // bg7: why_handsome
+                url: 'IMAGE_URL_NEEDED',
+                moods: ['clueless', 'wondering', 'why', 'handsome', 'attitude', 'what', 'huh', 'question', 'coke', 'soda', 'pop', 'pepsi', 'fanta', '7 up', 'sprite'],
+                fonts: ['Fredoka', 'Bangers', 'Chewy', 'Knewave'],
+                textArea: { x: 0.1, y: 0.15, width: 0.8, height: 0.35 },
+                align: 'center'
+            }
+        ];
+
+        // Brand color scheme for text - UPDATED PALETTE
+        // Rule: max 2 colors if message has more than 3 words
+        const textColors = [
+            '#EFB257', // Gold/Orange
+            '#5A308B', // Purple
+            '#4BA7E3', // Blue
+            '#FF4CBD', // Pink/Magenta
+            '#260F2E'  // Dark purple
+        ];
+
+        // Get random text color
+        function getRandomTextColor() {
+            return textColors[Math.floor(Math.random() * textColors.length)];
+        }
+
+        // Sound effect for submit button using Web Audio API
+        function playSubmitSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Create a fun "pop" sound effect
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                // Fun ascending tone
+                oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+                oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.15);
+
+                oscillator.type = 'sine';
+
+                // Quick fade in and out
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.02);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch (e) {
+                // Audio not supported or blocked, silently fail
+                console.log('Audio not available');
+            }
+        }
+
+        // Mood-based font categories - UPDATED with new fonts
+        const moodFonts = {
+            // Fun, playful, energetic
+            fun: ['Bangers', 'Chewy', 'Luckiest Guy', 'Bungee', 'Titan One', 'Lilita One', 'Shrikhand', 'Londrina Solid', 'Righteous', 'Fredoka', 'Cherry Bomb One', 'Slackey'],
+            // Romantic, sweet, elegant
+            romantic: ['Dancing Script', 'Pacifico', 'Satisfy', 'Lobster', 'Imperial Script', 'Charm', 'Playwrite GB J', 'Fleur De Leah'],
+            // Sad, emotional, melancholic
+            sad: ['Caveat', 'Indie Flower', 'Shadows Into Light', 'Reenie Beanie', 'Gloria Hallelujah', 'Patrick Hand', 'Coming Soon', 'Foldit'],
+            // Angry, intense, strong
+            angry: ['Permanent Marker', 'Archivo Black', 'Alfa Slab One', 'Creepster', 'Special Elite', 'Rock Salt', 'Sedgwick Ave Display', 'Blaka'],
+            // Cool, chill, relaxed
+            chill: ['Pangolin', 'Mali', 'Sriracha', 'Itim', 'Architects Daughter', 'Fontdiner Swanky', 'Amatic SC', 'Slackey'],
+            // Stylish, trendy, K-pop
+            stylish: ['Rubik Vinyl', 'Rubik Storm', 'Rubik Puddles', 'Honk', 'Knewave', 'Faster One', 'Barrio', 'Megrim', 'Nabla', 'Bungee Spice', 'Audiowide'],
+            // Faith, hopeful, peaceful
+            faith: ['Gloock', 'Kalnia Glaze', 'Fredericka the Great', 'Fleur De Leah', 'Dancing Script'],
+            // Japanese/Asian style
+            japanese: ['Sawarabi Gothic', 'M PLUS Rounded 1c', 'Kosugi Maru', 'Zen Maru Gothic', 'Rampart One', 'Chokokutai'],
+            // Chinese style - with mood-specific fonts
+            // SentyCreamPuff: happy, cute, funny | Noto Sans TC Light: serious, facts, general, news | Dela Gothic One: funny, cute, kids, brotherhood, strength
+            chinese: ['ZCOOL KuaiLe', 'ZCOOL QingKe HuangYou', 'Ma Shan Zheng', 'Liu Jian Mao Cao', 'Zhi Mang Xing', 'Hanalei Fill', 'Noto Sans SC', 'Noto Sans TC', 'SentyCreamPuff', 'Dela Gothic One'],
+            // Korean style
+            korean: ['Kirang Haerang', 'Black Han Sans', 'Do Hyeon', 'Jua', 'Gaegu', 'Gamja Flower'],
+            // Default/general
+            general: ['Fredoka', 'Bangers', 'Chewy', 'Caveat', 'Lobster', 'Permanent Marker', 'Luckiest Guy', 'Righteous', 'Coral Pixels', 'Jacquard 12']
+        };
+
+        // Detect mood from text and return appropriate font
+        function getMoodBasedFont(text) {
+            const lowerText = text.toLowerCase();
+
+            // Check for Korean characters (Hangul)
+            if (/[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f]/.test(text)) {
+                const allKoreanFonts = [...moodFonts.korean, ...moodFonts.fun];
+                return allKoreanFonts[Math.floor(Math.random() * allKoreanFonts.length)];
+            }
+
+            // Check for Chinese characters - with mood-specific font selection
+            if (/[\u4e00-\u9fff]/.test(text)) {
+                // Mood-specific Chinese fonts
+                const happyCuteWords = ['happy', 'cute', 'funny', 'joy', 'laugh', 'smile', 'yay', 'wow', '開心', '可愛', '搞笑', '好玩', '哈哈', '笑'];
+                const seriousWords = ['serious', 'facts', 'news', 'important', 'truth', 'real', '認真', '事實', '新聞', '重要', '真相'];
+                const strengthWords = ['strong', 'power', 'brother', 'brotherhood', 'kids', 'children', 'strength', 'fight', '強', '力量', '兄弟', '孩子', '戰'];
+
+                if (happyCuteWords.some(w => lowerText.includes(w))) {
+                    return 'SentyCreamPuff';
+                }
+                if (seriousWords.some(w => lowerText.includes(w))) {
+                    return 'Noto Sans TC';
+                }
+                if (strengthWords.some(w => lowerText.includes(w))) {
+                    return 'Dela Gothic One';
+                }
+
+                // Default: mix of Chinese fonts
+                const allAsianFonts = [...moodFonts.chinese, ...moodFonts.japanese, ...moodFonts.fun];
+                return allAsianFonts[Math.floor(Math.random() * allAsianFonts.length)];
+            }
+
+            // Check for Japanese characters
+            if (/[\u3040-\u309f\u30a0-\u30ff]/.test(text)) {
+                return moodFonts.japanese[Math.floor(Math.random() * moodFonts.japanese.length)];
+            }
+
+            // Check mood keywords
+            const romanticWords = ['love', 'heart', 'crush', 'kiss', 'romance', 'sweet', 'babe', 'darling', 'forever', '愛', '喜歡'];
+            const sadWords = ['sad', 'cry', 'tired', 'exhausted', 'lost', 'alone', 'miss', 'hurt', '累', '傷心', '難過'];
+            const angryWords = ['angry', 'mad', 'hate', 'frustrated', 'annoyed', 'wtf', 'damn', '嬲', '憎'];
+            const funWords = ['happy', 'yay', 'wow', 'amazing', 'awesome', 'party', 'slay', 'bestie', '開心', '好玩'];
+            const chillWords = ['chill', 'relax', 'vibes', 'calm', 'peace', 'lazy', 'sleep', '放鬆', '休息'];
+            const faithWords = ['god', 'grace', 'faith', 'hope', 'pray', 'blessed', 'jesus', 'amen', '上帝', '恩典'];
+            const stylishWords = ['slay', 'queen', 'king', 'iconic', 'serve', 'main character', 'aesthetic'];
+
+            if (romanticWords.some(w => lowerText.includes(w))) {
+                return moodFonts.romantic[Math.floor(Math.random() * moodFonts.romantic.length)];
+            }
+            if (sadWords.some(w => lowerText.includes(w))) {
+                return moodFonts.sad[Math.floor(Math.random() * moodFonts.sad.length)];
+            }
+            if (angryWords.some(w => lowerText.includes(w))) {
+                return moodFonts.angry[Math.floor(Math.random() * moodFonts.angry.length)];
+            }
+            if (funWords.some(w => lowerText.includes(w))) {
+                return moodFonts.fun[Math.floor(Math.random() * moodFonts.fun.length)];
+            }
+            if (chillWords.some(w => lowerText.includes(w))) {
+                return moodFonts.chill[Math.floor(Math.random() * moodFonts.chill.length)];
+            }
+            if (faithWords.some(w => lowerText.includes(w))) {
+                return moodFonts.faith[Math.floor(Math.random() * moodFonts.faith.length)];
+            }
+            if (stylishWords.some(w => lowerText.includes(w))) {
+                return moodFonts.stylish[Math.floor(Math.random() * moodFonts.stylish.length)];
+            }
+
+            // Default: pick from general fonts
+            return moodFonts.general[Math.floor(Math.random() * moodFonts.general.length)];
+        }
+
+        // Get a random color from the palette
+        function getRandomColorForWord() {
+            return textColors[Math.floor(Math.random() * textColors.length)];
+        }
+
+        // Create a gradient from two colors (for canvas context)
+        function createTextGradient(ctx, x, y, width, height, color1, color2, vertical = false) {
+            let gradient;
+            if (vertical) {
+                gradient = ctx.createLinearGradient(x, y, x, y + height);
+            } else {
+                gradient = ctx.createLinearGradient(x, y, x + width, y);
+            }
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            return gradient;
+        }
+
+        // Generate word styles (font + color) for all words in text
+        // RULES: ONE font per message, max 2 colors if more than 3 words, supports gradients
+        function generateWordStyles(text) {
+            const textWithLineBreaks = text.replace(/\\n/g, '\n');
+            const allWords = textWithLineBreaks.split(/[\s\n]+/).filter(w => w.length > 0);
+            const styles = {};
+
+            // ONE FONT per message - get a single font based on mood/language
+            const singleFont = getMoodBasedFont(text);
+
+            // Generate color pool: max 2 colors if more than 3 words, otherwise up to word count
+            const shuffledColors = [...textColors].sort(() => Math.random() - 0.5);
+            const maxColors = allWords.length > 3 ? 2 : Math.min(allWords.length, 2);
+            const colorPool = shuffledColors.slice(0, maxColors);
+
+            // Decide if we should use gradient (30% chance if we have 2 colors)
+            const useGradient = colorPool.length >= 2 && Math.random() < 0.3;
+
+            allWords.forEach((word, index) => {
+                // Use the SAME font for all words
+                // Distribute colors across words (cycling through the color pool)
+                const colorIndex = index % colorPool.length;
+                styles[`${word}_${index}`] = {
+                    font: singleFont,
+                    color: colorPool[colorIndex],
+                    // If using gradient, store both colors for gradient creation
+                    useGradient: useGradient,
+                    gradientColors: useGradient ? [colorPool[0], colorPool[1]] : null
+                };
+            });
+
+            return styles;
+        }
+
+        // Get random font from fonts array (legacy, kept for compatibility)
+        function getRandomFont(fonts) {
+            if (!fonts || fonts.length === 0) return 'Fredoka';
+            return fonts[Math.floor(Math.random() * fonts.length)];
+        }
+
+        // Emotional keywords that trigger 20% font size boost
+        const emotionalKeywords = ['sad', 'depress', 'happy', 'surprise', 'congrats', 'congratulations', 'super'];
+
+        // Keywords to emphasize (underline + larger) in the generated image
+        const emphasisKeywords = [
+            'love', 'hate', 'amazing', 'awesome', 'beautiful', 'ugly',
+            'happy', 'sad', 'angry', 'excited', 'depressed', 'surprised',
+            'best', 'worst', 'never', 'always', 'forever', 'super',
+            'incredible', 'terrible', 'perfect', 'horrible', 'fantastic',
+            'congrats', 'congratulations', 'sorry', 'thanks', 'please',
+            'yes', 'no', 'wow', 'omg', 'wtf', 'why', 'how',
+            'queen', 'king', 'boss', 'slay', 'fierce', 'fabulous',
+            'tired', 'exhausted', 'dead', 'alive', 'strong', 'weak',
+            'rich', 'broke', 'money', 'trash', 'fire', 'hot', 'cold',
+            'crazy', 'insane', 'mad', 'chill', 'relax', 'stress',
+            // Faith/Christianity
+            'god', 'grace', 'blessed', 'faith', 'hope', 'pray', 'forgiven',
+            'mercy', 'peace', 'soul', 'heaven', 'jesus', 'amen',
+            // Eco/Environment
+            'earth', 'planet', 'green', 'recycle', 'reuse', 'reduce', 'reject',
+            'nature', 'clean', 'sustainable', 'climate', 'future',
+            // Asian teen culture
+            'senpai', 'kawaii', 'bestie', 'delulu', 'lowkey', 'highkey', 'vibes'
+        ];
+
+        // Check if a word is an emphasis keyword
+        function isEmphasisWord(word) {
+            const cleanWord = word.toLowerCase().replace(/[^a-zA-Z]/g, '');
+            return emphasisKeywords.some(kw => cleanWord === kw || cleanWord.includes(kw));
+        }
+
+        // Check if text contains emotional keywords
+        function isEmotionalText(text) {
+            const lowerText = text.toLowerCase();
+            return emotionalKeywords.some(keyword => lowerText.includes(keyword));
+        }
+
+        // Track background usage to ensure even distribution (max 3 uses per template)
+        const backgroundUsageCount = {};
+        const MAX_TEMPLATE_USES = 3;
+
+        // Find matching background based on text mood (with randomness and usage balancing)
+        function findMatchingBackground(text) {
+            const lowerText = text.toLowerCase();
+            const matchingBgs = [];
+
+            // Collect all backgrounds that have at least one mood match
+            backgrounds.forEach((bg, index) => {
+                let score = 0;
+                bg.moods.forEach(mood => {
+                    if (lowerText.includes(mood.toLowerCase())) {
+                        score += mood.length; // Longer matches score higher
+                    }
+                });
+                if (score > 0) {
+                    matchingBgs.push({ bg, score, index });
+                }
+            });
+
+            // Helper function to check if background is overused
+            const isOverused = (bgIndex) => {
+                return (backgroundUsageCount[bgIndex] || 0) >= MAX_TEMPLATE_USES;
+            };
+
+            // Helper function to record background usage
+            const recordUsage = (bgIndex) => {
+                backgroundUsageCount[bgIndex] = (backgroundUsageCount[bgIndex] || 0) + 1;
+            };
+
+            // Helper function to pick from candidates, avoiding overused ones
+            const pickFromCandidates = (candidates) => {
+                // First, filter out overused backgrounds
+                const availableCandidates = candidates.filter(c => !isOverused(c.index));
+
+                if (availableCandidates.length > 0) {
+                    // Pick randomly from available candidates
+                    const randomIndex = Math.floor(Math.random() * availableCandidates.length);
+                    const selected = availableCandidates[randomIndex];
+                    recordUsage(selected.index);
+                    return selected.bg;
+                }
+
+                // All matching backgrounds are overused, pick from non-overused random backgrounds
+                const nonOverusedIndices = [];
+                backgrounds.forEach((bg, idx) => {
+                    if (!isOverused(idx)) {
+                        nonOverusedIndices.push(idx);
+                    }
+                });
+
+                if (nonOverusedIndices.length > 0) {
+                    const randomIdx = nonOverusedIndices[Math.floor(Math.random() * nonOverusedIndices.length)];
+                    recordUsage(randomIdx);
+                    return backgrounds[randomIdx];
+                }
+
+                // All backgrounds are overused, reset counts and pick randomly
+                Object.keys(backgroundUsageCount).forEach(key => {
+                    backgroundUsageCount[key] = 0;
+                });
+                const randomIdx = Math.floor(Math.random() * backgrounds.length);
+                recordUsage(randomIdx);
+                return backgrounds[randomIdx];
+            };
+
+            // If we have matching backgrounds, pick from them with usage balancing
+            if (matchingBgs.length > 0) {
+                // Sort by score and pick from top matches
+                matchingBgs.sort((a, b) => b.score - a.score);
+                // Take top 3 or all if less than 3
+                const topMatches = matchingBgs.slice(0, Math.min(3, matchingBgs.length));
+                return pickFromCandidates(topMatches);
+            }
+
+            // If no match found, pick random non-overused background
+            const allCandidates = backgrounds.map((bg, index) => ({ bg, score: 0, index }));
+            return pickFromCandidates(allCandidates);
+        }
+
+        // Play magical wind sound using Web Audio API
+        function playMagicalSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = audioCtx.currentTime;
+
+                // Create wind/whoosh noise
+                const bufferSize = audioCtx.sampleRate * 0.8;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                const whiteNoise = audioCtx.createBufferSource();
+                whiteNoise.buffer = noiseBuffer;
+
+                // Filter to make it more wind-like
+                const bandpass = audioCtx.createBiquadFilter();
+                bandpass.type = 'bandpass';
+                bandpass.frequency.setValueAtTime(800, now);
+                bandpass.frequency.linearRampToValueAtTime(2000, now + 0.3);
+                bandpass.frequency.linearRampToValueAtTime(600, now + 0.7);
+                bandpass.Q.value = 0.5;
+
+                const windGain = audioCtx.createGain();
+                windGain.gain.setValueAtTime(0, now);
+                windGain.gain.linearRampToValueAtTime(0.15, now + 0.1);
+                windGain.gain.linearRampToValueAtTime(0.08, now + 0.4);
+                windGain.gain.linearRampToValueAtTime(0, now + 0.7);
+
+                whiteNoise.connect(bandpass);
+                bandpass.connect(windGain);
+                windGain.connect(audioCtx.destination);
+
+                // Add magical sparkle tones on top
+                const sparkleNotes = [1047, 1319, 1568, 2093]; // C6, E6, G6, C7
+                sparkleNotes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    const startTime = now + (i * 0.1);
+                    gain.gain.setValueAtTime(0, startTime);
+                    gain.gain.linearRampToValueAtTime(0.08, startTime + 0.03);
+                    gain.gain.linearRampToValueAtTime(0, startTime + 0.2);
+
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.25);
+                });
+
+                whiteNoise.start(now);
+                whiteNoise.stop(now + 0.8);
+
+            } catch (e) {
+                console.log('Audio not available');
+            }
+        }
+
+        const generateBtn = document.getElementById('generateBtn');
+        const trashText = document.getElementById('trashText');
+        const canvas = document.getElementById('generatorCanvas');
+        const ctx = canvas.getContext('2d');
+        const trashCounter = document.getElementById('trashCounter');
+
+        // Store last generated messages for sharing
+        let lastOriginalMessage = '';
+        let lastAiResponse = '';
+        let lastAiResponseRaw = ''; // Store raw AI response with \n for transform
+        let lastBackgroundImage = null; // Store background for transform
+        let lastWordStyles = {}; // Store word styles for transform
+        let lastRenderedWords = []; // Store rendered words with their styles as array
+        let lastFontSize = 48; // Store font size for transform
+        let lastTextArea = { x: 0.5, y: 0.5, width: 0.8, height: 0.5 }; // Store text area from background config
+
+        // Listen for Enter key to submit
+        trashText.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateBtn.click();
+            }
+        });
+
+        // Counter for generated trash talks
+        let generatedCount = 0;
+
+        // Google Sheets Web App URL - Replace with your own Google Apps Script Web App URL
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxfOZJXymG22AOaZ9H8cp1TAvM7GfPgjRrn8rVJRFPWQ6yjI3_x01MPsaOH-NFg-iXK4A/exec';
+
+        // Function to log message to Google Sheets
+        async function logToGoogleSheets(message) {
+            if (!GOOGLE_SHEETS_URL) {
+                console.log('Google Sheets URL not configured. Message:', message);
+                return;
+            }
+
+            try {
+                const data = {
+                    timestamp: new Date().toISOString(),
+                    message: message,
+                    count: generatedCount
+                };
+
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Logged to Google Sheets:', data);
+            } catch (error) {
+                console.log('Failed to log to Google Sheets:', error);
+            }
+        }
+
+        // Update counter display
+        function updateCounter() {
+            generatedCount++;
+            trashCounter.textContent = generatedCount;
+            // Add a little animation
+            trashCounter.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+                trashCounter.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Summarize message using LLM (Poe API or OpenAI API)
+        let summarizeResolve = null;
+
+        // Check if Poe API is available
+        const isPoeAvailable = typeof window.Poe !== 'undefined' && window.Poe.registerHandler;
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // 🌐 WIX COMPATIBILITY: AI API Configuration (via Google Apps Script Proxy)
+        // ═══════════════════════════════════════════════════════════════════════════
+        // For Wix: Uses JSONP via Google Apps Script to call DeepSeek
+        // This bypasses Wix's fetch() restrictions by using script tag injection
+        // ═══════════════════════════════════════════════════════════════════════════
+        const DEEPSEEK_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwlYlgckSfnc8Bc_Cs3rkF_mrubu-pR2cyz3MjWy3lxgbbY0zCv0UnkgyewhcDTQcy_Mg/exec';
+
+        // JSONP-based DeepSeek transformation (works in Wix!)
+        function transformWithJSONP(text) {
+            return new Promise((resolve) => {
+                const callbackName = 'deepseekCallback_' + Date.now();
+                const timeout = setTimeout(() => {
+                    // Timeout after 15 seconds - return original text
+                    delete window[callbackName];
+                    console.log('JSONP timeout, using original text');
+                    resolve(text);
+                }, 15000);
+
+                window[callbackName] = function(data) {
+                    clearTimeout(timeout);
+                    delete window[callbackName];
+                    const script = document.querySelector('script[data-jsonp="' + callbackName + '"]');
+                    if (script) script.remove();
+
+                    if (data && data.success && data.result) {
+                        console.log('JSONP DeepSeek result:', data.result);
+                        resolve(data.result);
+                    } else {
+                        console.log('JSONP failed, using original:', data);
+                        resolve(text);
+                    }
+                };
+
+                const script = document.createElement('script');
+                script.setAttribute('data-jsonp', callbackName);
+                script.src = DEEPSEEK_PROXY_URL + '?action=transform&text=' + encodeURIComponent(text) + '&callback=' + callbackName;
+                script.onerror = function() {
+                    clearTimeout(timeout);
+                    delete window[callbackName];
+                    console.log('JSONP script error, using original text');
+                    resolve(text);
+                };
+                document.head.appendChild(script);
+            });
+        }
+        // Priority: 1) DeepSeek (primary) → 2) Groq → 3) Gemini → 4) OpenAI (fallbacks)
+        // ═══════════════════════════════════════════════════════════════════════════
+        const DEEPSEEK_API_KEY = 'sk-4137cb4d9f4a4e559b3812933616749a'; // DeepSeek (China, works in HK & Wix): https://platform.deepseek.com/api_keys
+        const GROQ_API_KEY = ''; // Groq (FREE fallback): https://console.groq.com/keys
+        const OPENAI_API_KEY = ''; // OpenAI (fallback): https://platform.openai.com
+        const GEMINI_API_KEY = ''; // Google Gemini (fallback): https://aistudio.google.com/apikey
+
+        // Register handler for summarization response (only if Poe is available)
+        if (isPoeAvailable) {
+            window.Poe.registerHandler('summarize-handler', (result) => {
+                const msg = result.responses[0];
+                if (msg.status === 'complete') {
+                    // Clean up the response - remove quotes and extra whitespace
+                    const cleanedText = msg.content.trim().replace(/^["']|["']$/g, '').trim();
+                    if (summarizeResolve) {
+                        summarizeResolve(cleanedText);
+                        summarizeResolve = null;
+                    }
+                } else if (msg.status === 'error') {
+                    console.log('Summarization error:', msg.statusText);
+                    if (summarizeResolve) {
+                        summarizeResolve('');
+                        summarizeResolve = null;
+                    }
+                }
+            });
+        }
+
+        // The prompt used for summarization - UPDATED with new rules from CSV
+        const SUMMARIZE_PROMPT = `You are generating short "trash talk" sentences for a card with limited width, for teenagers in Asia.
+
+🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
+🔴 ENGLISH INPUT = 100% ENGLISH OUTPUT - NO EXCEPTIONS! 🔴
+🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
+
+If the user writes in English (like "I'm tired", "hello", "work is boring"):
+→ Your response MUST be 100% in English
+→ DO NOT use ANY Chinese characters (零中文字符!)
+→ DO NOT mix languages
+→ ONLY English words, English slang, English emojis
+
+EXAMPLES OF CORRECT ENGLISH RESPONSES:
+- Input: "I'm so tired" → Output: "Bestie same,\\nrunning on vibes only ✨"
+- Input: "work is boring" → Output: "Slay through it,\\ncoffee and chaos mode 💅"
+- Input: "hello" → Output: "Hey bestie,\\nlet's goooo! 🔥"
+
+EXAMPLES OF WRONG RESPONSES (DO NOT DO THIS):
+- Input: "I'm so tired" → Output: "好累啊" ❌ ABSOLUTELY WRONG!
+- Input: "hello" → Output: "嗨" ❌ ABSOLUTELY WRONG!
+- Input: "work sucks" → Output: "工作好煩" ❌ ABSOLUTELY WRONG!
+
+🚨🚨🚨 ABSOLUTE REQUIREMENT - READ THIS FIRST 🚨🚨🚨
+⚠️⚠️⚠️ CRITICAL: LANGUAGE MATCHING IS YOUR #1 PRIORITY ⚠️⚠️⚠️
+🚨🚨🚨 THIS IS NON-NEGOTIABLE - FAILURE = COMPLETE REJECTION 🚨🚨🚨
+
+BEFORE generating ANY response, you MUST:
+1. ⭐ Detect the input language FIRST ⭐
+2. ⭐ Generate output in the EXACT SAME language as the input ⭐
+3. ⭐ NEVER switch languages unless explicitly allowed below ⭐
+
+IF INPUT IS ENGLISH → OUTPUT MUST BE 100% ENGLISH (ZERO Chinese characters, ZERO other languages)
+IF INPUT IS CHINESE → OUTPUT MUST BE CHINESE (not English, not any other language)
+IF INPUT IS JAPANESE → OUTPUT MUST BE JAPANESE
+IF INPUT IS KOREAN → OUTPUT MUST BE KOREAN
+
+=== LANGUAGE DETECTION & OUTPUT RULES ===
+| Input Language | Output Rule |
+|----------------|-------------|
+| ENGLISH ONLY (100% Latin letters, English words) | Output MUST be 100% English only. ZERO Chinese characters allowed. Use teen slang (slay, bestie, lowkey, vibes, etc.) |
+| TRADITIONAL CHINESE (繁體字, HK/Taiwan style) | Output can be Traditional Chinese OR English (can mix both). Casual HK/TW teen tone. |
+| SIMPLIFIED CHINESE (简体字, Mainland style) | Output MUST be Simplified Chinese, max 10% English allowed. Casual Mainland teen tone. |
+| JAPANESE (ひらがな, カタカナ, 漢字 JP style) | Output MUST be Japanese, max 10% English allowed. Casual Japanese teen tone. |
+| KOREAN (Hangul / 한글) | Output MUST be Korean, max 10% English allowed. Casual Korean teen tone. |
+| Other languages | Output in the SAME language as input. Match casual teen-ish tone. |
+
+⚠️ VIOLATION EXAMPLES (THESE ARE WRONG - NEVER DO THIS):
+- Input: "I'm so tired" → Output: "好累啊" ❌ WRONG (English input → must be English output, ZERO Chinese!)
+- Input: "hello" → Output: "嗨" ❌ WRONG (English input → must be English output!)
+- Input: "今天好累" → Output: "So tired today" ❌ WRONG (Chinese input → must be Chinese output)
+
+=== OUTPUT FORMAT RULES ===
+1. Output ONLY the final sentence text. No explanations, no quotes, no extra lines.
+2. After every comma character, insert a line break:
+   - After English comma "," add \\n
+   - After Chinese comma "，" add \\n
+   Example: coffee失效,\\n靈魂待機，\\n今天好累
+3. Keep the sentence short (ideally 20-30 characters total, excluding \\n)
+4. Use exactly "\\n" where you want a new line. No HTML <br>, only literal "\\n"
+5. Emojis ARE allowed.
+
+=== CONTENT TYPE HANDLING ===
+| Content Type | How to Handle |
+|--------------|---------------|
+| QUESTION (ends with ?, ？, ؟) | Respond with a witty, punchy ANSWER in the same language. Keep playful and direct. (Note: The original question will be copied and appear 50% smaller above your response, which displays at normal size on the next line.) |
+| CONFESSION / ROMANTIC (love, crush, relationship) | Copy the confession note and add more funny elements. Keep sincere but playful. Softer emotional tone with humor twist. |
+| FAITH / CHRISTIANITY (god, grace, faith, jesus, pray, blessed) | Keep hopeful and grace-focused. Respectful and uplifting. |
+| ECO / ENVIRONMENT (earth, recycle, reuse, reduce, reject, climate) | Catchy eco message. Positive activism tone. |
+| OTHER GENERAL | Make it funny, aware of waste/environmental issues, relatable, dramatic but positive energy. NO negative/destructive messages, NO provocative content, NO insults, NO political views. Teen social-media style. |
+
+=== FORMATTING ===
+- Line breaks after every comma (English "," or Chinese "，") → insert "\\n"
+- Plain text only - no HTML, no markdown
+- Keep compact for card width (20-30 characters ideal)
+
+Message: `;
+
+        // Summarize using OpenAI API (for Wix)
+        async function summarizeWithOpenAI(originalText) {
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [{ role: 'user', content: SUMMARIZE_PROMPT + `"${originalText}"` }],
+                        max_tokens: 50,
+                        temperature: 0.8
+                    })
+                });
+
+                const data = await response.json();
+                if (data.choices && data.choices[0]) {
+                    const result = data.choices[0].message.content.trim().replace(/^["']|["']$/g, '').trim();
+                    return result || originalText;
+                }
+                return originalText;
+            } catch (error) {
+                console.log('OpenAI API failed:', error);
+                return originalText;
+            }
+        }
+
+        // Summarize using DeepSeek API (China, works in Hong Kong and Wix)
+        // This function is optimized for Wix iframe embedding with proper CORS and timeout handling
+        async function summarizeWithDeepSeek(originalText) {
+            try {
+                console.log('Calling DeepSeek API (Wix-compatible)...');
+
+                // Create an AbortController for timeout handling (important for Wix)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+                const response = await fetch('https://api.deepseek.com/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [{
+                            role: 'system',
+                            content: 'You are a creative trash talk transformer. Follow the user instructions exactly.'
+                        }, {
+                            role: 'user',
+                            content: SUMMARIZE_PROMPT + `"${originalText}"`
+                        }],
+                        max_tokens: 80,
+                        temperature: 0.8,
+                        stream: false
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                console.log('DeepSeek response status:', response.status);
+
+                if (!response.ok) {
+                    console.log('DeepSeek API error:', response.status, response.statusText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('DeepSeek response:', JSON.stringify(data));
+
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    let result = data.choices[0].message.content;
+                    // Clean up the result - remove quotes, extra whitespace, and any markdown
+                    result = result.trim()
+                        .replace(/^["']|["']$/g, '')
+                        .replace(/^\*+|\*+$/g, '')
+                        .replace(/^`+|`+$/g, '')
+                        .trim();
+                    console.log('DeepSeek result:', result);
+                    return result || originalText;
+                }
+                console.log('DeepSeek: No valid response in data');
+                return originalText;
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('DeepSeek API timeout (15s exceeded)');
+                } else {
+                    console.log('DeepSeek API failed:', error.message || error);
+                }
+                return originalText;
+            }
+        }
+
+        // Summarize using Groq API (FREE, works in Hong Kong)
+        async function summarizeWithGroq(originalText) {
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'llama-3.1-8b-instant',
+                        messages: [{ role: 'user', content: SUMMARIZE_PROMPT + `"${originalText}"` }],
+                        max_tokens: 50,
+                        temperature: 0.8
+                    })
+                });
+
+                const data = await response.json();
+                if (data.choices && data.choices[0]) {
+                    const result = data.choices[0].message.content.trim().replace(/^["']|["']$/g, '').trim();
+                    return result || originalText;
+                }
+                return originalText;
+            } catch (error) {
+                console.log('Groq API failed:', error);
+                return originalText;
+            }
+        }
+
+        // Summarize using Google Gemini API (for Wix)
+        async function summarizeWithGemini(originalText) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: SUMMARIZE_PROMPT + `"${originalText}"` }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                    const result = data.candidates[0].content.parts[0].text.trim().replace(/^["']|["']$/g, '').trim();
+                    return result || originalText;
+                }
+                return originalText;
+            } catch (error) {
+                console.log('Gemini API failed:', error);
+                return originalText;
+            }
+        }
+
+        async function summarizeMessage(originalText) {
+            // Detect if running in Wix iframe (Wix sets specific referrer patterns)
+            const isWixEmbed = window.location.ancestorOrigins &&
+                Array.from(window.location.ancestorOrigins).some(origin =>
+                    origin.includes('wix') || origin.includes('wixsite')
+                ) || document.referrer.includes('wix');
+
+            console.log('Running in Wix:', isWixEmbed);
+            console.log('Poe available:', isPoeAvailable);
+            console.log('External APIs blocked:', externalAPIsBlocked);
+
+            // ═══════════════════════════════════════════════════════════════════════
+            // 🌐 WIX PRIMARY METHOD: JSONP via Google Apps Script Proxy
+            // This works in Wix because it uses script tag injection, not fetch()
+            // ═══════════════════════════════════════════════════════════════════════
+            if (isWixEmbed || externalAPIsBlocked) {
+                console.log('Using JSONP proxy for Wix/blocked environment...');
+                try {
+                    const result = await transformWithJSONP(originalText);
+                    if (result && result !== originalText) {
+                        return result;
+                    }
+                } catch (error) {
+                    console.log('JSONP proxy failed:', error);
+                }
+                // If JSONP failed, return original text
+                return originalText;
+            }
+
+            // Try Poe API first (if available and not in Wix)
+            if (isPoeAvailable) {
+                const prompt = SUMMARIZE_PROMPT + `"${originalText}"`;
+
+                try {
+                    // Create a promise that will be resolved by the handler
+                    const responsePromise = new Promise((resolve) => {
+                        summarizeResolve = resolve;
+                        // Timeout after 5 seconds
+                        setTimeout(() => {
+                            if (summarizeResolve) {
+                                summarizeResolve('');
+                                summarizeResolve = null;
+                            }
+                        }, 5000);
+                    });
+
+                    await window.Poe.sendUserMessage(
+                        `@GPT-4o ${prompt}`,
+                        {
+                            handler: 'summarize-handler',
+                            stream: false,
+                            openChat: false
+                        }
+                    );
+
+                    const result = await responsePromise;
+                    return result || originalText;
+                } catch (error) {
+                    console.log('Poe API failed:', error);
+                    // Fall through to JSONP
+                }
+            }
+
+            // Fallback: Try JSONP proxy (works everywhere)
+            console.log('Trying JSONP proxy as fallback...');
+            try {
+                const result = await transformWithJSONP(originalText);
+                if (result && result !== originalText) {
+                    return result;
+                }
+            } catch (error) {
+                console.log('JSONP fallback failed:', error);
+            }
+
+            // Direct API calls (only if not blocked)
+            if (!externalAPIsBlocked && DEEPSEEK_API_KEY) {
+                console.log('Trying direct DeepSeek API...');
+                const result = await summarizeWithDeepSeek(originalText);
+                if (result && result !== originalText) {
+                    return result;
+                }
+            }
+
+            // All methods failed, return original text
+            console.log('All AI methods failed, using original text');
+            return originalText;
+        }
+
+        // Generate image
+        generateBtn.addEventListener('click', async () => {
+            // Check daily limit first
+            if (isLimitReached()) {
+                showBinFullWindow();
+                return;
+            }
+
+            const text = trashText.value.trim();
+            if (!text) {
+                showCustomAlert('Please enter some trash talk first! 🗑️');
+                return;
+            }
+
+            // Increment daily count
+            incrementDailyMessageCount();
+
+            // Play submit sound effect
+            playSubmitSound();
+
+            generateBtn.disabled = true;
+            generateBtn.style.opacity = '0.5';
+
+            // Show loading state on button
+            const originalBtnText = generateBtn.innerHTML;
+            generateBtn.innerHTML = '✨ AI Transforming...';
+
+            try {
+                // Check if it's a question (ends with ?, ？, ؟ for various languages)
+                const isQuestion = /[?？؟]$/.test(text.trim());
+
+                // Check if it's a confession/romantic message
+                const lowerText = text.toLowerCase();
+                const confessionWords = ['love', 'crush', 'relationship', 'boyfriend', 'girlfriend', 'marry', 'miss you', 'heart', 'forever', 'babe', 'darling', 'sweetheart', 'honey', 'soulmate', '愛', '喜歡', '想你', '暗戀', '表白', '告白'];
+                const isConfession = confessionWords.some(w => lowerText.includes(w));
+
+                // Determine if we should show original text above response
+                const showOriginalAbove = isQuestion || isConfession;
+
+                // Get AI response
+                const aiResponse = await summarizeMessage(text);
+
+                // Store for sharing
+                lastOriginalMessage = text;
+                lastAiResponse = aiResponse.replace(/\\n/g, ' ');
+                lastAiResponseRaw = aiResponse; // Store raw for transform
+
+                const bgConfig = findMatchingBackground(text); // Use original for mood matching
+
+                // Pass both original text and AI response (for questions and confessions)
+                await generateImage(aiResponse, bgConfig, showOriginalAbove, showOriginalAbove ? text : null);
+
+                // Update counter and log to Google Sheets (log original message)
+                updateCounter();
+                logToGoogleSheets(text);
+            } catch (error) {
+                console.error('Error generating image:', error);
+                showCustomAlert('Oops! Something went wrong. Try again!');
+            }
+
+            generateBtn.disabled = false;
+            generateBtn.style.opacity = '1';
+            generateBtn.innerHTML = originalBtnText;
+        });
+
+        async function generateImage(text, bgConfig, showOriginalAbove = false, originalText = null) {
+            // Load background image first to get dimensions
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = bgConfig.url;
+            });
+
+            // Canvas setup - use image aspect ratio
+            const width = 600;
+            const height = Math.round(width * (img.height / img.width));
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw background image to fill canvas
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Store background image for transform modal
+            lastBackgroundImage = img;
+
+            // Get text area from config (or use defaults)
+            const ta = bgConfig.textArea || { x: 0.1, y: 0.08, width: 0.8, height: 0.35 };
+            // Store text area for transform section positioning
+            lastTextArea = ta;
+            const textAreaX = width * ta.x;
+            const textAreaY = height * ta.y;
+            const textAreaWidth = width * ta.width;
+            const textAreaHeight = height * ta.height;
+
+            // Get alignment from config
+            const align = bgConfig.align || 'center';
+            let textCenterX;
+            if (align === 'left') {
+                textCenterX = textAreaX + 20;
+            } else if (align === 'right') {
+                textCenterX = textAreaX + textAreaWidth - 20;
+            } else {
+                textCenterX = textAreaX + textAreaWidth / 2;
+            }
+            const textCenterY = textAreaY + textAreaHeight / 2;
+
+            // Generate per-word styles (font + color) for variety
+            const wordStyles = generateWordStyles(text);
+            let globalWordIndex = 0; // Track word index across all lines
+
+            // Get a base font for calculations (use mood-based)
+            const baseFontFamily = getMoodBasedFont(text);
+
+            // Target width is 95% of text area to fill the space better
+            const targetWidth = textAreaWidth * 0.95;
+
+            // Calculate optimal font size with the specific font
+            // Start with larger max size to fill the text area, allow auto-resize for long text
+            const baseMaxSize = isEmotionalText(text) ? 173 : 144; // 80% bigger for sticker fonts
+            const baseMinSize = 12; // Allow smaller font for longer text
+
+            const maxWidth = textAreaWidth - 20;
+
+            // If there's original text to show (question or confession), calculate space for both
+            let originalLines = [];
+            let originalFontSize = 0;
+            let originalLineHeight = 0;
+            let originalTotalHeight = 0;
+            let originalWordStyles = {};
+
+            if (originalText) {
+                // Original text is 50% of normal size (50% smaller than response)
+                originalFontSize = Math.round(baseMaxSize * 0.5);
+                originalLineHeight = originalFontSize * 1.3;
+                originalLines = wrapText(ctx, originalText, maxWidth, baseFontFamily, originalFontSize);
+                originalTotalHeight = originalLines.length * originalLineHeight + 20; // +20 for gap
+                // Use simple readable font for original text (not decorative fonts)
+                // Detect if Chinese characters present for appropriate readable font
+                const hasChinese = /[\u4e00-\u9fff]/.test(originalText);
+                const readableFont = hasChinese ? 'Noto Sans TC' : 'Fredoka';
+                const textWithLineBreaksOrig = originalText.replace(/\\n/g, '\n');
+                const allWordsOrig = textWithLineBreaksOrig.split(/[\s\n]+/).filter(w => w.length > 0);
+                const shuffledColorsOrig = [...textColors].sort(() => Math.random() - 0.5);
+                const colorPoolOrig = shuffledColorsOrig.slice(0, 2);
+                allWordsOrig.forEach((word, index) => {
+                    originalWordStyles[`${word}_${index}`] = {
+                        font: readableFont,
+                        color: colorPoolOrig[index % colorPoolOrig.length],
+                        useGradient: false,
+                        gradientColors: null
+                    };
+                });
+            }
+
+            // Calculate remaining height for AI response
+            const remainingHeight = textAreaHeight - originalTotalHeight;
+            const optimalFontSize = calculateOptimalFontSize(ctx, text, targetWidth, remainingHeight, baseMinSize, baseMaxSize, baseFontFamily, wordStyles);
+            const lineHeight = optimalFontSize * 1.3;
+
+            // Store for transform modal
+            lastWordStyles = wordStyles;
+            lastFontSize = optimalFontSize;
+
+            // Handle \n line breaks from AI output
+            const textWithLineBreaks = text.replace(/\\n/g, '\n');
+            const lines = wrapText(ctx, textWithLineBreaks, maxWidth, baseFontFamily, optimalFontSize);
+
+            // Calculate total height including original text
+            const responseTotalHeight = lines.length * lineHeight;
+            const totalCombinedHeight = originalTotalHeight + responseTotalHeight;
+            let textStartY = textCenterY - (totalCombinedHeight / 2) + (originalLineHeight / 2);
+
+            // Draw original text first (if exists) - with per-word styles
+            if (originalText && originalLines.length > 0) {
+                ctx.globalAlpha = 0.7; // Slightly faded for original text
+                let oWordIndex = 0;
+
+                originalLines.forEach((line, i) => {
+                    const lineY = textStartY + i * originalLineHeight;
+                    const words = line.split(' ');
+
+                    // Calculate total line width for centering
+                    let totalLineWidth = 0;
+                    words.forEach((word, idx) => {
+                        const styleKey = `${word}_${oWordIndex + idx}`;
+                        const style = originalWordStyles[styleKey] || { font: baseFontFamily, color: textColors[0] };
+                        ctx.font = `bold ${originalFontSize}px ${style.font}, Fredoka, sans-serif`;
+                        totalLineWidth += ctx.measureText(word).width;
+                        if (idx < words.length - 1) {
+                            totalLineWidth += ctx.measureText(' ').width;
+                        }
+                    });
+
+                    // Determine starting X
+                    let currentX;
+                    if (align === 'left') {
+                        currentX = textAreaX + 20;
+                    } else if (align === 'right') {
+                        currentX = textAreaX + textAreaWidth - 20 - totalLineWidth;
+                    } else {
+                        currentX = textCenterX - totalLineWidth / 2;
+                    }
+
+                    // Draw each word with its style
+                    words.forEach((word, idx) => {
+                        const styleKey = `${word}_${oWordIndex}`;
+                        const style = originalWordStyles[styleKey] || { font: baseFontFamily, color: textColors[0] };
+
+                        ctx.font = `bold ${originalFontSize}px ${style.font}, Fredoka, sans-serif`;
+                        ctx.fillStyle = style.color;
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+
+                        ctx.fillText(word, currentX, lineY);
+
+                        const wordWidth = ctx.measureText(word).width;
+                        const spaceWidth = ctx.measureText(' ').width;
+                        currentX += wordWidth + spaceWidth;
+                        oWordIndex++;
+                    });
+                });
+
+                ctx.globalAlpha = 1.0; // Reset opacity
+                textStartY += originalTotalHeight; // Move down for AI response
+            }
+
+            // Adjust textStartY for centering the response
+            textStartY = textStartY + (lineHeight / 2) - (originalLineHeight / 2);
+
+            // Reset lastRenderedWords - will be populated during drawing
+            lastRenderedWords = [];
+
+            // Draw each line with per-word fonts and colors
+            globalWordIndex = 0;
+            lines.forEach((line, i) => {
+                const lineY = textStartY + i * lineHeight;
+                const words = line.split(' ');
+
+                // Calculate total line width INCLUDING emphasis sizes and per-word fonts
+                let totalLineWidth = 0;
+                const wordMeasurements = [];
+
+                words.forEach((word, idx) => {
+                    const styleKey = `${word}_${globalWordIndex + idx}`;
+                    const style = wordStyles[styleKey] || { font: baseFontFamily, color: textColors[0] };
+                    const isEmph = isEmphasisWord(word);
+                    const wordSize = isEmph ? Math.round(optimalFontSize * 1.5) : optimalFontSize;
+
+                    ctx.font = `bold ${wordSize}px ${style.font}, Fredoka, sans-serif`;
+                    const wordWidth = ctx.measureText(word).width;
+                    wordMeasurements.push({ word, width: wordWidth, size: wordSize, style, isEmph });
+
+                    // Store the exact font and color used for this word (including gradient info)
+                    lastRenderedWords.push({
+                        word,
+                        font: style.font,
+                        color: style.color,
+                        useGradient: style.useGradient || false,
+                        gradientColors: style.gradientColors || null
+                    });
+
+                    totalLineWidth += wordWidth;
+                    if (idx < words.length - 1) {
+                        ctx.font = `bold ${optimalFontSize}px ${baseFontFamily}, Fredoka, sans-serif`;
+                        const baseSpaceWidth = ctx.measureText(' ').width;
+                        totalLineWidth += baseSpaceWidth + (isEmph ? baseSpaceWidth * 0.5 : 0);
+                    }
+                });
+
+                // Determine starting X based on alignment
+                let currentX;
+                if (align === 'left') {
+                    currentX = textAreaX + 20;
+                } else if (align === 'right') {
+                    currentX = textAreaX + textAreaWidth - 20 - totalLineWidth;
+                } else {
+                    currentX = textCenterX - totalLineWidth / 2;
+                }
+
+                // Draw each word with its unique font and color (or gradient)
+                wordMeasurements.forEach((wm, wordIndex) => {
+                    // Set font and color for this word
+                    ctx.font = `bold ${wm.size}px ${wm.style.font}, Fredoka, sans-serif`;
+
+                    // Check if we should use gradient
+                    if (wm.style.useGradient && wm.style.gradientColors) {
+                        const wordWidth = ctx.measureText(wm.word).width;
+                        ctx.fillStyle = createTextGradient(ctx, currentX, lineY - wm.size / 2, wordWidth, wm.size, wm.style.gradientColors[0], wm.style.gradientColors[1], true);
+                    } else {
+                        ctx.fillStyle = wm.style.color;
+                    }
+
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+
+                    // Draw the word
+                    ctx.fillText(wm.word, currentX, lineY);
+
+                    // Move to next word position
+                    ctx.font = `bold ${optimalFontSize}px ${baseFontFamily}, Fredoka, sans-serif`;
+                    const spaceWidth = ctx.measureText(' ').width;
+                    const extraSpace = wm.isEmph ? spaceWidth * 0.5 : 0;
+                    currentX += wm.width + spaceWidth + extraSpace;
+
+                    globalWordIndex++;
+                });
+            });
+
+            // Add copyright disclaimer at bottom
+            const disclaimer = 'All Trash Talk Images © Happihood Creations Company Limited. The key message does not reflect the company\'s point of view.';
+            const disclaimerFontSize = 10;
+            ctx.font = `${disclaimerFontSize}px Arial, sans-serif`;
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(disclaimer, width / 2, height - 8);
+
+            // Increment the trash talk counter
+            incrementTrashTalkCount();
+
+            // Show transform section directly
+            showTransformSection();
+        }
+
+        // Calculate optimal font size to fit within text area (using single font per message)
+        function calculateOptimalFontSize(context, text, targetWidth, maxHeight, minSize, maxSize, fontFamily, wordStyles = {}) {
+            // Handle \n line breaks from AI output
+            const textWithLineBreaks = text.replace(/\\n/g, '\n');
+
+            // Start from max size and work down until text fits
+            for (let size = maxSize; size >= minSize; size--) {
+                context.font = `bold ${size}px ${fontFamily}, Fredoka, sans-serif`;
+                const lines = wrapText(context, textWithLineBreaks, targetWidth, fontFamily, size);
+                const lineHeight = size * 1.3;
+                const totalHeight = lines.length * lineHeight;
+
+                // Check if all lines fit within width (using single font, accounting for emphasis)
+                let allLinesFit = true;
+
+                for (const line of lines) {
+                    let lineWidth = 0;
+                    const words = line.split(' ');
+                    context.font = `bold ${size}px ${fontFamily}, Fredoka, sans-serif`;
+                    const baseSpaceWidth = context.measureText(' ').width;
+
+                    words.forEach((word, idx) => {
+                        const isEmph = isEmphasisWord(word);
+                        const wordSize = isEmph ? Math.round(size * 1.5) : size;
+                        // Use SINGLE font for all words
+                        context.font = `bold ${wordSize}px ${fontFamily}, Fredoka, sans-serif`;
+                        lineWidth += context.measureText(word).width;
+                        if (idx < words.length - 1) {
+                            lineWidth += baseSpaceWidth * (isEmph ? 1.5 : 1);
+                        }
+                    });
+
+                    if (lineWidth > targetWidth) {
+                        allLinesFit = false;
+                        break;
+                    }
+                }
+
+                // Check if text fits within height AND width (use 95% of height to fill the area)
+                if (totalHeight <= maxHeight * 0.95 && allLinesFit) {
+                    return size;
+                }
+            }
+
+            return minSize;
+        }
+
+        function wrapText(context, text, maxWidth, fontFamily, fontSize) {
+            // Set font for accurate measurement
+            if (fontFamily && fontSize) {
+                context.font = `bold ${fontSize}px ${fontFamily}, Fredoka, sans-serif`;
+            }
+
+            const lines = [];
+
+            // First split by explicit line breaks
+            const paragraphs = text.split('\n');
+
+            paragraphs.forEach(paragraph => {
+                const words = paragraph.split(' ');
+                let currentLine = '';
+
+                words.forEach(word => {
+                    const testLine = currentLine ? currentLine + ' ' + word : word;
+                    const metrics = context.measureText(testLine);
+
+                    if (metrics.width > maxWidth && currentLine) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = testLine;
+                    }
+                });
+
+                if (currentLine) {
+                    lines.push(currentLine);
+                }
+            });
+
+            // Limit lines
+            if (lines.length > 7) {
+                lines.length = 7;
+                lines[6] = lines[6].substring(0, lines[6].length - 3) + '...';
+            }
+
+            return lines;
+        }
+
+        // Transform section variables
+        let textX = 0.5;
+        let textY = 0.5;
+        let isDragging = false;
+        let transformText = '';
+        let transformInitialized = false;
+        let currentScale = 1.0;
+        let currentRotation = 0;
+        let currentFontSizeScale = 1.0;
+        let currentFontIndex = 0;
+        let currentLineCount = 0; // 0 = auto, 1-4 = fixed line count
+        let currentAlignment = 'center'; // left, center, right
+        let availableFonts = []; // Will be populated with 4 font options
+
+        // Store text bounding box for hit testing (in canvas coordinates)
+        let stickerBoundingBox = { x: 0, y: 0, width: 0, height: 0, rotation: 0 };
+
+        // Global render function reference - updated each time showTransformSection is called
+        let globalRenderTransform = null;
+
+        // Check if a point (in canvas coordinates) is inside the rotated sticker bounding box
+        function isPointInSticker(pointX, pointY, bbox) {
+            // Translate point to be relative to sticker center
+            const centerX = bbox.x;
+            const centerY = bbox.y;
+            const dx = pointX - centerX;
+            const dy = pointY - centerY;
+
+            // Rotate point back by negative rotation angle
+            const angle = -bbox.rotation * (Math.PI / 180);
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            const localX = dx * cos - dy * sin;
+            const localY = dx * sin + dy * cos;
+
+            // Check if the point is within the unrotated bounding box (centered at origin)
+            const halfWidth = bbox.width / 2;
+            const halfHeight = bbox.height / 2;
+
+            // Add padding for easier touch targeting (20px on each side)
+            const padding = 20;
+            return (
+                localX >= -halfWidth - padding &&
+                localX <= halfWidth + padding &&
+                localY >= -halfHeight - padding &&
+                localY <= halfHeight + padding
+            );
+        }
+
+        // Get canvas coordinates from mouse/touch event
+        function getCanvasCoordinates(canvas, event) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            let clientX, clientY;
+            if (event.touches && event.touches.length > 0) {
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            } else {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            }
+
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        // Get midpoint of two touches in canvas coordinates
+        function getTouchesMidpoint(canvas, touches) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            const midX = (touches[0].clientX + touches[1].clientX) / 2;
+            const midY = (touches[0].clientY + touches[1].clientY) / 2;
+
+            return {
+                x: (midX - rect.left) * scaleX,
+                y: (midY - rect.top) * scaleY
+            };
+        }
+
+        // Transform Section - shows inline at bottom of page with drag support
+        function showTransformSection() {
+            // Check if we have a background image
+            if (!lastBackgroundImage) {
+                showCustomAlert('Please generate an image first!');
+                return;
+            }
+
+            // Use raw AI response to match word styles exactly (fallback to lastAiResponse if raw is empty)
+            const rawText = lastAiResponseRaw || lastAiResponse;
+            transformText = rawText.replace(/\\n/g, '\n');
+
+            // Reset position to match the background's text area center
+            textX = lastTextArea.x + lastTextArea.width / 2;
+            textY = lastTextArea.y + lastTextArea.height / 2;
+
+            // Show the transform section with fade-in
+            const transformSection = document.getElementById('transformSection');
+            const tCanvas = document.getElementById('transformCanvas');
+            transformSection.style.display = 'block';
+
+            // Hide the empty space image
+            const emptySpaceImage = document.getElementById('emptySpaceImage');
+            if (emptySpaceImage) {
+                emptySpaceImage.style.display = 'none';
+            }
+
+            // Add fade-in animation to canvas
+            tCanvas.classList.remove('image-fade-in');
+            void tCanvas.offsetWidth; // Trigger reflow
+            tCanvas.classList.add('image-fade-in');
+
+            // Play magical sound
+            playMagicalSound();
+
+            // Reset values
+            const tSpacing = document.getElementById('transformSpacing');
+            const tSpacingVal = document.getElementById('tSpacingVal');
+            const tRotation = document.getElementById('transformRotation');
+            const tRotationVal = document.getElementById('tRotationVal');
+
+            // Reset gesture-controlled values
+            currentScale = 1.0;
+            currentRotation = 0;
+            currentFontSizeScale = 1.0;
+            currentFontIndex = 0;
+            tSpacing.value = 100;
+            tSpacingVal.textContent = '100';
+            tRotation.value = 0;
+            tRotationVal.textContent = '0';
+
+            // Reset font size slider
+            const tFontSize = document.getElementById('transformFontSize');
+            const tFontSizeVal = document.getElementById('tFontSizeVal');
+            if (tFontSize) {
+                tFontSize.value = 100;
+                tFontSizeVal.textContent = '100%';
+            }
+
+            // Generate 5 font options based on current font
+            const currentFont = lastRenderedWords.length > 0 ? lastRenderedWords[0].font : 'Fredoka';
+            const allFonts = Object.values(moodFonts).flat();
+            const uniqueFonts = [...new Set(allFonts)];
+            availableFonts = [currentFont]; // First option is current font
+            const shuffled = uniqueFonts.filter(f => f !== currentFont).sort(() => Math.random() - 0.5);
+            availableFonts.push(...shuffled.slice(0, 3)); // Add 3 more random fonts (4 total)
+
+            // Reset font buttons
+            document.querySelectorAll('.font-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === 0);
+                btn.style.borderColor = idx === 0 ? '#2DE897' : '#555';
+            });
+
+            // Reset line count (default to Auto)
+            currentLineCount = 0;
+            document.querySelectorAll('.line-btn').forEach(btn => {
+                const count = parseInt(btn.dataset.lineCount);
+                btn.classList.toggle('active', count === 0);
+                btn.style.borderColor = count === 0 ? '#FF4CBC' : '#555';
+            });
+
+            // Reset alignment (default to Center)
+            currentAlignment = 'center';
+            document.querySelectorAll('.align-btn').forEach(btn => {
+                const align = btn.dataset.align;
+                btn.classList.toggle('active', align === 'center');
+                btn.style.borderColor = align === 'center' ? '#FF4CBC' : '#555';
+            });
+
+            // Setup transform canvas
+            const tCtx = tCanvas.getContext('2d');
+
+            // Use same dimensions as main canvas
+            const width = 600;
+            const height = Math.round(width * (lastBackgroundImage.height / lastBackgroundImage.width));
+            tCanvas.width = width;
+            tCanvas.height = height;
+
+            function renderTransform() {
+                // Draw original background image (clean, without text)
+                tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
+                tCtx.drawImage(lastBackgroundImage, 0, 0, tCanvas.width, tCanvas.height);
+
+                const sizeScale = currentScale;
+                const rotation = currentRotation * (Math.PI / 180);
+                const spacingScale = parseInt(tSpacing.value) / 100;
+                const fontSizeScale = currentFontSizeScale;
+                const baseFontSize = lastFontSize * (tCanvas.width / 600);
+
+                // Get selected font from availableFonts
+                const selectedFont = availableFonts[currentFontIndex] || 'Fredoka';
+
+                // Use drag position
+                const actualX = textX * tCanvas.width;
+                const actualY = textY * tCanvas.height;
+
+                tCtx.save();
+                tCtx.translate(actualX, actualY);
+                tCtx.rotate(rotation);
+
+                tCtx.textAlign = 'center';
+                tCtx.textBaseline = 'middle';
+
+                // Use lastRenderedWords array for consistent font/color rendering
+                // But override font with selected font from font selector
+                const words = lastRenderedWords.length > 0 ? lastRenderedWords :
+                    transformText.split(/[\s\n]+/).filter(w => w.length > 0).map(w => ({ word: w, font: 'Fredoka', color: '#FF4CBC' }));
+                const fontSize = baseFontSize * sizeScale * fontSizeScale;
+                const lineHeight = fontSize * 1.3 * spacingScale;
+
+                const maxWidth = tCanvas.width * 0.85;
+                let lines = [];
+                let currentLine = [];
+                let currentWidth = 0;
+
+                // If fixed line count is set (1-4), distribute words evenly
+                if (currentLineCount > 0 && words.length > 0) {
+                    const targetLines = Math.min(currentLineCount, words.length);
+                    const wordsPerLine = Math.ceil(words.length / targetLines);
+
+                    words.forEach((wordData, idx) => {
+                        const { word, font, color, useGradient, gradientColors } = wordData;
+                        const fontToUse = selectedFont;
+                        currentLine.push({ word, font: fontToUse, color, useGradient, gradientColors, idx });
+
+                        if (currentLine.length >= wordsPerLine || idx === words.length - 1) {
+                            lines.push([...currentLine]);
+                            currentLine = [];
+                        }
+                    });
+                } else {
+                    // Auto mode: wrap based on width
+                    words.forEach((wordData, idx) => {
+                        const { word, font, color, useGradient, gradientColors } = wordData;
+                        // Use selected font instead of original font
+                        const fontToUse = selectedFont;
+                        tCtx.font = `bold ${fontSize}px "${fontToUse}", Fredoka, sans-serif`;
+                        const wordWidth = tCtx.measureText(word + ' ').width;
+
+                        if (currentWidth + wordWidth > maxWidth && currentLine.length > 0) {
+                            lines.push([...currentLine]);
+                            currentLine = [{ word, font: fontToUse, color, useGradient, gradientColors, idx }];
+                            currentWidth = wordWidth;
+                        } else {
+                            currentLine.push({ word, font: fontToUse, color, useGradient, gradientColors, idx });
+                            currentWidth += wordWidth;
+                        }
+                    });
+                    if (currentLine.length > 0) lines.push(currentLine);
+                }
+
+                const totalHeight = lines.length * lineHeight;
+                const startY = -totalHeight / 2 + lineHeight / 2;
+
+                // Calculate the maximum line width for bounding box
+                let maxLineWidth = 0;
+
+                lines.forEach((lineWords, lineIdx) => {
+                    let lineWidth = 0;
+                    lineWords.forEach(({ word, font }) => {
+                        tCtx.font = `bold ${fontSize}px "${font}", Fredoka, sans-serif`;
+                        lineWidth += tCtx.measureText(word + ' ').width;
+                    });
+                    lineWidth -= tCtx.measureText(' ').width;
+
+                    if (lineWidth > maxLineWidth) {
+                        maxLineWidth = lineWidth;
+                    }
+
+                    // Apply alignment based on currentAlignment
+                    let currentX;
+                    if (currentAlignment === 'left') {
+                        currentX = -maxWidth / 2;
+                    } else if (currentAlignment === 'right') {
+                        currentX = maxWidth / 2 - lineWidth;
+                    } else {
+                        currentX = -lineWidth / 2; // center (default)
+                    }
+                    const lineY = startY + lineIdx * lineHeight;
+
+                    lineWords.forEach(({ word, font, color, useGradient, gradientColors }) => {
+                        tCtx.font = `bold ${fontSize}px "${font}", Fredoka, sans-serif`;
+                        const wordWidth = tCtx.measureText(word).width;
+
+                        // Apply gradient if available
+                        if (useGradient && gradientColors) {
+                            const gradX = currentX;
+                            const gradY = lineY - fontSize / 2;
+                            tCtx.fillStyle = createTextGradient(tCtx, gradX, gradY, wordWidth, fontSize, gradientColors[0], gradientColors[1], true);
+                        } else {
+                            tCtx.fillStyle = color;
+                        }
+
+                        tCtx.fillText(word, currentX + wordWidth / 2, lineY);
+                        currentX += tCtx.measureText(word + ' ').width;
+                    });
+                });
+
+                tCtx.restore();
+
+                // Update the sticker bounding box for hit testing
+                stickerBoundingBox = {
+                    x: actualX,
+                    y: actualY,
+                    width: maxLineWidth,
+                    height: totalHeight,
+                    rotation: currentRotation
+                };
+            }
+
+            // Assign to global reference so event listeners always use latest version
+            globalRenderTransform = renderTransform;
+
+            // Initial render
+            renderTransform();
+
+            // Only add event listeners once
+            if (!transformInitialized) {
+                transformInitialized = true;
+
+                // Font size slider event listener
+                const fontSizeSlider = document.getElementById('transformFontSize');
+                const fontSizeValSpan = document.getElementById('tFontSizeVal');
+                if (fontSizeSlider) {
+                    fontSizeSlider.addEventListener('input', () => {
+                        currentFontSizeScale = parseInt(fontSizeSlider.value) / 100;
+                        fontSizeValSpan.textContent = fontSizeSlider.value + '%';
+                        if (globalRenderTransform) globalRenderTransform();
+                    });
+                }
+
+                // Font family button event listeners
+                document.querySelectorAll('.font-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const index = parseInt(btn.dataset.fontIndex);
+                        currentFontIndex = index;
+                        // Update button styles
+                        document.querySelectorAll('.font-btn').forEach((b, i) => {
+                            b.classList.toggle('active', i === index);
+                            b.style.borderColor = i === index ? '#2DE897' : '#555';
+                        });
+                        if (globalRenderTransform) globalRenderTransform();
+                    });
+                });
+
+                // Line count button event listeners
+                document.querySelectorAll('.line-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const count = parseInt(btn.dataset.lineCount);
+                        currentLineCount = count;
+                        // Update button styles
+                        document.querySelectorAll('.line-btn').forEach(b => {
+                            const bCount = parseInt(b.dataset.lineCount);
+                            b.classList.toggle('active', bCount === count);
+                            b.style.borderColor = bCount === count ? '#FF4CBC' : '#555';
+                        });
+                        if (globalRenderTransform) globalRenderTransform();
+                    });
+                });
+
+                // Alignment button event listeners
+                document.querySelectorAll('.align-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const align = btn.dataset.align;
+                        currentAlignment = align;
+                        // Update button styles
+                        document.querySelectorAll('.align-btn').forEach(b => {
+                            const bAlign = b.dataset.align;
+                            b.classList.toggle('active', bAlign === align);
+                            b.style.borderColor = bAlign === align ? '#FF4CBC' : '#555';
+                        });
+                        if (globalRenderTransform) globalRenderTransform();
+                    });
+                });
+
+                // Variables for gesture tracking
+                let lastTouchDistance = 0;
+                let lastTouchAngle = 0;
+                let touchCount = 0;
+                let isTouchOnSticker = false; // Track if the touch started on the sticker
+
+                // Mouse drag functionality - only start if on sticker
+                tCanvas.addEventListener('mousedown', (e) => {
+                    const coords = getCanvasCoordinates(tCanvas, e);
+                    if (isPointInSticker(coords.x, coords.y, stickerBoundingBox)) {
+                        isDragging = true;
+                        tCanvas.style.cursor = 'grabbing';
+                    }
+                });
+
+                tCanvas.addEventListener('mousemove', (e) => {
+                    const coords = getCanvasCoordinates(tCanvas, e);
+
+                    // Update cursor based on hover state
+                    if (!isDragging) {
+                        if (isPointInSticker(coords.x, coords.y, stickerBoundingBox)) {
+                            tCanvas.style.cursor = 'grab';
+                        } else {
+                            tCanvas.style.cursor = 'default';
+                        }
+                    }
+
+                    if (!isDragging) return;
+                    const rect = tCanvas.getBoundingClientRect();
+                    textX = Math.max(0.1, Math.min(0.9, (e.clientX - rect.left) / rect.width));
+                    textY = Math.max(0.1, Math.min(0.9, (e.clientY - rect.top) / rect.height));
+                    if (globalRenderTransform) globalRenderTransform();
+                });
+
+                tCanvas.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    tCanvas.style.cursor = 'default';
+                });
+
+                tCanvas.addEventListener('mouseleave', () => {
+                    isDragging = false;
+                    tCanvas.style.cursor = 'default';
+                });
+
+                // Mouse wheel for size - only if on sticker
+                tCanvas.addEventListener('wheel', (e) => {
+                    const coords = getCanvasCoordinates(tCanvas, e);
+                    if (isPointInSticker(coords.x, coords.y, stickerBoundingBox)) {
+                        e.preventDefault();
+                        const delta = e.deltaY > 0 ? -0.05 : 0.05;
+                        currentScale = Math.max(0.5, Math.min(1.5, currentScale + delta));
+                        if (globalRenderTransform) globalRenderTransform();
+                    }
+                }, { passive: false });
+
+                // Touch support with gestures - only if on sticker
+                tCanvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    touchCount = e.touches.length;
+
+                    if (touchCount === 1) {
+                        const coords = getCanvasCoordinates(tCanvas, e);
+                        if (isPointInSticker(coords.x, coords.y, stickerBoundingBox)) {
+                            isDragging = true;
+                            isTouchOnSticker = true;
+                        } else {
+                            isTouchOnSticker = false;
+                        }
+                    } else if (touchCount === 2) {
+                        // For two-finger gestures, check if midpoint is on sticker
+                        const midpoint = getTouchesMidpoint(tCanvas, e.touches);
+                        if (isPointInSticker(midpoint.x, midpoint.y, stickerBoundingBox)) {
+                            isTouchOnSticker = true;
+                            isDragging = false;
+                            // Calculate initial distance and angle for pinch/rotate
+                            const dx = e.touches[1].clientX - e.touches[0].clientX;
+                            const dy = e.touches[1].clientY - e.touches[0].clientY;
+                            lastTouchDistance = Math.hypot(dx, dy);
+                            lastTouchAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+                        } else {
+                            isTouchOnSticker = false;
+                        }
+                    }
+                }, { passive: false });
+
+                tCanvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+
+                    // Only process if touch started on sticker
+                    if (!isTouchOnSticker) return;
+
+                    if (e.touches.length === 1 && isDragging) {
+                        // Single finger drag
+                        const touch = e.touches[0];
+                        const rect = tCanvas.getBoundingClientRect();
+                        textX = Math.max(0.1, Math.min(0.9, (touch.clientX - rect.left) / rect.width));
+                        textY = Math.max(0.1, Math.min(0.9, (touch.clientY - rect.top) / rect.height));
+                        if (globalRenderTransform) globalRenderTransform();
+                    } else if (e.touches.length === 2) {
+                        // Two finger pinch/rotate
+                        const dx = e.touches[1].clientX - e.touches[0].clientX;
+                        const dy = e.touches[1].clientY - e.touches[0].clientY;
+                        const distance = Math.hypot(dx, dy);
+                        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+                        // Pinch to scale
+                        if (lastTouchDistance > 0) {
+                            const scaleDelta = (distance - lastTouchDistance) / 200;
+                            currentScale = Math.max(0.5, Math.min(1.5, currentScale + scaleDelta));
+                        }
+
+                        // Rotate
+                        if (lastTouchAngle !== 0) {
+                            let angleDelta = angle - lastTouchAngle;
+                            if (angleDelta > 180) angleDelta -= 360;
+                            if (angleDelta < -180) angleDelta += 360;
+                            currentRotation = Math.max(-180, Math.min(180, currentRotation + angleDelta));
+                            // Sync rotation slider
+                            tRotation.value = Math.round(currentRotation);
+                            tRotationVal.textContent = Math.round(currentRotation);
+                        }
+
+                        lastTouchDistance = distance;
+                        lastTouchAngle = angle;
+                        if (globalRenderTransform) globalRenderTransform();
+                    }
+                }, { passive: false });
+
+                tCanvas.addEventListener('touchend', (e) => {
+                    isDragging = false;
+                    if (e.touches.length < 2) {
+                        lastTouchDistance = 0;
+                        lastTouchAngle = 0;
+                    }
+                    if (e.touches.length === 0) {
+                        isTouchOnSticker = false;
+                    }
+                });
+
+                // Rotation slider
+                tRotation.addEventListener('input', () => {
+                    currentRotation = parseInt(tRotation.value);
+                    tRotationVal.textContent = tRotation.value;
+                    if (globalRenderTransform) globalRenderTransform();
+                });
+
+                // Line spacing slider
+                tSpacing.addEventListener('input', () => {
+                    tSpacingVal.textContent = tSpacing.value;
+                    if (globalRenderTransform) globalRenderTransform();
+                });
+
+                // Download button
+                document.getElementById('transformDownload').addEventListener('click', () => {
+                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+                    if (isMobile) {
+                        // On mobile, open the image in a new tab for long-press save
+                        tCanvas.toBlob((blob) => {
+                            const url = URL.createObjectURL(blob);
+                            const newWindow = window.open(url, '_blank');
+                            if (!newWindow) {
+                                // If popup blocked, show instruction
+                                showCustomAlert('Long press the image above and select "Save Image" to save to your photo album');
+                            }
+                        }, 'image/png');
+                    } else {
+                        // On desktop, use standard download
+                        tCanvas.toBlob((blob) => {
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = 'trash-talk-image.png';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(link.href);
+                        }, 'image/png');
+                    }
+                });
+
+                // Share button
+                const shareSvgIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"></path></svg>`;
+                document.getElementById('transformShare').addEventListener('click', async () => {
+                    const shareBtn = document.getElementById('transformShare');
+                    try {
+                        const shareCaption = `🗑️✨ My Trash Talk being transformed! ✨🗑️
+
+📝 From:
+"${lastOriginalMessage}"
+
+🔄 To:
+"${lastAiResponse}"
+
+👀 Check it out!
+
+#trashtalk | trashtalk.live 🔥`;
+
+                        const blob = await new Promise(resolve => tCanvas.toBlob(resolve, 'image/png'));
+                        const file = new File([blob], 'trash-talk.png', { type: 'image/png' });
+
+                        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                title: 'Trash Talk',
+                                text: shareCaption,
+                                files: [file]
+                            });
+                        } else {
+                            shareBtn.innerHTML = '<span style="font-size:10px;">...</span>';
+                            shareBtn.disabled = true;
+
+                            const base64Data = tCanvas.toDataURL('image/png').split(',')[1];
+
+                            const response = await fetch('https://api.imgur.com/3/image', {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': 'Client-ID 546c25a59c58ad7',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    image: base64Data,
+                                    type: 'base64'
+                                })
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                                const imageUrl = data.data.link;
+                                const emailSubject = encodeURIComponent('Check out my Trash Talk! 🗑️✨');
+                                const emailBody = encodeURIComponent(`🗑️✨ My Trash Talk being transformed! ✨🗑️
+
+📝 From:
+"${lastOriginalMessage}"
+
+🔄 To:
+"${lastAiResponse}"
+
+👀 Check it out! 👇
+
+${imageUrl}
+
+#trashtalk | trashtalk.live 🔥`);
+
+                                window.location.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+                            } else {
+                                throw new Error('Upload failed');
+                            }
+
+                            shareBtn.innerHTML = shareSvgIcon;
+                            shareBtn.disabled = false;
+                        }
+                    } catch (err) {
+                        console.error('Share failed:', err);
+                        shareBtn.innerHTML = shareSvgIcon;
+                        shareBtn.disabled = false;
+                        showCustomAlert('Sharing failed. Try again!');
+                    }
+                });
+
+                // Explore button - Upload to Google Drive → Make.com → Printful
+                // Using form submission approach for reliable Wix compatibility
+                document.getElementById('transformExplore').addEventListener('click', async () => {
+                    const exploreBtn = document.getElementById('transformExplore');
+                    const originalIcon = exploreBtn.innerHTML;
+
+                    // Show loading state
+                    exploreBtn.innerHTML = '<span style="font-size:10px;">...</span>';
+                    exploreBtn.disabled = true;
+
+                    try {
+                        // Convert canvas to base64
+                        const base64Data = tCanvas.toDataURL('image/png').split(',')[1];
+                        const fileName = 'trash-talk-' + Date.now() + '.png';
+
+                        // Upload to Google Drive via Apps Script
+                        // REPLACE THIS URL with your deployed Google Apps Script Web App URL
+                        const GOOGLE_DRIVE_UPLOAD_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+                        if (GOOGLE_DRIVE_UPLOAD_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                            showExploreSetupModal();
+                            exploreBtn.innerHTML = originalIcon;
+                            exploreBtn.disabled = false;
+                            return;
+                        }
+
+                        // Method 1: Try fetch first (works in most environments)
+                        let uploadSuccess = false;
+
+                        try {
+                            // Use no-cors for Wix compatibility
+                            await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: {
+                                    'Content-Type': 'text/plain', // Avoid preflight
+                                },
+                                body: JSON.stringify({
+                                    image: base64Data,
+                                    fileName: fileName,
+                                    originalMessage: lastOriginalMessage,
+                                    transformedMessage: lastAiResponse
+                                })
+                            });
+                            uploadSuccess = true;
+                        } catch (fetchErr) {
+                            console.log('Fetch failed, trying form submission:', fetchErr);
+
+                            // Method 2: Fallback to hidden form submission (more reliable in Wix)
+                            try {
+                                // Create hidden iframe for form submission
+                                let exploreIframe = document.getElementById('explore_upload_iframe');
+                                if (!exploreIframe) {
+                                    exploreIframe = document.createElement('iframe');
+                                    exploreIframe.id = 'explore_upload_iframe';
+                                    exploreIframe.name = 'explore_upload_iframe';
+                                    exploreIframe.style.display = 'none';
+                                    document.body.appendChild(exploreIframe);
+                                }
+
+                                // Create and submit form
+                                const form = document.createElement('form');
+                                form.method = 'POST';
+                                form.action = GOOGLE_DRIVE_UPLOAD_URL;
+                                form.target = 'explore_upload_iframe';
+                                form.style.display = 'none';
+
+                                // Add data as hidden fields
+                                const addField = (name, value) => {
+                                    const input = document.createElement('input');
+                                    input.type = 'hidden';
+                                    input.name = name;
+                                    input.value = value;
+                                    form.appendChild(input);
+                                };
+
+                                addField('image', base64Data);
+                                addField('fileName', fileName);
+                                addField('originalMessage', lastOriginalMessage);
+                                addField('transformedMessage', lastAiResponse);
+
+                                document.body.appendChild(form);
+                                form.submit();
+                                document.body.removeChild(form);
+
+                                uploadSuccess = true;
+                            } catch (formErr) {
+                                console.error('Form submission also failed:', formErr);
+                            }
+                        }
+
+                        // Show result modal
+                        if (uploadSuccess) {
+                            // Wait a moment for the upload to process
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                            showExploreSuccessModal();
+                        } else {
+                            showCustomAlert('Upload failed. Please try again! 🔄');
+                        }
+
+                    } catch (err) {
+                        console.error('Explore upload failed:', err);
+                        showCustomAlert('Upload failed. Please try again! 🔄');
+                    }
+
+                    exploreBtn.innerHTML = originalIcon;
+                    exploreBtn.disabled = false;
+                });
+            } else {
+                // Re-render with current slider values
+                renderTransform();
+            }
+
+            // Scroll to input container (top of message box)
+            setTimeout(() => {
+                document.querySelector('.input-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Explore Setup Modal - shows instructions for first-time setup
+        function showExploreSetupModal() {
+            const modal = document.createElement('div');
+            modal.id = 'exploreSetupModal';
+            modal.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+                overflow-y: auto;
+                padding: 20px;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a1a, #2d1f3d);
+                    padding: 24px;
+                    border-radius: 20px;
+                    border: 3px solid #FAAF40;
+                    text-align: left;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    max-width: 400px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                ">
+                    <h2 style="font-size: 20px; color: #FAAF40; margin-bottom: 16px; text-align: center;">🧭 Explore Setup Required</h2>
+                    <p style="font-size: 14px; color: #ffffff; margin-bottom: 12px;">To enable automatic product creation with Printful, you need to set up the integration:</p>
+
+                    <div style="background: #0d0d0d; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                        <p style="font-size: 13px; color: #2DE897; margin-bottom: 8px; font-weight: bold;">Step 1: Google Apps Script</p>
+                        <p style="font-size: 12px; color: #aaa;">Create a script to receive image uploads to Google Drive</p>
+                    </div>
+
+                    <div style="background: #0d0d0d; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                        <p style="font-size: 13px; color: #2DE897; margin-bottom: 8px; font-weight: bold;">Step 2: Make.com Scenario</p>
+                        <p style="font-size: 12px; color: #aaa;">Connect Google Drive → Printful automation</p>
+                    </div>
+
+                    <div style="background: #0d0d0d; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                        <p style="font-size: 13px; color: #2DE897; margin-bottom: 8px; font-weight: bold;">Step 3: Wix + Printful</p>
+                        <p style="font-size: 12px; color: #aaa;">Install Printful plugin on your Wix store</p>
+                    </div>
+
+                    <p style="font-size: 12px; color: #FF4CBC; margin-bottom: 16px; text-align: center;">Contact your developer to complete setup! 🛠️</p>
+
+                    <button style="
+                        width: 100%;
+                        padding: 12px 24px;
+                        font-family: Helvetica, Arial, sans-serif;
+                        font-weight: bold;
+                        font-size: 1rem;
+                        color: white;
+                        background: linear-gradient(135deg, #FAAF40, #FF8C00);
+                        border: none;
+                        border-radius: 25px;
+                        cursor: pointer;
+                    " onclick="this.closest('#exploreSetupModal').remove()">Got it! 👍</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Explore Success Modal - shows after successful upload
+        function showExploreSuccessModal() {
+            const modal = document.createElement('div');
+            modal.id = 'exploreSuccessModal';
+            modal.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.85);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a1a, #1f3d2d);
+                    padding: 28px;
+                    border-radius: 20px;
+                    border: 3px solid #2DE897;
+                    text-align: center;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    max-width: 340px;
+                ">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
+                    <h2 style="font-size: 20px; color: #2DE897; margin-bottom: 12px;">Image Uploaded!</h2>
+                    <p style="font-size: 14px; color: #ffffff; margin-bottom: 8px;">Your trash talk design has been sent to the product creator!</p>
+                    <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Check your Printful dashboard for the new product mockup.</p>
+                    <button style="
+                        padding: 12px 28px;
+                        font-family: Helvetica, Arial, sans-serif;
+                        font-weight: bold;
+                        font-size: 1rem;
+                        color: white;
+                        background: linear-gradient(135deg, #2DE897, #1a9960);
+                        border: none;
+                        border-radius: 25px;
+                        cursor: pointer;
+                    " onclick="this.closest('#exploreSuccessModal').remove()">Awesome! ✨</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Custom alert function
+        function showCustomAlert(message) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.2s ease;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: #1a1a1a;
+                    padding: 24px 32px;
+                    border-radius: 16px;
+                    border: 4px solid #FCEE21;
+                    text-align: center;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    max-width: 300px;
+                ">
+                    <p style="font-size: 18px; color: #ffffff; margin-bottom: 16px;">${message}</p>
+                    <button style="
+                        padding: 10px 24px;
+                        font-family: Helvetica, Arial, sans-serif;
+                        font-weight: bold;
+                        font-size: 1.2rem;
+                        color: white;
+                        background: #FF6B6B;
+                        border: 3px solid #ffffff;
+                        border-radius: 30px;
+                        cursor: pointer;
+                    " onclick="this.closest('div').parentElement.remove()">OK!</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Daily message limit tracking
+        const DAILY_LIMIT = 20;
+        const BIN_FULL_IMAGE = 'https://pfst.cf2.poecdn.net/base/image/f7784fee699fcaba09e4db4cf4ab65b136d8ed703e8bf9ce17bb62263f7adea6?w=6438&h=6015';
+
+        // Initialize in-memory counter
+        window._dailyMessageCount = 0;
+
+        function getTodayKey() {
+            const today = new Date();
+            return 'trashTalk_' + today.getFullYear() + '_' + (today.getMonth() + 1) + '_' + today.getDate();
+        }
+
+        // Check if cookies are available
+        function areCookiesEnabled() {
+            try {
+                document.cookie = 'testcookie=1';
+                const result = document.cookie.indexOf('testcookie') !== -1;
+                document.cookie = 'testcookie=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
+                return result;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        const cookiesEnabled = areCookiesEnabled();
+
+        // Cookie helper functions
+        function setCookie(name, value, days) {
+            if (!cookiesEnabled) return;
+            try {
+                const expires = new Date();
+                expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+                document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+            } catch (e) {
+                // Ignore cookie errors
+            }
+        }
+
+        function getCookie(name) {
+            if (!cookiesEnabled) return null;
+            try {
+                const nameEQ = name + '=';
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+            } catch (e) {
+                // Ignore cookie errors
+            }
+            return null;
+        }
+
+        function getDailyMessageCount() {
+            // Try cookies first (for Wix)
+            if (cookiesEnabled) {
+                const key = getTodayKey();
+                const cookieVal = getCookie(key);
+                if (cookieVal) {
+                    const count = parseInt(cookieVal, 10);
+                    if (!isNaN(count)) return count;
+                }
+            }
+            // Fallback to in-memory counter (for Poe)
+            return window._dailyMessageCount || 0;
+        }
+
+        function incrementDailyMessageCount() {
+            const count = getDailyMessageCount() + 1;
+            // Update in-memory counter
+            window._dailyMessageCount = count;
+            // Try to save to cookie (for Wix)
+            if (cookiesEnabled) {
+                const key = getTodayKey();
+                setCookie(key, count.toString(), 1);
+            }
+            return count;
+        }
+
+        function isLimitReached() {
+            return getDailyMessageCount() >= DAILY_LIMIT;
+        }
+
+        // Bin Full Window - shown when daily limit reached
+        function showBinFullWindow() {
+            const modal = document.createElement('div');
+            modal.id = 'binFullWindow';
+            modal.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.85);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a1a, #2d1f3d);
+                    padding: 24px;
+                    border-radius: 20px;
+                    border: none;
+                    text-align: center;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    max-width: 340px;
+                    margin: 16px;
+                ">
+                    <img src="${BIN_FULL_IMAGE}" alt="Bin Full" style="width: 100%; max-width: 280px; border-radius: 12px; margin-bottom: 16px;">
+                    <p style="font-size: 20px; color: #FCEE21; margin-bottom: 8px; font-weight: bold;">🗑️ Bin Full! 🗑️</p>
+                    <p style="font-size: 16px; color: #ffffff; margin-bottom: 20px;">Trash talk recycle bin is full,<br>let's talk tomorrow!</p>
+                    <button style="
+                        padding: 12px 28px;
+                        font-family: Helvetica, Arial, sans-serif;
+                        font-weight: bold;
+                        font-size: 1.1rem;
+                        color: white;
+                        background: linear-gradient(135deg, #FF4CBC, #902B8D);
+                        border: 3px solid #ffffff;
+                        border-radius: 30px;
+                        cursor: pointer;
+                    " onclick="this.closest('#binFullWindow').remove()">Got it! 👋</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Restart confirmation dialog
+        function showRestartConfirm() {
+            const modal = document.createElement('div');
+            modal.id = 'restartConfirmModal';
+            modal.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.2s ease;
+            `;
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1a1a, #2d1f3d);
+                    padding: 24px 32px;
+                    border-radius: 16px;
+                    border: 4px solid #2DE897;
+                    text-align: center;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    max-width: 320px;
+                    margin: 16px;
+                ">
+                    <p style="font-size: 18px; color: #ffffff; margin-bottom: 8px; font-weight: bold;">🔄 Restart?</p>
+                    <p style="font-size: 14px; color: #aaa; margin-bottom: 20px;">Are you sure to restart?<br>(make sure you save previous work)</p>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button id="restartConfirmYes" style="
+                            padding: 10px 24px;
+                            font-family: Helvetica, Arial, sans-serif;
+                            font-weight: bold;
+                            font-size: 1rem;
+                            color: white;
+                            background: linear-gradient(135deg, #2DE897, #1a9960);
+                            border: 2px solid #ffffff;
+                            border-radius: 25px;
+                            cursor: pointer;
+                        ">Restart</button>
+                        <button id="restartConfirmNo" style="
+                            padding: 10px 24px;
+                            font-family: Helvetica, Arial, sans-serif;
+                            font-weight: bold;
+                            font-size: 1rem;
+                            color: white;
+                            background: #666;
+                            border: 2px solid #ffffff;
+                            border-radius: 25px;
+                            cursor: pointer;
+                        ">Exit</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Add event listeners
+            document.getElementById('restartConfirmYes').addEventListener('click', () => {
+                modal.remove();
+                // Scroll to top and refresh the page
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                location.reload();
+            });
+
+            document.getElementById('restartConfirmNo').addEventListener('click', () => {
+                modal.remove();
+            });
+        }
+
+        // Restart button - initialized once on page load
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            showRestartConfirm();
+        });
+    </script>
+
+
+
+
+</body></html>
