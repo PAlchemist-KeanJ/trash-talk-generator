@@ -1276,13 +1276,17 @@ IF INPUT IS KOREAN → OUTPUT MUST BE KOREAN
 
 === OUTPUT FORMAT RULES ===
 1. Output ONLY the final sentence text. No explanations, no quotes, no extra lines.
-2. After every comma character, insert a line break:
-   - After English comma "," add \\n
-   - After Chinese comma "，" add \\n
-   Example: coffee失效,\\n靈魂待機，\\n今天好累
-3. Keep the sentence short (ideally 20-30 characters total, excluding \\n)
+2. You CAN add line breaks (\\n) after ANY punctuation mark to improve readability:
+   - After English punctuation: comma ",", period ".", exclamation "!", question "?"
+   - After Chinese punctuation: comma "，", period "。", exclamation "！", question "？"
+   - After Japanese punctuation: comma "、", period "。"
+   - After Korean punctuation: comma ",", period "."
+   Example: coffee失效，\\n靈魂待機。\\n今天好累！
+   Example: Slay mode on!\\nNo rest for queens 👑
+3. Keep the sentence short (ideally 20-40 characters total, excluding \\n)
 4. Use exactly "\\n" where you want a new line. No HTML <br>, only literal "\\n"
 5. Emojis ARE allowed.
+6. Break long sentences into 2-3 lines for better visual display on cards.
 
 === CONTENT TYPE HANDLING ===
 | Content Type | How to Handle |
@@ -2594,8 +2598,8 @@ ${imageUrl}
                     }
                 });
 
-                // Explore button - Upload to Google Drive → Make.com → Printful
-                // Using form submission approach for reliable Wix compatibility
+                // Explore button - Upload to Imgur → Make.com → Google Drive
+                // Imgur provides a public URL that can be passed to the Wix store
                 document.getElementById('transformExplore').addEventListener('click', async () => {
                     const exploreBtn = document.getElementById('transformExplore');
                     const originalIcon = exploreBtn.innerHTML;
@@ -2615,8 +2619,33 @@ ${imageUrl}
                         const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/jceingok6epbqlzofh7jddq22xfaffau';
 
                         let uploadSuccess = false;
+                        lastUploadedImageUrl = null; // Reset
 
-                        // Step 1: Send to Make.com webhook (for Printful)
+                        // Step 1: Upload to Imgur first to get a public URL
+                        try {
+                            console.log('Uploading to Imgur for public URL...');
+                            const imgurResponse = await fetch('https://api.imgur.com/3/image', {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': 'Client-ID 546c25a59c58ad7',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    image: base64Data,
+                                    type: 'base64'
+                                })
+                            });
+                            const imgurData = await imgurResponse.json();
+                            if (imgurData.success) {
+                                lastUploadedImageUrl = imgurData.data.link;
+                                console.log('Imgur upload success:', lastUploadedImageUrl);
+                                uploadSuccess = true;
+                            }
+                        } catch (imgurErr) {
+                            console.log('Imgur upload failed:', imgurErr);
+                        }
+
+                        // Step 2: Send to Make.com webhook (for Printful) - include Imgur URL
                         try {
                             console.log('Sending to Make.com webhook...');
                             await fetch(MAKE_WEBHOOK_URL, {
@@ -2627,6 +2656,7 @@ ${imageUrl}
                                 body: JSON.stringify({
                                     image: fullDataUrl,
                                     imageBase64: base64Data,
+                                    imageUrl: lastUploadedImageUrl || '',
                                     fileName: fileName,
                                     originalMessage: lastOriginalMessage || '',
                                     transformedMessage: lastAiResponse || '',
@@ -2634,12 +2664,12 @@ ${imageUrl}
                                 })
                             });
                             console.log('Make.com webhook sent successfully!');
-                            uploadSuccess = true;
+                            if (!uploadSuccess) uploadSuccess = true;
                         } catch (makeErr) {
                             console.log('Make.com webhook failed:', makeErr);
                         }
 
-                        // Step 2: Also save to Google Drive (backup)
+                        // Step 3: Also save to Google Drive (backup)
                         try {
                             await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
@@ -2658,7 +2688,6 @@ ${imageUrl}
                             if (!uploadSuccess) uploadSuccess = true;
                         } catch (driveErr) {
                             console.log('Google Drive backup failed:', driveErr);
-                            // Still show success if Make.com worked
                         }
 
                         // Show result modal
@@ -2757,8 +2786,10 @@ ${imageUrl}
         // ═══════════════════════════════════════════════════════════════════════════
         // 🛒 MOCKUP & SHOP MODAL - Shows design on products
         // ═══════════════════════════════════════════════════════════════════════════
-        // REPLACE THIS URL with your Wix store URL
-        const STORE_URL = 'YOUR_WIX_STORE_URL_HERE';
+        const STORE_URL = 'https://www.trashtalk.live/category/all-products';
+
+        // Store the uploaded image URL for passing to the store
+        let lastUploadedImageUrl = null;
 
         function showExploreSuccessModal() {
             // Get the design image from canvas
@@ -2785,6 +2816,13 @@ ${imageUrl}
             `;
 
             const hasStoreUrl = STORE_URL !== 'YOUR_WIX_STORE_URL_HERE';
+
+            // Build store URL with image parameter if available
+            let storeUrlWithImage = STORE_URL;
+            if (lastUploadedImageUrl) {
+                const separator = STORE_URL.includes('?') ? '&' : '?';
+                storeUrlWithImage = STORE_URL + separator + 'design=' + encodeURIComponent(lastUploadedImageUrl);
+            }
 
             modal.innerHTML = `
                 <div style="
@@ -2984,7 +3022,7 @@ ${imageUrl}
                     <!-- Action Buttons -->
                     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                         ${hasStoreUrl ? `
-                        <a href="${STORE_URL}" target="_blank" style="
+                        <a href="${storeUrlWithImage}" target="_blank" style="
                             padding: 14px 28px;
                             font-family: Helvetica, Arial, sans-serif;
                             font-weight: bold;
