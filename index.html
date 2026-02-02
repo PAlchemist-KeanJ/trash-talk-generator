@@ -1,5 +1,7 @@
 
-<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;"><meta name="x-poe-datastore-behavior" content="local_only">
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trash Talk Generator</title>
@@ -2604,47 +2606,23 @@ ${imageUrl}
                     exploreBtn.disabled = true;
 
                     try {
-                        // Convert canvas to base64 and full data URL
-                        const fullDataUrl = tCanvas.toDataURL('image/png');
-                        const base64Data = fullDataUrl.split(',')[1];
+                        // Convert canvas to base64
+                        const base64Data = tCanvas.toDataURL('image/png').split(',')[1];
                         const fileName = 'trash-talk-' + Date.now() + '.png';
 
-                        // API URLs
+                        // Upload to Google Drive via Apps Script
                         const GOOGLE_DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbwV_EC_lncd568jbf26W5QvfAhpG_YUrRzarYMXLWDg5X4yOPVAdUwFIAfAct0C2NTb/exec';
-                        const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/jceingok6epbqlzofh7jddq22xfaffau';
 
+                        // Method 1: Try fetch first (works in most environments)
                         let uploadSuccess = false;
 
-                        // Step 1: Send to Make.com webhook (for Printful)
                         try {
-                            console.log('Sending to Make.com webhook...');
-                            await fetch(MAKE_WEBHOOK_URL, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    image: fullDataUrl,
-                                    imageBase64: base64Data,
-                                    fileName: fileName,
-                                    originalMessage: lastOriginalMessage || '',
-                                    transformedMessage: lastAiResponse || '',
-                                    timestamp: new Date().toISOString()
-                                })
-                            });
-                            console.log('Make.com webhook sent successfully!');
-                            uploadSuccess = true;
-                        } catch (makeErr) {
-                            console.log('Make.com webhook failed:', makeErr);
-                        }
-
-                        // Step 2: Also save to Google Drive (backup)
-                        try {
+                            // Use no-cors for Wix compatibility
                             await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
                                 mode: 'no-cors',
                                 headers: {
-                                    'Content-Type': 'text/plain',
+                                    'Content-Type': 'text/plain', // Avoid preflight
                                 },
                                 body: JSON.stringify({
                                     image: base64Data,
@@ -2653,11 +2631,51 @@ ${imageUrl}
                                     transformedMessage: lastAiResponse
                                 })
                             });
-                            console.log('Google Drive backup sent!');
-                            if (!uploadSuccess) uploadSuccess = true;
-                        } catch (driveErr) {
-                            console.log('Google Drive backup failed:', driveErr);
-                            // Still show success if Make.com worked
+                            uploadSuccess = true;
+                        } catch (fetchErr) {
+                            console.log('Fetch failed, trying form submission:', fetchErr);
+
+                            // Method 2: Fallback to hidden form submission (more reliable in Wix)
+                            try {
+                                // Create hidden iframe for form submission
+                                let exploreIframe = document.getElementById('explore_upload_iframe');
+                                if (!exploreIframe) {
+                                    exploreIframe = document.createElement('iframe');
+                                    exploreIframe.id = 'explore_upload_iframe';
+                                    exploreIframe.name = 'explore_upload_iframe';
+                                    exploreIframe.style.display = 'none';
+                                    document.body.appendChild(exploreIframe);
+                                }
+
+                                // Create and submit form
+                                const form = document.createElement('form');
+                                form.method = 'POST';
+                                form.action = GOOGLE_DRIVE_UPLOAD_URL;
+                                form.target = 'explore_upload_iframe';
+                                form.style.display = 'none';
+
+                                // Add data as hidden fields
+                                const addField = (name, value) => {
+                                    const input = document.createElement('input');
+                                    input.type = 'hidden';
+                                    input.name = name;
+                                    input.value = value;
+                                    form.appendChild(input);
+                                };
+
+                                addField('image', base64Data);
+                                addField('fileName', fileName);
+                                addField('originalMessage', lastOriginalMessage);
+                                addField('transformedMessage', lastAiResponse);
+
+                                document.body.appendChild(form);
+                                form.submit();
+                                document.body.removeChild(form);
+
+                                uploadSuccess = true;
+                            } catch (formErr) {
+                                console.error('Form submission also failed:', formErr);
+                            }
                         }
 
                         // Show result modal
