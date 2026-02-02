@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1196,7 +1195,7 @@
             });
         }
         // Priority: 1) DeepSeek (primary) → 2) Groq → 3) Gemini → 4) OpenAI (fallbacks)
-        // ═══════════════════════════════════════════════════════════════════════════
+        // ════════════════════════════════════════════════════════════════���══════════
         const DEEPSEEK_API_KEY = 'sk-4137cb4d9f4a4e559b3812933616749a'; // DeepSeek (China, works in HK & Wix): https://platform.deepseek.com/api_keys
         const GROQ_API_KEY = ''; // Groq (FREE fallback): https://console.groq.com/keys
         const OPENAI_API_KEY = ''; // OpenAI (fallback): https://platform.openai.com
@@ -2763,6 +2762,11 @@ ${imageUrl}
 
         function showExploreSuccessModal() {
             // Get the design image from canvas
+            const tCanvas = document.getElementById('transformCanvas');
+            if (!tCanvas) {
+                showCustomAlert('Please generate an image first! 🖼️');
+                return;
+            }
             const designImage = tCanvas.toDataURL('image/png');
 
             const modal = document.createElement('div');
