@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1195,7 +1196,7 @@
             });
         }
         // Priority: 1) DeepSeek (primary) → 2) Groq → 3) Gemini → 4) OpenAI (fallbacks)
-        // ════════════════════════════════════════════════════════════════���══════════
+        // ═══════════════════════════════════════════════════════════════════════════
         const DEEPSEEK_API_KEY = 'sk-4137cb4d9f4a4e559b3812933616749a'; // DeepSeek (China, works in HK & Wix): https://platform.deepseek.com/api_keys
         const GROQ_API_KEY = ''; // Groq (FREE fallback): https://console.groq.com/keys
         const OPENAI_API_KEY = ''; // OpenAI (fallback): https://platform.openai.com
@@ -2754,67 +2755,270 @@ ${imageUrl}
             document.body.appendChild(modal);
         }
 
-        // Explore Success Modal - shows after successful upload with Shop Now button
-        // REPLACE THIS URL with your Wix Printful store URL
-        const PRINTFUL_STORE_URL = 'YOUR_PRINTFUL_STORE_URL_HERE';
+        // ═══════════════════════════════════════════════════════════════════════════
+        // 🛒 MOCKUP & SHOP MODAL - Shows design on products
+        // ═══════════════════════════════════════════════════════════════════════════
+        // REPLACE THIS URL with your Wix store URL
+        const STORE_URL = 'YOUR_WIX_STORE_URL_HERE';
 
         function showExploreSuccessModal() {
+            // Get the design image from canvas
+            const designImage = tCanvas.toDataURL('image/png');
+
             const modal = document.createElement('div');
             modal.id = 'exploreSuccessModal';
             modal.style.cssText = `
                 position: fixed;
                 inset: 0;
-                background: rgba(0,0,0,0.85);
+                background: rgba(0,0,0,0.95);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 z-index: 1000;
                 animation: fadeIn 0.3s ease;
+                padding: 20px;
+                overflow-y: auto;
             `;
 
-            const hasStoreUrl = PRINTFUL_STORE_URL !== 'YOUR_PRINTFUL_STORE_URL_HERE';
+            const hasStoreUrl = STORE_URL !== 'YOUR_WIX_STORE_URL_HERE';
 
             modal.innerHTML = `
                 <div style="
-                    background: linear-gradient(135deg, #1a1a1a, #1f3d2d);
-                    padding: 28px;
+                    background: linear-gradient(135deg, #1a1a1a, #2d1a3d);
+                    padding: 24px;
                     border-radius: 20px;
-                    border: 3px solid #2DE897;
+                    border: 3px solid #FAAF40;
                     text-align: center;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                    max-width: 340px;
+                    max-width: 500px;
+                    width: 100%;
                 ">
-                    <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-                    <h2 style="font-size: 20px; color: #2DE897; margin-bottom: 12px;">Design Uploaded!</h2>
-                    <p style="font-size: 14px; color: #ffffff; margin-bottom: 8px;">Your trash talk design is being turned into awesome products!</p>
-                    <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">T-shirts, mugs, phone cases and more!</p>
+                    <h2 style="font-size: 22px; color: #FAAF40; margin-bottom: 8px;">🎨 Your Design on Products!</h2>
+                    <p style="font-size: 13px; color: #aaa; margin-bottom: 16px;">Swipe to see mockups</p>
+
+                    <!-- Product Mockups Carousel -->
+                    <div id="mockupCarousel" style="
+                        display: flex;
+                        overflow-x: auto;
+                        gap: 16px;
+                        padding: 12px 0;
+                        scroll-snap-type: x mandatory;
+                        -webkit-overflow-scrolling: touch;
+                    ">
+                        <!-- T-Shirt Mockup -->
+                        <div style="
+                            flex: 0 0 auto;
+                            width: 200px;
+                            scroll-snap-align: center;
+                            background: #fff;
+                            border-radius: 12px;
+                            padding: 12px;
+                            position: relative;
+                        ">
+                            <div style="
+                                width: 176px;
+                                height: 200px;
+                                background: #f5f5f5;
+                                border-radius: 8px;
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <!-- T-shirt shape -->
+                                <svg viewBox="0 0 200 220" style="width: 100%; height: 100%;">
+                                    <path d="M40,30 L60,10 L80,20 L100,15 L120,20 L140,10 L160,30 L180,50 L160,70 L150,60 L150,200 L50,200 L50,60 L40,70 L20,50 Z" fill="#2A0031" stroke="#1a0020" stroke-width="2"/>
+                                </svg>
+                                <!-- Design overlay -->
+                                <img src="${designImage}" style="
+                                    position: absolute;
+                                    width: 70px;
+                                    height: auto;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -40%);
+                                    border-radius: 4px;
+                                ">
+                            </div>
+                            <p style="margin-top: 8px; font-weight: bold; color: #333; font-size: 14px;">👕 T-Shirt</p>
+                            <p style="color: #666; font-size: 12px;">From $25</p>
+                        </div>
+
+                        <!-- Mug Mockup -->
+                        <div style="
+                            flex: 0 0 auto;
+                            width: 200px;
+                            scroll-snap-align: center;
+                            background: #fff;
+                            border-radius: 12px;
+                            padding: 12px;
+                            position: relative;
+                        ">
+                            <div style="
+                                width: 176px;
+                                height: 200px;
+                                background: #f5f5f5;
+                                border-radius: 8px;
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <!-- Mug shape -->
+                                <svg viewBox="0 0 200 200" style="width: 80%; height: 80%;">
+                                    <ellipse cx="90" cy="40" rx="60" ry="15" fill="#e0e0e0" stroke="#ccc" stroke-width="2"/>
+                                    <rect x="30" y="40" width="120" height="120" rx="8" fill="#ffffff" stroke="#ccc" stroke-width="2"/>
+                                    <ellipse cx="90" cy="160" rx="60" ry="12" fill="#f0f0f0" stroke="#ccc" stroke-width="2"/>
+                                    <path d="M150,60 Q180,60 180,100 Q180,140 150,140" fill="none" stroke="#ccc" stroke-width="8"/>
+                                </svg>
+                                <!-- Design overlay -->
+                                <img src="${designImage}" style="
+                                    position: absolute;
+                                    width: 60px;
+                                    height: auto;
+                                    top: 50%;
+                                    left: 45%;
+                                    transform: translate(-50%, -50%);
+                                    border-radius: 4px;
+                                ">
+                            </div>
+                            <p style="margin-top: 8px; font-weight: bold; color: #333; font-size: 14px;">☕ Mug</p>
+                            <p style="color: #666; font-size: 12px;">From $18</p>
+                        </div>
+
+                        <!-- Phone Case Mockup -->
+                        <div style="
+                            flex: 0 0 auto;
+                            width: 200px;
+                            scroll-snap-align: center;
+                            background: #fff;
+                            border-radius: 12px;
+                            padding: 12px;
+                            position: relative;
+                        ">
+                            <div style="
+                                width: 176px;
+                                height: 200px;
+                                background: #f5f5f5;
+                                border-radius: 8px;
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <!-- Phone shape -->
+                                <div style="
+                                    width: 90px;
+                                    height: 160px;
+                                    background: #2A0031;
+                                    border-radius: 16px;
+                                    border: 3px solid #1a0020;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    position: relative;
+                                ">
+                                    <!-- Camera bump -->
+                                    <div style="position: absolute; top: 8px; left: 8px; width: 25px; height: 25px; background: #1a0020; border-radius: 6px;"></div>
+                                    <!-- Design overlay -->
+                                    <img src="${designImage}" style="
+                                        width: 55px;
+                                        height: auto;
+                                        border-radius: 4px;
+                                        margin-top: 10px;
+                                    ">
+                                </div>
+                            </div>
+                            <p style="margin-top: 8px; font-weight: bold; color: #333; font-size: 14px;">📱 Phone Case</p>
+                            <p style="color: #666; font-size: 12px;">From $22</p>
+                        </div>
+
+                        <!-- Tote Bag Mockup -->
+                        <div style="
+                            flex: 0 0 auto;
+                            width: 200px;
+                            scroll-snap-align: center;
+                            background: #fff;
+                            border-radius: 12px;
+                            padding: 12px;
+                            position: relative;
+                        ">
+                            <div style="
+                                width: 176px;
+                                height: 200px;
+                                background: #f5f5f5;
+                                border-radius: 8px;
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+                                <!-- Tote bag shape -->
+                                <svg viewBox="0 0 200 220" style="width: 85%; height: 85%;">
+                                    <path d="M60,50 Q60,20 100,20 Q140,20 140,50" fill="none" stroke="#8B4513" stroke-width="6"/>
+                                    <rect x="40" y="50" width="120" height="140" rx="4" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
+                                </svg>
+                                <!-- Design overlay -->
+                                <img src="${designImage}" style="
+                                    position: absolute;
+                                    width: 65px;
+                                    height: auto;
+                                    top: 55%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    border-radius: 4px;
+                                ">
+                            </div>
+                            <p style="margin-top: 8px; font-weight: bold; color: #333; font-size: 14px;">👜 Tote Bag</p>
+                            <p style="color: #666; font-size: 12px;">From $20</p>
+                        </div>
+                    </div>
+
+                    <!-- Scroll indicator -->
+                    <p style="font-size: 11px; color: #666; margin: 8px 0 16px;">← Scroll for more →</p>
+
+                    <!-- Action Buttons -->
                     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                         ${hasStoreUrl ? `
-                        <a href="${PRINTFUL_STORE_URL}" target="_blank" style="
-                            padding: 12px 24px;
+                        <a href="${STORE_URL}" target="_blank" style="
+                            padding: 14px 28px;
                             font-family: Helvetica, Arial, sans-serif;
                             font-weight: bold;
-                            font-size: 1rem;
+                            font-size: 1.1rem;
                             color: white;
                             background: linear-gradient(135deg, #FF6B6B, #FF4757);
                             border: none;
-                            border-radius: 25px;
+                            border-radius: 30px;
                             cursor: pointer;
                             text-decoration: none;
                             display: inline-block;
-                        ">🛒 Shop Now!</a>
-                        ` : ''}
+                            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+                        ">🛒 Order Now!</a>
+                        ` : `
+                        <button onclick="showCustomAlert('Store coming soon! 🚀')" style="
+                            padding: 14px 28px;
+                            font-family: Helvetica, Arial, sans-serif;
+                            font-weight: bold;
+                            font-size: 1.1rem;
+                            color: white;
+                            background: linear-gradient(135deg, #FF6B6B, #FF4757);
+                            border: none;
+                            border-radius: 30px;
+                            cursor: pointer;
+                            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+                        ">🛒 Order Now!</button>
+                        `}
                         <button style="
-                            padding: 12px 24px;
+                            padding: 14px 24px;
                             font-family: Helvetica, Arial, sans-serif;
                             font-weight: bold;
                             font-size: 1rem;
                             color: white;
-                            background: linear-gradient(135deg, #2DE897, #1a9960);
+                            background: linear-gradient(135deg, #666, #444);
                             border: none;
-                            border-radius: 25px;
+                            border-radius: 30px;
                             cursor: pointer;
-                        " onclick="this.closest('#exploreSuccessModal').remove()">${hasStoreUrl ? 'Close' : 'Awesome! ✨'}</button>
+                        " onclick="this.closest('#exploreSuccessModal').remove()">Close</button>
                     </div>
                 </div>
             `;
