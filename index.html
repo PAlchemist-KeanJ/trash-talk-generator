@@ -2598,7 +2598,8 @@ ${imageUrl}
                     }
                 });
 
-                // Explore button - Upload to Google Drive → Get URL → Make.com → Printify
+                // Explore button - Upload to Google Drive → Make.com → Printful
+                // Using form submission approach for reliable Wix compatibility
                 document.getElementById('transformExplore').addEventListener('click', async () => {
                     const exploreBtn = document.getElementById('transformExplore');
                     const originalIcon = exploreBtn.innerHTML;
@@ -2620,7 +2621,7 @@ ${imageUrl}
                         let uploadSuccess = false;
                         let publicUrl = '';
 
-                        // Step 1: Upload to Google Drive and get public URL
+                        // Step 1: Upload to Google Drive FIRST (to get public URL)
                         try {
                             console.log('Uploading to Google Drive...');
                             const driveResponse = await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
@@ -2647,17 +2648,17 @@ ${imageUrl}
                             console.log('Google Drive upload failed:', driveErr);
                         }
 
-                        // Step 2: Send publicUrl to Make.com webhook (for Printify)
+                        // Step 2: Send public URL to Make.com webhook (for Printify)
                         if (publicUrl) {
                             try {
-                                console.log('Sending to Make.com webhook with publicUrl...');
+                                console.log('Sending to Make.com webhook with URL...');
                                 await fetch(MAKE_WEBHOOK_URL, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
                                     },
                                     body: JSON.stringify({
-                                        publicUrl: publicUrl,
+                                        imageUrl: publicUrl,
                                         fileName: fileName,
                                         originalMessage: lastOriginalMessage || '',
                                         transformedMessage: lastAiResponse || '',
@@ -2672,6 +2673,7 @@ ${imageUrl}
 
                         // Show result modal
                         if (uploadSuccess) {
+                            // Wait a moment for the upload to process
                             await new Promise(resolve => setTimeout(resolve, 500));
                             showExploreSuccessModal();
                         } else {
@@ -2764,7 +2766,7 @@ ${imageUrl}
 
         // ═══════════════════════════════════════════════════════════════════════════
         // 🛒 MOCKUP & SHOP MODAL - Shows design on products
-        // ═══════════════════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════���═══════════════════
         // REPLACE THIS URL with your Wix store URL
         const STORE_URL = 'YOUR_WIX_STORE_URL_HERE';
 
