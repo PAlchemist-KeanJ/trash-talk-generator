@@ -2761,8 +2761,8 @@ ${imageUrl}
         // ═══════════════════════════════════════════════════════════════════════════
         // 🛒 MOCKUP & SHOP MODAL - Shows design on products
         // ═══════════════════════════════════════════════════════════════════════════
-        // Your Wix store URL
-        const STORE_URL = 'https://www.trashtalk.live/category/all-products';
+        // REPLACE THIS URL with your Wix store URL
+        const STORE_URL = 'YOUR_WIX_STORE_URL_HERE';
 
         function showExploreSuccessModal() {
             // Get the design image from canvas
@@ -2801,8 +2801,8 @@ ${imageUrl}
                     max-width: 500px;
                     width: 100%;
                 ">
-                    <h2 style="font-size: 22px; color: #FAAF40; margin-bottom: 8px;">🎨 Design Saved!</h2>
-                    <p style="font-size: 13px; color: #aaa; margin-bottom: 16px;">Preview how it looks • Visit our store for real products!</p>
+                    <h2 style="font-size: 22px; color: #FAAF40; margin-bottom: 8px;">🎨 Your Design on Products!</h2>
+                    <p style="font-size: 13px; color: #aaa; margin-bottom: 16px;">Swipe to see mockups</p>
 
                     <!-- Product Mockups Carousel -->
                     <div id="mockupCarousel" style="
@@ -3074,7 +3074,7 @@ ${imageUrl}
         }
 
         // Daily message limit tracking
-        const DAILY_LIMIT = 20;
+        const DAILY_LIMIT = 100; // Increased for testing
         const BIN_FULL_IMAGE = 'https://pfst.cf2.poecdn.net/base/image/f7784fee699fcaba09e4db4cf4ab65b136d8ed703e8bf9ce17bb62263f7adea6?w=6438&h=6015';
 
         // Initialize in-memory counter
@@ -3274,6 +3274,7 @@ ${imageUrl}
             showRestartConfirm();
         });
     </script>
+
 
 
 
