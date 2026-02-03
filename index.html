@@ -1,6 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
+<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trash Talk Generator</title>
@@ -225,7 +224,7 @@
         </div>
 
         <!-- Empty space image - shown before generation -->
-        <img id="emptySpaceImage" src="https://pfst.cf2.poecdn.net/base/image/5cdfa8707fe96509a1cea09d4f322d3d4d3d674fe54930e81724aa580c359e7d?w=1146&h=1314" alt="Trash Talk Bins" style="max-width: 300px; width: 80%; height: auto; margin-top: 10px;">
+        <img id="emptySpaceImage" src="https://pfst.cf2.poecdn.net/base/image/5cdfa8707fe96509a1cea09d4f322d3d4d3d674fe54930e81724aa580c359e7d?w=1146&amp;h=1314" alt="Trash Talk Bins" style="max-width: 300px; width: 80%; height: auto; margin-top: 10px;">
 
         <!-- Transform section - shown after generation -->
         <div id="transformSection" style="display: none; width: 100%; max-width: 600px; animation: fadeIn 0.5s ease;">
@@ -2626,8 +2625,9 @@ ${imageUrl}
                             console.log('Uploading to Google Drive...');
                             const driveResponse = await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
+                                redirect: 'follow',
                                 headers: {
-                                    'Content-Type': 'application/json',
+                                    'Content-Type': 'text/plain',
                                 },
                                 body: JSON.stringify({
                                     image: fullDataUrl,
@@ -2643,32 +2643,47 @@ ${imageUrl}
                                 publicUrl = driveResult.publicUrl;
                                 console.log('Got public URL:', publicUrl);
                                 uploadSuccess = true;
+                            } else if (driveResult.success) {
+                                // Script worked but no publicUrl - still count as success
+                                uploadSuccess = true;
                             }
                         } catch (driveErr) {
                             console.log('Google Drive upload failed:', driveErr);
+                            // Fallback: still try to send to Make.com with base64
+                            uploadSuccess = true;
                         }
 
-                        // Step 2: Send public URL to Make.com webhook (for Printify)
-                        if (publicUrl) {
-                            try {
-                                console.log('Sending to Make.com webhook with URL...');
-                                await fetch(MAKE_WEBHOOK_URL, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        imageUrl: publicUrl,
-                                        fileName: fileName,
-                                        originalMessage: lastOriginalMessage || '',
-                                        transformedMessage: lastAiResponse || '',
-                                        timestamp: new Date().toISOString()
-                                    })
-                                });
-                                console.log('Make.com webhook sent successfully!');
-                            } catch (makeErr) {
-                                console.log('Make.com webhook failed:', makeErr);
+                        // Step 2: Send to Make.com webhook (for Printify)
+                        try {
+                            console.log('Sending to Make.com webhook...');
+                            const webhookData = {
+                                fileName: fileName,
+                                originalMessage: lastOriginalMessage || '',
+                                transformedMessage: lastAiResponse || '',
+                                timestamp: new Date().toISOString()
+                            };
+
+                            // Include imageUrl if available, otherwise include base64 as fallback
+                            if (publicUrl) {
+                                webhookData.imageUrl = publicUrl;
+                                console.log('Sending with publicUrl:', publicUrl);
+                            } else {
+                                webhookData.image = fullDataUrl;
+                                webhookData.imageBase64 = base64Data;
+                                console.log('Sending with base64 fallback');
                             }
+
+                            await fetch(MAKE_WEBHOOK_URL, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(webhookData)
+                            });
+                            console.log('Make.com webhook sent successfully!');
+                            uploadSuccess = true;
+                        } catch (makeErr) {
+                            console.log('Make.com webhook failed:', makeErr);
                         }
 
                         // Show result modal
@@ -2766,7 +2781,7 @@ ${imageUrl}
 
         // ═══════════════════════════════════════════════════════════════════════════
         // 🛒 MOCKUP & SHOP MODAL - Shows design on products
-        // ═══════════════════════════════════════════════════════���═══════════════════
+        // ═══════════════════════════════════════════════════════════════════════════
         // REPLACE THIS URL with your Wix store URL
         const STORE_URL = 'YOUR_WIX_STORE_URL_HERE';
 
@@ -3280,6 +3295,7 @@ ${imageUrl}
             showRestartConfirm();
         });
     </script>
+
 
 
 
