@@ -2598,8 +2598,7 @@ ${imageUrl}
                     }
                 });
 
-                // Explore button - Upload to Google Drive → Make.com → Printful
-                // Using form submission approach for reliable Wix compatibility
+                // Explore button - Upload to Google Drive → Get URL → Make.com → Printify
                 document.getElementById('transformExplore').addEventListener('click', async () => {
                     const exploreBtn = document.getElementById('transformExplore');
                     const originalIcon = exploreBtn.innerHTML;
@@ -2611,7 +2610,6 @@ ${imageUrl}
                     try {
                         // Convert canvas to base64 and full data URL
                         const fullDataUrl = tCanvas.toDataURL('image/png');
-                        const base64Data = fullDataUrl.split(',')[1];
                         const fileName = 'trash-talk-' + Date.now() + '.png';
 
                         // API URLs
@@ -2619,55 +2617,60 @@ ${imageUrl}
                         const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/jceingok6epbqlzofh7jddq22xfaffau';
 
                         let uploadSuccess = false;
+                        let publicUrl = '';
 
-                        // Step 1: Send to Make.com webhook (for Printful)
+                        // Step 1: Upload to Google Drive and get public URL
                         try {
-                            console.log('Sending to Make.com webhook...');
-                            await fetch(MAKE_WEBHOOK_URL, {
+                            console.log('Uploading to Google Drive...');
+                            const driveResponse = await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    image: fullDataUrl,
-                                    imageBase64: base64Data,
-                                    fileName: fileName,
-                                    originalMessage: lastOriginalMessage || '',
-                                    transformedMessage: lastAiResponse || '',
-                                    timestamp: new Date().toISOString()
-                                })
-                            });
-                            console.log('Make.com webhook sent successfully!');
-                            uploadSuccess = true;
-                        } catch (makeErr) {
-                            console.log('Make.com webhook failed:', makeErr);
-                        }
-
-                        // Step 2: Also save to Google Drive (backup)
-                        try {
-                            await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
-                                method: 'POST',
-                                mode: 'no-cors',
                                 headers: {
                                     'Content-Type': 'text/plain',
                                 },
                                 body: JSON.stringify({
-                                    image: base64Data,
+                                    image: fullDataUrl,
                                     fileName: fileName,
                                     originalMessage: lastOriginalMessage,
                                     transformedMessage: lastAiResponse
                                 })
                             });
-                            console.log('Google Drive backup sent!');
-                            if (!uploadSuccess) uploadSuccess = true;
+                            const driveResult = await driveResponse.json();
+                            console.log('Google Drive response:', driveResult);
+
+                            if (driveResult.success && driveResult.publicUrl) {
+                                publicUrl = driveResult.publicUrl;
+                                console.log('Got public URL:', publicUrl);
+                                uploadSuccess = true;
+                            }
                         } catch (driveErr) {
-                            console.log('Google Drive backup failed:', driveErr);
-                            // Still show success if Make.com worked
+                            console.log('Google Drive upload failed:', driveErr);
+                        }
+
+                        // Step 2: Send public URL to Make.com webhook (for Printify)
+                        if (publicUrl) {
+                            try {
+                                console.log('Sending to Make.com webhook with URL...');
+                                await fetch(MAKE_WEBHOOK_URL, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        publicUrl: publicUrl,
+                                        fileName: fileName,
+                                        originalMessage: lastOriginalMessage || '',
+                                        transformedMessage: lastAiResponse || '',
+                                        timestamp: new Date().toISOString()
+                                    })
+                                });
+                                console.log('Make.com webhook sent successfully!');
+                            } catch (makeErr) {
+                                console.log('Make.com webhook failed:', makeErr);
+                            }
                         }
 
                         // Show result modal
                         if (uploadSuccess) {
-                            // Wait a moment for the upload to process
                             await new Promise(resolve => setTimeout(resolve, 500));
                             showExploreSuccessModal();
                         } else {
