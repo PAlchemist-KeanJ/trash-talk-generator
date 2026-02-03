@@ -2610,6 +2610,7 @@ ${imageUrl}
                     try {
                         // Convert canvas to base64 and full data URL
                         const fullDataUrl = tCanvas.toDataURL('image/png');
+                        const base64Data = fullDataUrl.split(',')[1];
                         const fileName = 'trash-talk-' + Date.now() + '.png';
 
                         // API URLs
@@ -2625,7 +2626,7 @@ ${imageUrl}
                             const driveResponse = await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'text/plain',
+                                    'Content-Type': 'application/json',
                                 },
                                 body: JSON.stringify({
                                     image: fullDataUrl,
@@ -2646,10 +2647,10 @@ ${imageUrl}
                             console.log('Google Drive upload failed:', driveErr);
                         }
 
-                        // Step 2: Send public URL to Make.com webhook (for Printify)
+                        // Step 2: Send publicUrl to Make.com webhook (for Printify)
                         if (publicUrl) {
                             try {
-                                console.log('Sending to Make.com webhook with URL...');
+                                console.log('Sending to Make.com webhook with publicUrl...');
                                 await fetch(MAKE_WEBHOOK_URL, {
                                     method: 'POST',
                                     headers: {
