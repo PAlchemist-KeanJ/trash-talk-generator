@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1196,7 +1195,7 @@
             });
         }
         // Priority: 1) DeepSeek (primary) → 2) Groq → 3) Gemini → 4) OpenAI (fallbacks)
-        // ═══════════════════════════════════════════════════════════════════════════
+        // ════════════════════════════════════════════════════════════════���══════════
         const DEEPSEEK_API_KEY = 'sk-4137cb4d9f4a4e559b3812933616749a'; // DeepSeek (China, works in HK & Wix): https://platform.deepseek.com/api_keys
         const GROQ_API_KEY = ''; // Groq (FREE fallback): https://console.groq.com/keys
         const OPENAI_API_KEY = ''; // OpenAI (fallback): https://platform.openai.com
@@ -2627,8 +2626,9 @@ ${imageUrl}
                             console.log('Uploading to Google Drive...');
                             const driveResponse = await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
+                                redirect: 'follow',
                                 headers: {
-                                    'Content-Type': 'application/json',
+                                    'Content-Type': 'text/plain',
                                 },
                                 body: JSON.stringify({
                                     image: fullDataUrl,
@@ -2644,32 +2644,51 @@ ${imageUrl}
                                 publicUrl = driveResult.publicUrl;
                                 console.log('Got public URL:', publicUrl);
                                 uploadSuccess = true;
+                            } else if (driveResult.success) {
+                                // Fallback: even if no publicUrl, still success
+                                uploadSuccess = true;
                             }
                         } catch (driveErr) {
                             console.log('Google Drive upload failed:', driveErr);
-                        }
-
-                        // Step 2: Send public URL to Make.com webhook (for Printify)
-                        if (publicUrl) {
+                            // Fallback: try no-cors mode just to upload
                             try {
-                                console.log('Sending to Make.com webhook with URL...');
-                                await fetch(MAKE_WEBHOOK_URL, {
+                                await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                     method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
+                                    mode: 'no-cors',
+                                    headers: { 'Content-Type': 'text/plain' },
                                     body: JSON.stringify({
-                                        imageUrl: publicUrl,
-                                        fileName: fileName,
-                                        originalMessage: lastOriginalMessage || '',
-                                        transformedMessage: lastAiResponse || '',
-                                        timestamp: new Date().toISOString()
+                                        image: fullDataUrl,
+                                        fileName: fileName
                                     })
                                 });
-                                console.log('Make.com webhook sent successfully!');
-                            } catch (makeErr) {
-                                console.log('Make.com webhook failed:', makeErr);
+                                uploadSuccess = true;
+                            } catch (e) {
+                                console.log('Fallback upload also failed:', e);
                             }
+                        }
+
+                        // Step 2: Send to Make.com webhook (for Printify)
+                        try {
+                            console.log('Sending to Make.com webhook...');
+                            await fetch(MAKE_WEBHOOK_URL, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    imageUrl: publicUrl || '',
+                                    image: fullDataUrl,
+                                    imageBase64: base64Data,
+                                    fileName: fileName,
+                                    originalMessage: lastOriginalMessage || '',
+                                    transformedMessage: lastAiResponse || '',
+                                    timestamp: new Date().toISOString()
+                                })
+                            });
+                            console.log('Make.com webhook sent successfully!');
+                            uploadSuccess = true;
+                        } catch (makeErr) {
+                            console.log('Make.com webhook failed:', makeErr);
                         }
 
                         // Show result modal
