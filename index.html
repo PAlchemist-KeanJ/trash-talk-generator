@@ -2621,14 +2621,13 @@ ${imageUrl}
                         let uploadSuccess = false;
                         let publicUrl = '';
 
-                        // Step 1: Upload to Google Drive (backup, using no-cors)
+                        // Step 1: Upload to Google Drive FIRST (to get public URL)
                         try {
                             console.log('Uploading to Google Drive...');
-                            await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
+                            const driveResponse = await fetch(GOOGLE_DRIVE_UPLOAD_URL, {
                                 method: 'POST',
-                                mode: 'no-cors',
                                 headers: {
-                                    'Content-Type': 'text/plain',
+                                    'Content-Type': 'application/json',
                                 },
                                 body: JSON.stringify({
                                     image: fullDataUrl,
@@ -2637,33 +2636,39 @@ ${imageUrl}
                                     transformedMessage: lastAiResponse
                                 })
                             });
-                            console.log('Google Drive upload sent!');
-                            uploadSuccess = true;
+                            const driveResult = await driveResponse.json();
+                            console.log('Google Drive response:', driveResult);
+
+                            if (driveResult.success && driveResult.publicUrl) {
+                                publicUrl = driveResult.publicUrl;
+                                console.log('Got public URL:', publicUrl);
+                                uploadSuccess = true;
+                            }
                         } catch (driveErr) {
                             console.log('Google Drive upload failed:', driveErr);
                         }
 
-                        // Step 2: Send to Make.com webhook (for Printify) with base64
-                        try {
-                            console.log('Sending to Make.com webhook...');
-                            await fetch(MAKE_WEBHOOK_URL, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    image: fullDataUrl,
-                                    imageBase64: base64Data,
-                                    fileName: fileName,
-                                    originalMessage: lastOriginalMessage || '',
-                                    transformedMessage: lastAiResponse || '',
-                                    timestamp: new Date().toISOString()
-                                })
-                            });
-                            console.log('Make.com webhook sent successfully!');
-                            uploadSuccess = true;
-                        } catch (makeErr) {
-                            console.log('Make.com webhook failed:', makeErr);
+                        // Step 2: Send public URL to Make.com webhook (for Printify)
+                        if (publicUrl) {
+                            try {
+                                console.log('Sending to Make.com webhook with URL...');
+                                await fetch(MAKE_WEBHOOK_URL, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        imageUrl: publicUrl,
+                                        fileName: fileName,
+                                        originalMessage: lastOriginalMessage || '',
+                                        transformedMessage: lastAiResponse || '',
+                                        timestamp: new Date().toISOString()
+                                    })
+                                });
+                                console.log('Make.com webhook sent successfully!');
+                            } catch (makeErr) {
+                                console.log('Make.com webhook failed:', makeErr);
+                            }
                         }
 
                         // Show result modal
@@ -2761,9 +2766,9 @@ ${imageUrl}
 
         // ═══════════════════════════════════════════════════════════════════════════
         // 🛒 MOCKUP & SHOP MODAL - Shows design on products
-        // ═══════════════════════════════════════════════════════════════════════════
-        // REPLACE THIS URL with your Wix store URL
-        const STORE_URL = 'YOUR_WIX_STORE_URL_HERE';
+        // ═══════════════════════════════════════════════════════���═══════════════════
+        // Your Wix store URL
+        const STORE_URL = 'https://www.trashtalk.live/category/all-products';
 
         function showExploreSuccessModal() {
             // Get the design image from canvas
@@ -2802,8 +2807,9 @@ ${imageUrl}
                     max-width: 500px;
                     width: 100%;
                 ">
-                    <h2 style="font-size: 22px; color: #FAAF40; margin-bottom: 8px;">🎨 Your Design on Products!</h2>
-                    <p style="font-size: 13px; color: #aaa; margin-bottom: 16px;">Swipe to see mockups</p>
+                    <h2 style="font-size: 22px; color: #FAAF40; margin-bottom: 8px;">🎨 Design Saved!</h2>
+                    <p style="font-size: 13px; color: #aaa; margin-bottom: 8px;">Preview how it looks • Visit our store for real products!</p>
+                    <p style="font-size: 11px; color: #2DE897; margin-bottom: 16px;">✨ Your design will appear in the store shortly ✨</p>
 
                     <!-- Product Mockups Carousel -->
                     <div id="mockupCarousel" style="
@@ -3002,7 +3008,7 @@ ${imageUrl}
                             text-decoration: none;
                             display: inline-block;
                             box-shadow: 0 4px 15px rgba(255,107,107,0.4);
-                        ">🛒 Order Now!</a>
+                        ">🛒 View Products</a>
                         ` : `
                         <button onclick="showCustomAlert('Store coming soon! 🚀')" style="
                             padding: 14px 28px;
@@ -3015,7 +3021,7 @@ ${imageUrl}
                             border-radius: 30px;
                             cursor: pointer;
                             box-shadow: 0 4px 15px rgba(255,107,107,0.4);
-                        ">🛒 Order Now!</button>
+                        ">🛒 View Products</button>
                         `}
                         <button style="
                             padding: 14px 24px;
