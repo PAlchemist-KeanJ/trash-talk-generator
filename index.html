@@ -722,9 +722,14 @@ d.textContent = "ERR: " + msg + " | line:" + line + " col:" + col;
 document.body.appendChild(d);
 };
 window.addEventListener("unhandledrejection", function(e) {
+var reasonText = e && e.reason ? (e.reason.message || String(e.reason)) : "";
+if (/failed to connect to metamask/i.test(reasonText)) {
+if (e && typeof e.preventDefault === "function") e.preventDefault();
+return;
+}
 var d = document.createElement("div");
 d.style.cssText = "position:fixed;top:30px;left:0;right:0;background:#cc5500;color:white;padding:8px 12px;font-size:11px;z-index:99999;word-break:break-all;font-family:monospace;";
-d.textContent = "Promise ERR: " + (e.reason ? (e.reason.message || String(e.reason)) : "unknown");
+d.textContent = "Promise ERR: " + (reasonText || "unknown");
 document.body.appendChild(d);
 });
 </script>
