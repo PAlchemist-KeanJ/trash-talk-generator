@@ -1,0 +1,419 @@
+Template_ID,Template_Name,Image_URL,Mood,Fonts_List,Text_Placement_X,Text_Placement_Y,Text_Alignment,Max_Width,Font_Size_Range,Text_Color,Outline_Color,Shadow_Settings,Rotation
+1,"rose, plastic bag, banana, recycle, carry away, lift.png",https://drive.google.com/file/d/1Syl12BfkzzzpGL_r8xQdwbNwmlY3Nj6a/view?usp=drive_link,"friendly, happy, friendship, help","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.55,0.05,center,0.9,60-75,#15BDE8 / #F987E0 / gradient,none,,-8
+2,"crowded, mess, chaotic.png",https://drive.google.com/file/d/14nuz-lvHfoSIpnG1e3-DBaXYRmLxvi12/view?usp=sharing,"friendly, crowded, team, trash, chaotic","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+3,"clueless, deparate, depair, make up, hazart.png",https://drive.google.com/file/d/1DY7fYE2FRB-nfmfFjMf5nc2sC1hxkXRg/view?usp=sharing,"clueless, desparate, despair, make up, hazard","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,70-90,#2A0031 / #F987E0 / #F26522 / #853278 / gradient,none,none,-5 / 0 / 5
+4,"clueless, can, squashed, metal.png",https://drive.google.com/file/d/1xjozoJcObn3-47TTrt6IYiBKdZV8bZlv/view?usp=sharing,"clueless, can, squashed, metal","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,70-90,#2A0031 / #F987E0 / #F26522 / #853278 / gradient / #BE1E2D,#FF6B6B,4px red shadow,-5 / 0 / 5
+5,template-33.png,https://drive.google.com/file/d/1rOtDdylVus5e1TFk_Lk92EovhI7lCkRg/view?usp=sharing,"Plastic, beautiful , confident","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.6,0.05,center,0.9,60-75,#15BDE8 / #F987E0 / gradient,none / gradient,none,-8 / 0 / 8
+6,template-29.png,https://drive.google.com/file/d/1xZVpuLfWSVaUXHqAXOYNLCSGNGnQMpBp/view?usp=sharing,"rebellious, angry","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.6,0.05,center,0.9,60-75,#2A0031 / #F987E0 / #F26522 / #853278 / gradient / #BE1E2D,#000000,spray paint effect,-8 / 0 / 8
+7,template-11.png,https://drive.google.com/file/d/10S6j6Bf7ziwUB1vPsDYReRt7TpWdlEFb/view?usp=sharing,sweet,"""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,38-65,Gradient / #201E1F / #853278, ,soft shadow,-8 / 0 / 8
+8,template-17.png,https://drive.google.com/file/d/12zkDeYjQ2w3cdUp6fHO9xMRMVp4p75zy/view?usp=sharing,"comfortable, light, blue, baby, plastic bag, air, cloud, sleep","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.48,0.04,center,0.55,120,#15BDE8, , ,-8 / 0 / 8
+9,template-12.png,https://drive.google.com/file/d/1GT0cnkqWhg2rj3pzZXqKPvjHrb8gLsn1/view?usp=sharing,"enery, strong, courage, banana, baba, protect","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,65-120,random / gradient,#000000 or none, ,-8 / 0 / 8
+10,template-14.png,https://drive.google.com/file/d/1HqDhJzJcvMn3lVzv2M-vE2GsHREVyF1q/view?usp=sharing,"comfortable, light, blue, baby, plastic bag, air, cloud, sleep","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.3,0.05,center,0.7,65-120,random / gradient,#000000 or none, ,-8 / 0 / 8
+11,template-21.png,https://drive.google.com/file/d/1MgXC4Ld80eZelE15yuMimjgbkWo2q8C4/view?usp=sharing,"paper box, fly, sad, grey","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.05,0.05,center,0.9,65-120,random / gradient,#000000 or none, ,-8 / 0 / 8
+,template-10.png,https://drive.google.com/file/d/1QTyXJqdai4Htd1Jrh7vnYrFJrU-HdapL/view?usp=sharing,"comfortable, light, blue, baby, plastic bag, air, cloud, sleep","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.3,0.05,center,0.7,65-120,random / gradient,#000000 or none, ,-8 / 0 / 8
+12,template-15.png,https://drive.google.com/file/d/1aiuHprcUN_Fa8RAPAl6bMHgobMI94inj/view?usp=sharing,"yellow, paper box, fly, sad, grey","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.3,0.05,center,0.7,65-120,random / gradient,#000000 or none, ,0
+13,template-16.png,https://drive.google.com/file/d/1as8A0NDK0nJnCpa1dzNXJqYnOSf3ZXJc/view?usp=sharing,"Plastic, beautiful , tired, sleepy","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,70-90,#2A0031 / #F987E0 / #F26522 / #853278 / gradient,none,none,-5 / 0 / 5
+14,template-05.png,https://drive.google.com/file/d/1h4qWnW0lBThl6_8cT3qB0ei0CGGbKK2j/view?usp=sharing,"friendly, crowded, team, trash, chaotic","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.08,0.05,center,0.9,70,random / gradient,#000000 or none,,-5 / 0 / 5
+15,template-01.png,https://drive.google.com/file/d/1gxwa4Wyq2dIm_C2GFZh2pNSJe8GD1ftI/view?usp=sharing,"careless, chill, sweet","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,70-95,random / gradient,#000000 or none,,-5 / 0 / 5
+16,template-08.png,https://drive.google.com/file/d/1dI_BJVfMsPcYxWNu9E0KBGm8-1VxGqtH/view?usp=sharing,"happy, shopping, friendship, family","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.08,0.05,center,0.9,70,random / gradient,#000000 or none,,-5 / 0 / 5
+17,template-08.png,https://drive.google.com/file/d/1ZscOnx_JPCldYGRGYLyX--WBLVuVUUeK/view?usp=sharing,"careless, chill, sweet, red, cola, pepsi, soda","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,70-95,random / gradient,#000000 or none,,-5 / 0 / 5
+18,template-06.png,https://drive.google.com/file/d/1MoCR8ll-fPv11bpYqPBgmyVwH0gJRA-7/view?usp=sharing,"competition, beauty, plastic","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.08,0.05,center,0.9,70,random / gradient,#000000 or none,,-5 / 0 / 5
+19,template-03.png,https://drive.google.com/file/d/1F_hgzTfzIZ9l5As3_jqAfv-kkf5PlJm8/view?usp=sharing,,"""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,70-95,random / gradient,#000000 or none,,-5 / 0 / 5
+20,template-09.png,https://drive.google.com/file/d/1z68BokR8gjDiQSQLd60b0jfBHpfhc7EX/view?usp=sharing,"confident, strong, happy, excited","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,70-95,random / gradient,#000000,,-9 / 0 / 9
+21,template-18.png,https://drive.google.com/file/d/1yRTq80_Vs16zx8h7wv1LyTlODNJTvliC/view?usp=sharing,"love, intimate","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,70-95,random / gradient,#000000,,0
+22,template-24.png,https://drive.google.com/file/d/1rAD379dk5JCPNUBISiXCYIqvy8DLusRx/view?usp=sharing,"lazy, sleepy , clueless, chill, hae, fart, poo, wee","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.9,70-95,random / gradient,#000000 or none,,-5 / 0 / 5
+23,template-13.png,https://drive.google.com/file/d/1njqY0_Ub5gH3MRPLIpNsdsie0KZSg-_d/view?usp=sharing,"comfotable, blue, lazy. soft","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.8,70-95,random / gradient,#000000 or none,,-5 / 0 / 5
+24,template-20.png,https://drive.google.com/file/d/1m-haNPeHHUfzZRhOVSRTuGVgPQ5tfK3i/view?usp=sharing,"banana, sad, tired, hopeless, sleep, rest, poo poo","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.1,0.05,center,0.8,70-95,random / gradient,#000000 or none,,-5 / 0 / 5
+25,template-37 (1).png,https://drive.google.com/file/d/1m4fp4a4lqpVYWxYqQZP4TSmhl9LDKzsl/view?usp=sharing,"rose, question, love, romantic, wine","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.3,0.4,center,0.65,80,random / gradient,#000000 or none,,8
+26,template-36 (1),template-36 (1).png,"crowded, angry, trash","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,82,random / gradient,#000000 or none,,-8
+27,template-38 (1).png,https://drive.google.com/file/d/18lJznG2YwlTLRa-ouxOLIMHXwB_N8bX-/view?usp=sharing,"paper box, fly, sad, grey","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.048,0.05,center,0.9,65-120,random / gradient,#000000 or none, ,-8 / 0 / 8
+28,template-07.png,https://drive.google.com/file/d/1d-dDMT1XXgzaU7UGgXpAXrM6YTQ_mZ6n/view?usp=sharing,"chill, drinking, cool, sweet","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.048,0.05,center,0.9,80,random / gradient,#000000 or none, ,-8 / 0 / 8
+29,template-30.png,https://drive.google.com/file/d/1q4g3qqM6XvxDttk7xW6nqdMhY1qywfTP/view?usp=sharing,"rose, question, love, romantic, wine","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.4,center,0.5,60-80,random / gradient,#000000 or none, ,8
+30,template-34.png,https://drive.google.com/file/d/1N2x94tPMRYBRWbPGTj47TxdxSBMT7WRQ/view?usp=sharing,"sweet, potato , rubbish, bin. fart, laid back","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.48,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+31,template-31.png,https://drive.google.com/file/d/1IyUtPn9Ruts5VMu4gLILZP1bwlrOwHk7/view?usp=sharing,"banana, sad, tired, hopeless, sleep, rest, poo poo","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.55,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+32,template-37.png,https://drive.google.com/file/d/1nehrg3HjszkOUQrPWnW16zTnD7LHufyo/view?usp=sharing,"sweet, potato , rubbish, lazy, sleep. fart, laid back","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.6,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+33,template-38.png,https://drive.google.com/file/d/1DClZgxDWp7YYQh1Jox_YtFZIf4gBKkm-/view?usp=sharing,"crowded, angry, trash","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.7,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+34,template-36.png,https://drive.google.com/file/d/1DClZgxDWp7YYQh1Jox_YtFZIf4gBKkm-/view?usp=sharing,"crowded, angry, trash","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.7,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+35,template-35.png,https://drive.google.com/file/d/1Ajsov6B8jpxWDhTRDjCSzRkG3f2xTqb8/view?usp=sharing,"banana, sad, tired, hopeless, sleep, rest, poo poo","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.55,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
+36,template-04.png,https://drive.google.com/file/d/1Z8-YsIKFLMt0dzGbOkY87AYDQ7Hflxdk/view?usp=sharing,"plastic, sad, clueless, despair, desparate, depress, make up","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.15,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000, ,-5 / 0 / 5
+37,template-32.png,https://drive.google.com/file/d/1ZjbbaiApDuWOZ7fCNoJZFEboA5wXppkR/view?usp=sharing,"banana, excited, friends, happy","""traditional chinese , output traditional chinese: Huninn / LXGW Marker Gothic / WDXL Lubrifont TC
+ 
+
+ simplified chinese , output simplified chinese: LXGW Marker Gothic / ZCOOL XiaoWei / WDXL Lubrifont SC / ZCOOL KuaiLe / Cactus Classical Serif
+ 
+
+ Japanese, output Japanese: WDXL Lubrifont JP N / Dela Gothic One / Potta One 4.UoqMunThenKhung 5. Hachi Maru Pop 6. Yuji Mai / Rampart One / DotGothic16 / Mochiy Pop P One  
+ 
+
+ Englsh: Ranchers, Rampart One, Spicy Rice, climate crisis, Ultra, homemade apple, DotGothic16, Permanent Marker, Rock Salt
+ Bangers,Chewy,Luckiest Guy,Titan One""",0.5,0.05,center,0.9,75,Gradient / #201E1F / #853278,#000000,2px black shadow,-5 / 0 / 5
