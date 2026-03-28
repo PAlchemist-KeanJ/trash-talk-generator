@@ -755,4 +755,72 @@ d.textContent = "Eval error: " + e.message;
 document.body.appendChild(d);
 }
 </script>
+<script>
+(function() {
+var EMPTY_IMAGE_POOL = [
+"https://pfst.cf2.poecdn.net/base/image/5cdfa8707fe96509a1cea09d4f322d3d4d3d674fe54930e81724aa580c359e7d?w=1146&h=1314",
+"https://pfst.cf2.poecdn.net/base/image/f996ae53d105a22959cfc7f62f195e3753be46abffcb9a0f81643d58278aeb9c?w=1024&h=1024",
+"https://pfst.cf2.poecdn.net/base/image/7d787afa8ae95bfc8dcf89540e3842775a3047dcd0d29e3b1880ffbcb5cd3c5a?w=850&h=1023",
+"https://pfst.cf2.poecdn.net/base/image/da4c84996922e19adb011b6227892acc4e70371d73d37305e967a9e2dd630804?w=850&h=1027",
+"https://pfst.cf2.poecdn.net/base/image/e564f8343d25ceb22aa547af8d219a1790f5689b63c241de0a465f93f302a3e4?w=850&h=1023",
+"https://pfst.cf2.poecdn.net/base/image/12a783afb15e538cfeca0f1cfd1ee4908772b7d9591bd5446163504f6c75de90?w=850&h=1027",
+"https://pfst.cf2.poecdn.net/base/image/9f8800bc1364e76f987c9ac05a7dc847ea4a914f118112106c3381cae395d549?w=850&h=1023"
+];
+var lastIdleImageIndex = -1;
+
+function isElementVisible(el) {
+if (!el) return false;
+var styles = window.getComputedStyle(el);
+if (styles.display === "none" || styles.visibility === "hidden" || styles.opacity === "0") return false;
+return el.offsetWidth > 0 && el.offsetHeight > 0;
+}
+
+function setRandomIdleImage() {
+var emptyImage = document.getElementById("emptySpaceImage");
+if (!emptyImage || !EMPTY_IMAGE_POOL.length) return;
+var index = Math.floor(Math.random() * EMPTY_IMAGE_POOL.length);
+if (EMPTY_IMAGE_POOL.length > 1 && index === lastIdleImageIndex) {
+index = (index + 1) % EMPTY_IMAGE_POOL.length;
+}
+lastIdleImageIndex = index;
+emptyImage.src = EMPTY_IMAGE_POOL[index];
+}
+
+function maybeRotateIdleImage() {
+var emptyImage = document.getElementById("emptySpaceImage");
+if (isElementVisible(emptyImage)) setRandomIdleImage();
+}
+
+function initIdleImageRotation() {
+setRandomIdleImage();
+var transformSection = document.getElementById("transformSection");
+var emptyImage = document.getElementById("emptySpaceImage");
+var loadingOverlay = document.getElementById("aiLoadingOverlay");
+var restartBtn = document.getElementById("transformRestart");
+
+if (restartBtn) {
+restartBtn.addEventListener("click", function() {
+window.setTimeout(maybeRotateIdleImage, 120);
+});
+}
+
+var observer = new MutationObserver(function() {
+window.requestAnimationFrame(maybeRotateIdleImage);
+});
+if (transformSection) observer.observe(transformSection, { attributes: true, attributeFilter: ["style", "class"] });
+if (emptyImage) observer.observe(emptyImage, { attributes: true, attributeFilter: ["style", "class"] });
+if (loadingOverlay) observer.observe(loadingOverlay, { attributes: true, attributeFilter: ["style", "class"] });
+
+document.addEventListener("visibilitychange", function() {
+if (!document.hidden) maybeRotateIdleImage();
+});
+}
+
+if (document.readyState === "loading") {
+document.addEventListener("DOMContentLoaded", initIdleImageRotation);
+} else {
+initIdleImageRotation();
+}
+})();
+</script>
 </body></html>
