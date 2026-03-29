@@ -1,0 +1,2 @@
+# Exclude local Netlify runner/build artifacts from deploy uploads
+.netlify/
