@@ -13,6 +13,8 @@ function normalizeUploadBody(body) {
     originalMessage: safeString(body.originalMessage, 2_000),
     transformedMessage: safeString(body.transformedMessage, 2_000),
     timestamp: safeString(body.timestamp, 80) || new Date().toISOString(),
+    overwrite: body.overwrite === true || body.overwrite === "true" || body.oversave === true || body.oversave === "true",
+    oversave: body.overwrite === true || body.overwrite === "true" || body.oversave === true || body.oversave === "true",
   };
 }
 
