@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Trash Talk Admin</title>
+<style>
+  :root {
+    --bg: #f6f4ef; --panel: #fff; --ink: #1d1b19; --muted: #6f6a63; --line: #e4dfd6;
+    --accent: #ff4cbc; --accent-ink: #fff; --ok: #1f9d63; --warn: #c8581b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif; background: var(--bg); color: var(--ink); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; background: var(--ink); color: #fff; }
+  header h1 { margin: 0; font-size: 17px; letter-spacing: .02em; }
+  header h1 span { color: var(--accent); }
+  main { max-width: 1280px; margin: 0 auto; padding: 20px; }
+  button, .btn { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 7px 12px; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  button:hover, .btn:hover { border-color: var(--ink); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  button.ghost { background: transparent; color: inherit; border-color: rgba(255,255,255,.35); }
+  button.danger { color: #b3261e; }
+  button:disabled { opacity: .5; cursor: default; }
+  input, select { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .hidden { display: none !important; }
+  .muted { color: var(--muted); }
+
+  #login { max-width: 360px; margin: 12vh auto; text-align: center; }
+  #login form { display: grid; gap: 10px; margin-top: 16px; }
+  #loginError { color: #b3261e; min-height: 1.4em; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 24px; font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .toolbar .grow { flex: 1 1 220px; }
+  .toolbar label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: #faf8f4; }
+  td.date { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+  td.msg { max-width: 340px; white-space: pre-wrap; word-break: break-word; }
+  td.card img { width: 96px; height: 120px; object-fit: contain; background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0/12px 12px; border-radius: 6px; border: 1px solid var(--line); cursor: zoom-in; display: block; }
+  td.actions { white-space: nowrap; }
+  td.actions > * { margin: 0 4px 4px 0; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #f0ece4; color: var(--muted); margin-top: 4px; }
+  .file { font-size: 12px; color: var(--muted); word-break: break-all; }
+  .noimg { width: 96px; height: 120px; display: grid; place-items: center; text-align: center; font-size: 11px; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; }
+  .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+
+  dialog { border: none; border-radius: 14px; padding: 0; max-width: min(960px, 96vw); width: 100%; }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+  .dlg-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); gap: 8px; }
+  .dlg-body { padding: 16px; max-height: 80vh; overflow: auto; }
+  #viewer img { max-width: 100%; max-height: 70vh; display: block; margin: 0 auto; background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0/16px 16px; }
+  .related { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .grid2 label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  #importLog { white-space: pre-wrap; font-size: 12px; background: #faf8f4; border-radius: 8px; padding: 10px; max-height: 200px; overflow: auto; }
+  .progress { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .progress > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; align-items: center; }
+  .tabs button { border-radius: 999px; }
+  .tabs button.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .tabs .counter { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 6px 4px 14px; }
+  .tabs .counter b { font-size: 18px; font-variant-numeric: tabular-nums; }
+  .tabs .counter input { width: 96px; padding: 4px 8px; }
+  .tabs .counter button { padding: 4px 10px; }
+  select.status { padding: 4px 8px; }
+  select.status[data-v="pending_payment"] { background: #fff4e5; }
+  select.status[data-v="paid"] { background: #e6f6ee; }
+  select.status[data-v="printed"] { background: #e8f0fe; }
+  select.status[data-v="shipped"] { background: #eeeeee; }
+  td.small { font-size: 12px; max-width: 240px; white-space: pre-wrap; word-break: break-word; }
+  .links a { display: inline-block; margin: 2px 6px 2px 0; font-size: 12px; }
+  .note { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+
+  .tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .tpl { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; }
+  .tpl.off { opacity: .55; }
+  .tpl-img { position: relative; background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0/12px 12px; border-radius: 8px; overflow: hidden; }
+  .tpl-img img { width: 100%; display: block; }
+  .tpl-area { position: absolute; border: 2px dashed var(--accent); background: rgba(255,76,188,.14); pointer-events: none; display: grid; place-items: center; color: var(--accent); font-weight: 700; font-size: 12px; }
+  .tpl .fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .tpl .fields label { display: grid; gap: 2px; font-size: 11px; color: var(--muted); }
+  .tpl .fields input, .tpl .fields select { padding: 4px 6px; width: 100%; }
+  .tpl .fields .wide { grid-column: span 2; }
+  .tpl .fields .full { grid-column: 1 / -1; }
+  .tpl .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+  @media (max-width: 760px) {
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tr { border-bottom: 8px solid var(--bg); }
+    td { border: none; padding: 6px 12px; }
+    td.msg { max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<section id="login" class="panel hidden">
+  <h2 style="margin:0">Trash Talk Admin</h2>
+  <p class="muted">Enter the admin password.</p>
+  <form id="loginForm">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
+    <button class="primary" type="submit">Log in</button>
+  </form>
+  <p id="loginError"></p>
+</section>
+
+<div id="app" class="hidden">
+  <header>
+    <h1>Trash Talk <span>Admin</span></h1>
+    <button class="ghost" id="logoutBtn">Log out</button>
+  </header>
+  <main>
+    <nav class="tabs" id="tabs">
+      <button data-tab="cards" class="active">Conversations &amp; cards</button>
+      <button data-tab="orders">Orders</button>
+      <button data-tab="leads">Email leads</button>
+      <button data-tab="templates">Templates</button>
+      <form class="counter" id="counterForm" title="The number shown on the main page. The next card gets this number + 1.">
+        <span class="muted">Counter</span> <b id="counterValue">–</b>
+        <input id="counterInput" type="number" min="0" step="1" placeholder="New number">
+        <button type="submit">Set counter</button>
+      </form>
+    </nav>
+
+    <section class="tab" id="tab-cards">
+    <div class="stats">
+      <div class="stat"><b id="statCards">–</b><span>Cards saved</span></div>
+      <div class="stat"><b id="statToday">–</b><span>Last 24 hours</span></div>
+      <div class="stat"><b id="statMockups">–</b><span>Product mockups</span></div>
+      <div class="stat"><b id="statInvoices">–</b><span>Invoices</span></div>
+    </div>
+
+    <div class="panel">
+      <form class="toolbar" id="filters">
+        <input class="grow" id="q" type="search" placeholder="Search message, reply or file name">
+        <label>From <input id="from" type="date"></label>
+        <label>To <input id="to" type="date"></label>
+        <select id="kind">
+          <option value="card">Conversations &amp; cards</option>
+          <option value="mockup">Product mockups</option>
+          <option value="invoice">Invoices</option>
+          <option value="all">Everything</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+      <div class="toolbar" style="margin-top:10px">
+        <a class="btn" id="csvBtn" href="#">⬇ Download records (Excel CSV)</a>
+        <button id="zipBtn">⬇ Download images (ZIP)</button>
+        <label><input type="checkbox" id="zipMockups"> include mockups</label>
+        <span class="grow"></span>
+        <button id="importToggle">⬆ Import old history</button>
+      </div>
+      <div id="zipStatus" class="muted hidden" style="margin-top:10px">
+        <div class="progress"><div id="zipBar"></div></div>
+        <span id="zipText"></span>
+      </div>
+    </div>
+
+    <div class="panel hidden" id="importPanel">
+      <h3 style="margin-top:0">Import old history</h3>
+      <p class="muted" style="margin-top:0">
+        <b>1. Records:</b> choose a Google Sheet export (.xlsx or .csv), check the column matching, then import.
+        The <i>Trash Talk Log</i> sheet has the messages only; the <i>Invoices</i> sheet also has the AI response and design file.
+        Rows that already exist are skipped, so importing twice is safe.
+      </p>
+      <div class="toolbar">
+        <input type="file" id="sheetFile" accept=".xlsx,.xls,.csv">
+        <select id="sheetTab" class="hidden"></select>
+      </div>
+      <div id="mapping" class="hidden" style="margin-top:12px">
+        <div class="grid2">
+          <label>Date / time column <select data-field="timestamp"></select></label>
+          <label>User message column <select data-field="message"></select></label>
+          <label>AI reply column <select data-field="reply"></select></label>
+          <label>File name column <select data-field="fileName"></select></label>
+          <label>Drive link column <select data-field="driveUrl"></select></label>
+        </div>
+        <p class="muted" id="sheetPreview"></p>
+        <button class="primary" id="importRowsBtn">Import records</button>
+      </div>
+
+      <p class="muted" style="margin-top:20px">
+        <b>2. Card images (optional):</b> select the old card PNGs, or a ZIP downloaded from the Drive folder.
+        Each image is matched to its record by file name.
+      </p>
+      <input type="file" id="imageFiles" accept="image/*,.zip" multiple>
+      <div class="progress" style="margin-top:10px"><div id="importBar"></div></div>
+      <div id="importLog" style="margin-top:10px" class="hidden"></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Date</th><th>User message</th><th>AI reply</th><th>Card</th><th></th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="pager">
+      <button id="prevBtn">← Newer</button>
+      <span class="muted" id="pageInfo"></span>
+      <button id="nextBtn">Older →</button>
+    </div>
+    </section>
+
+    <section class="tab hidden" id="tab-orders">
+      <div class="stats" id="orderStats"></div>
+      <div class="panel">
+        <form class="toolbar" id="orderFilters">
+          <input class="grow" id="oq" type="search" placeholder="Search invoice #, name, email, phone, product, design file">
+          <select id="ostatus">
+            <option value="">All statuses</option>
+            <option value="pending_payment">Pending payment</option>
+            <option value="paid">Paid</option>
+            <option value="printed">Printed</option>
+            <option value="shipped">Shipped</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <label>From <input id="ofrom" type="date"></label>
+          <label>To <input id="oto" type="date"></label>
+          <button type="submit">Search</button>
+        </form>
+        <div class="toolbar" style="margin-top:10px">
+          <a class="btn" id="orderCsvBtn" href="#">⬇ Download orders (Excel CSV)</a>
+          <span class="grow"></span>
+          <label class="btn">⬆ Import old Orders / Invoices CSV <input type="file" id="orderImportFile" accept=".csv,.xlsx" multiple hidden></label>
+        </div>
+        <p class="note">Importing the old sheets: choose <b>Orders.csv</b> first, then <b>Invoices.csv</b> (the invoice rows add the subtotal, shipping, message and AI reply to the matching orders). Importing twice is safe.</p>
+        <div id="orderImportLog" class="note"></div>
+      </div>
+      <table>
+        <thead><tr><th>Date / Invoice</th><th>Customer</th><th>Products &amp; total</th><th>Message &amp; AI reply</th><th>Card</th><th>Status</th></tr></thead>
+        <tbody id="orderRows"></tbody>
+      </table>
+      <div class="pager">
+        <button id="orderPrev">← Newer</button>
+        <span class="muted" id="orderPageInfo"></span>
+        <button id="orderNext">Older →</button>
+      </div>
+    </section>
+
+    <section class="tab hidden" id="tab-leads">
+      <div class="panel">
+        <form class="toolbar" id="leadFilters">
+          <input class="grow" id="lq" type="search" placeholder="Search email, design file or status">
+          <label>From <input id="lfrom" type="date"></label>
+          <label>To <input id="lto" type="date"></label>
+          <button type="submit">Search</button>
+        </form>
+        <div class="toolbar" style="margin-top:10px">
+          <a class="btn" id="leadCsvBtn" href="#">⬇ Download email leads (Excel CSV)</a>
+          <span class="grow"></span>
+          <label class="btn">⬆ Import old Email Leads CSV <input type="file" id="leadImportFile" accept=".csv,.xlsx" hidden></label>
+        </div>
+        <div id="leadImportLog" class="note"></div>
+      </div>
+      <table>
+        <thead><tr><th>Date</th><th>Email</th><th>Design file</th><th>Card</th><th>Status</th><th></th></tr></thead>
+        <tbody id="leadRows"></tbody>
+      </table>
+      <div class="pager">
+        <button id="leadPrev">← Newer</button>
+        <span class="muted" id="leadPageInfo"></span>
+        <button id="leadNext">Older →</button>
+      </div>
+    </section>
+
+    <section class="tab hidden" id="tab-templates">
+      <div class="panel">
+        <div class="toolbar">
+          <label class="btn primary" style="background:var(--accent);color:#fff;border-color:var(--accent)">⬆ Upload templates <input type="file" id="tplFiles" accept="image/*" multiple hidden></label>
+          <span class="muted" id="tplCount"></span>
+          <span class="grow"></span>
+        </div>
+        <p class="note">
+          These are the card backgrounds the main page uses. The <b>name</b> is used to match the mood of the message
+          (e.g. <i>angry-fire</i>, <i>happy-sunshine</i>); a name containing <b>transparent</b> marks a transparent sticker.
+          The pink box is where the text goes (values are fractions of the image: 0 = left/top edge, 1 = right/bottom edge;
+          width is usually 0.6–0.9). Font size range is optional, e.g. <i>80-120</i>.
+          The full-size original is kept for printing; visitors get a lighter WebP copy.
+          If no template is switched on, the main page falls back to the Google Drive folder.
+        </p>
+        <div class="progress hidden" id="tplProgress" style="margin-top:8px"><div id="tplBar"></div></div>
+        <div id="tplLog" class="note"></div>
+      </div>
+      <div class="tpl-grid" id="tplGrid"></div>
+    </section>
+  </main>
+</div>
+
+<dialog id="viewer">
+  <div class="dlg-head">
+    <strong id="viewerTitle"></strong>
+    <div class="toolbar">
+      <a class="btn" id="viewerDownload" href="#">⬇ Download original (print)</a>
+      <button id="viewerClose">✕</button>
+    </div>
+  </div>
+  <div class="dlg-body">
+    <img id="viewerImg" alt="">
+    <p class="muted" id="viewerSize" style="text-align:center"></p>
+    <div class="related" id="viewerRelated"></div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var state = { page: 1, total: 0, pageSize: 30, rows: [] };
+  var $ = function (id) { return document.getElementById(id); };
+
+  function api(path, opts) {
+    opts = opts || {};
+    opts.credentials = 'same-origin';
+    return fetch(path, opts).then(function (res) {
+      if (res.status === 401 && path.indexOf('/login') < 0) { showLogin(); throw new Error('Not logged in'); }
+      return res;
+    });
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function fmtDate(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleString(undefined, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function fmtBytes(n) {
+    if (!n) return '';
+    return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB';
+  }
+
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = src; s.onload = resolve; s.onerror = function () { reject(new Error('Could not load ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  // ---------- login ----------
+  function showLogin() {
+    $('app').classList.add('hidden');
+    $('login').classList.remove('hidden');
+    $('password').focus();
+  }
+  function showApp() {
+    $('login').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    load();
+    loadCounter();
+  }
+
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('loginError').textContent = '';
+    api('/api/admin/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: $('password').value })
+    }).then(function (res) {
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        $('password').value = '';
+        showApp();
+      });
+    }).catch(function (err) { $('loginError').textContent = err.message; });
+  });
+
+  $('logoutBtn').addEventListener('click', function () {
+    api('/api/admin/logout', { method: 'POST' }).then(showLogin);
+  });
+
+  // ---------- list ----------
+  function filterParams() {
+    var p = new URLSearchParams();
+    if ($('q').value.trim()) p.set('q', $('q').value.trim());
+    if ($('from').value) p.set('from', $('from').value);
+    if ($('to').value) p.set('to', $('to').value);
+    p.set('kind', $('kind').value);
+    return p;
+  }
+
+  function load() {
+    var p = filterParams();
+    p.set('page', state.page);
+    $('csvBtn').href = '/api/admin/export.csv?' + filterParams().toString();
+    $('rows').innerHTML = '<tr><td colspan="5" class="muted">Loading…</td></tr>';
+    api('/api/admin/cards?' + p.toString()).then(function (res) { return res.json(); }).then(function (data) {
+      state.rows = data.rows || [];
+      state.total = data.total || 0;
+      state.pageSize = data.pageSize || 30;
+      var s = data.stats || {};
+      $('statCards').textContent = (s.cards || 0).toLocaleString();
+      $('statToday').textContent = (s.last24h || 0).toLocaleString();
+      $('statMockups').textContent = (s.mockups || 0).toLocaleString();
+      $('statInvoices').textContent = (s.invoices || 0).toLocaleString();
+      render();
+    }).catch(function (err) {
+      if (err.message !== 'Not logged in') $('rows').innerHTML = '<tr><td colspan="5">Could not load records: ' + esc(err.message) + '</td></tr>';
+    });
+  }
+
+  function render() {
+    if (!state.rows.length) {
+      $('rows').innerHTML = '<tr><td colspan="5" class="muted">No records yet.</td></tr>';
+    } else {
+      $('rows').innerHTML = state.rows.map(function (r, i) {
+        var img = r.image_bytes
+          ? '<img loading="lazy" src="/api/admin/image/' + r.id + '" alt="" data-view="' + i + '">'
+          : '<div class="noimg">' + (r.drive_url ? '<a href="' + esc(r.drive_url) + '" target="_blank" rel="noopener">View on Drive</a>' : 'No image') + '</div>';
+        var related = (r.related || []).length ? '<span class="tag">' + r.related.length + ' mockup' + (r.related.length > 1 ? 's' : '') + '</span> ' : '';
+        return '<tr>' +
+          '<td class="date">' + esc(fmtDate(r.created_at)) + '<br><span class="tag">' + esc(r.kind) + '</span>' + (r.source === 'import' ? ' <span class="tag">imported</span>' : '') + '</td>' +
+          '<td class="msg">' + esc(r.original_message) + '</td>' +
+          '<td class="msg">' + esc(r.reply) + '</td>' +
+          '<td class="card">' + img + '</td>' +
+          '<td class="actions">' +
+            (r.image_bytes ? '<a class="btn" href="/api/admin/image/' + r.id + '?download=1">⬇ Original</a>' : '') +
+            '<button data-upload="' + r.id + '">⬆ ' + (r.image_bytes ? 'Replace image' : 'Upload image') + '</button>' +
+            '<button class="danger" data-del="' + r.id + '">Delete</button>' +
+            '<div class="file">' + esc(r.file_name || '') + '</div>' + related +
+            (r.image_bytes ? '<span class="tag">' + fmtBytes(r.image_bytes) + '</span>' : '') +
+          '</td></tr>';
+      }).join('');
+    }
+    var pages = Math.max(1, Math.ceil(state.total / state.pageSize));
+    $('pageInfo').textContent = state.total.toLocaleString() + ' records · page ' + state.page + ' of ' + pages;
+    $('prevBtn').disabled = state.page <= 1;
+    $('nextBtn').disabled = state.page >= pages;
+  }
+
+  $('filters').addEventListener('submit', function (e) { e.preventDefault(); state.page = 1; load(); });
+  $('kind').addEventListener('change', function () { state.page = 1; load(); });
+  $('prevBtn').addEventListener('click', function () { state.page--; load(); window.scrollTo(0, 0); });
+  $('nextBtn').addEventListener('click', function () { state.page++; load(); window.scrollTo(0, 0); });
+
+  $('rows').addEventListener('click', function (e) {
+    var view = e.target.getAttribute('data-view');
+    if (view != null) return openViewer(state.rows[Number(view)]);
+    var up = e.target.getAttribute('data-upload');
+    if (up) return uploadForRecord(up);
+    var del = e.target.getAttribute('data-del');
+    if (del && confirm('Delete this record and its image? This cannot be undone.')) {
+      api('/api/admin/cards/' + del, { method: 'DELETE' }).then(load);
+    }
+  });
+
+  function uploadForRecord(id) {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function () {
+      var file = input.files[0];
+      if (!file) return;
+      if (file.size > MAX_UPLOAD) return alert('This image is over 5.8 MB. Please save it as a smaller PNG/JPG and try again.');
+      api('/api/admin/import-image', {
+        method: 'POST',
+        headers: { 'Content-Type': file.type || 'image/png', 'X-File-Name': encodeURIComponent(file.name), 'X-Record-Id': String(id) },
+        body: file
+      }).then(function (res) { return res.json(); }).then(function (d) {
+        if (d.error) alert('Upload failed: ' + d.error);
+        load();
+      }).catch(function (err) { alert('Upload failed: ' + err.message); });
+    };
+    input.click();
+  }
+
+  // ---------- viewer ----------
+  function openViewer(r) {
+    $('viewerTitle').textContent = r.file_name || ('Card #' + r.id);
+    $('viewerDownload').href = '/api/admin/image/' + r.id + '?download=1';
+    $('viewerSize').textContent = 'Loading…';
+    var img = $('viewerImg');
+    img.onload = function () {
+      var w = img.naturalWidth, h = img.naturalHeight;
+      $('viewerSize').textContent = w + ' × ' + h + ' px · ' + fmtBytes(r.image_bytes) +
+        ' · prints up to ' + (w / 300 * 2.54).toFixed(1) + ' × ' + (h / 300 * 2.54).toFixed(1) + ' cm at 300 dpi';
+    };
+    img.src = '/api/admin/image/' + r.id;
+    $('viewerRelated').innerHTML = (r.related || []).map(function (m) {
+      return '<a class="btn" href="/api/admin/image/' + m.id + '?download=1">⬇ ' + esc(m.file_name) + '</a>';
+    }).join('');
+    $('viewer').showModal();
+  }
+  $('viewerClose').addEventListener('click', function () { $('viewer').close(); });
+  $('viewer').addEventListener('click', function (e) { if (e.target === $('viewer')) $('viewer').close(); });
+
+  // ---------- ZIP download ----------
+  $('zipBtn').addEventListener('click', function () {
+    var btn = $('zipBtn');
+    var p = filterParams(); p.set('all', '1');
+    btn.disabled = true;
+    $('zipStatus').classList.remove('hidden');
+    $('zipText').textContent = 'Preparing…';
+    $('zipBar').style.width = '0';
+    Promise.all([
+      window.JSZip ? null : loadScript('/admin/vendor/jszip.min.js'),
+      api('/api/admin/cards?' + p.toString()).then(function (res) { return res.json(); })
+    ]).then(function (out) {
+      var rows = out[1].rows || [];
+      var items = [];
+      rows.forEach(function (r) {
+        if (r.image_bytes) items.push({ id: r.id, name: r.file_name || ('card-' + r.id + '.png') });
+        if ($('zipMockups').checked) (r.related || []).forEach(function (m) { items.push({ id: m.id, name: 'mockups/' + m.file_name }); });
+      });
+      if (!items.length) throw new Error('No images in the current filter.');
+      var zip = new JSZip();
+      var done = 0;
+      var queue = items.slice();
+      function worker() {
+        var item = queue.shift();
+        if (!item) return Promise.resolve();
+        return api('/api/admin/image/' + item.id).then(function (res) { return res.blob(); }).then(function (blob) {
+          zip.file(item.name, blob);
+          done++;
+          $('zipBar').style.width = (done / items.length * 100) + '%';
+          $('zipText').textContent = 'Downloading ' + done + ' / ' + items.length + '…';
+        }).then(worker);
+      }
+      return Promise.all([worker(), worker(), worker()]).then(function () {
+        $('zipText').textContent = 'Creating ZIP…';
+        return zip.generateAsync({ type: 'blob' });
+      });
+    }).then(function (blob) {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'trash-talk-cards-' + new Date().toISOString().slice(0, 10) + '.zip';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 10000);
+      $('zipText').textContent = 'Done.';
+    }).catch(function (err) {
+      $('zipText').textContent = err.message;
+    }).then(function () { btn.disabled = false; });
+  });
+
+  // ---------- import: records ----------
+  var sheet = { book: null, rows: [], headers: [] };
+  var guesses = {
+    timestamp: /time|date|日期|時間|时间/i,
+    message: /^(message|original|input|user|trash|原|留言)|originalmessage|user.?message/i,
+    reply: /reply|transformed|^ai|airesponse|response|output|回覆|回复/i,
+    fileName: /file|design/i,
+    driveUrl: /drive|url|link/i
+  };
+
+  $('importToggle').addEventListener('click', function () { $('importPanel').classList.toggle('hidden'); });
+
+  function log(msg) {
+    $('importLog').classList.remove('hidden');
+    $('importLog').textContent += msg + '\n';
+    $('importLog').scrollTop = $('importLog').scrollHeight;
+  }
+
+  $('sheetFile').addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    (window.XLSX ? Promise.resolve() : loadScript('/admin/vendor/xlsx.full.min.js'))
+      .then(function () { return /\.csv$/i.test(file.name) ? file.text() : file.arrayBuffer(); })
+      .then(function (data) {
+        // CSV: keep every cell as typed text so "01/03/2026" stays 1 March (DD/MM),
+        // the server reads the dates in Hong Kong time.
+        sheet.book = typeof data === 'string'
+          ? XLSX.read(data, { type: 'string', raw: true })
+          : XLSX.read(data, { type: 'array', cellDates: true });
+        var tabs = sheet.book.SheetNames;
+        $('sheetTab').innerHTML = tabs.map(function (t) { return '<option>' + esc(t) + '</option>'; }).join('');
+        $('sheetTab').classList.toggle('hidden', tabs.length < 2);
+        readTab(tabs[0]);
+      }).catch(function (err) { log('Could not read file: ' + err.message); });
+  });
+  $('sheetTab').addEventListener('change', function () { readTab(this.value); });
+
+  function readTab(name) {
+    var ws = sheet.book.Sheets[name];
+    sheet.rows = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false, dateNF: 'yyyy-mm-dd hh:mm:ss' });
+    sheet.headers = sheet.rows.length ? Object.keys(sheet.rows[0]) : [];
+    var used = {};
+    document.querySelectorAll('#mapping select').forEach(function (sel) {
+      var field = sel.getAttribute('data-field');
+      var guess = sheet.headers.find(function (h) { return !used[h] && guesses[field].test(h.replace(/\s+/g, '')); }) || '';
+      if (guess) used[guess] = true;
+      sel.innerHTML = '<option value="">— none —</option>' + sheet.headers.map(function (h) {
+        return '<option' + (h === guess ? ' selected' : '') + '>' + esc(h) + '</option>';
+      }).join('');
+    });
+    $('mapping').classList.remove('hidden');
+    $('sheetPreview').textContent = sheet.rows.length + ' rows found in "' + name + '".';
+  }
+
+  $('importRowsBtn').addEventListener('click', function () {
+    var map = {};
+    document.querySelectorAll('#mapping select').forEach(function (sel) { map[sel.getAttribute('data-field')] = sel.value; });
+    if (!map.message && !map.reply && !map.fileName) return alert('Pick at least the user message, AI reply or file name column.');
+    var rows = sheet.rows.map(function (r) {
+      var out = {};
+      Object.keys(map).forEach(function (k) { if (map[k]) out[k] = String(r[map[k]] == null ? '' : r[map[k]]).trim(); });
+      return out;
+    });
+    var btn = this; btn.disabled = true;
+    var added = 0, skipped = 0, i = 0, size = 200;
+    function next() {
+      if (i >= rows.length) {
+        log('Records import finished: ' + added + ' added, ' + skipped + ' skipped.');
+        btn.disabled = false; state.page = 1; load();
+        return;
+      }
+      var batch = rows.slice(i, i + size);
+      i += size;
+      api('/api/admin/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rows: batch }) })
+        .then(function (res) { return res.json(); })
+        .then(function (d) {
+          added += d.added || 0; skipped += d.skipped || 0;
+          $('importBar').style.width = Math.min(100, i / rows.length * 100) + '%';
+          next();
+        }).catch(function (err) { log('Import stopped: ' + err.message); btn.disabled = false; });
+    }
+    log('Importing ' + rows.length + ' rows…');
+    next();
+  });
+
+  // ---------- import: images ----------
+  var MAX_UPLOAD = 5.8 * 1024 * 1024;
+  $('imageFiles').addEventListener('change', function () {
+    var input = this;
+    var files = Array.prototype.slice.call(input.files);
+    if (!files.length) return;
+    var zips = files.filter(function (f) { return /\.zip$/i.test(f.name); });
+    var images = files.filter(function (f) { return !/\.zip$/i.test(f.name); }).map(function (f) {
+      return { name: f.name, blob: f, date: f.lastModified };
+    });
+    var unzip = zips.length
+      ? (window.JSZip ? Promise.resolve() : loadScript('/admin/vendor/jszip.min.js')).then(function () {
+          return Promise.all(zips.map(function (z) {
+            return JSZip.loadAsync(z).then(function (zip) {
+              var entries = [];
+              zip.forEach(function (path, entry) {
+                if (!entry.dir && /\.(png|jpe?g|webp)$/i.test(path)) entries.push(entry);
+              });
+              return Promise.all(entries.map(function (entry) {
+                return entry.async('blob').then(function (blob) {
+                  var type = /\.png$/i.test(entry.name) ? 'image/png' : /\.webp$/i.test(entry.name) ? 'image/webp' : 'image/jpeg';
+                  images.push({ name: entry.name.split('/').pop(), blob: new Blob([blob], { type: type }), date: entry.date && entry.date.getTime() });
+                });
+              }));
+            });
+          }));
+        })
+      : Promise.resolve();
+
+    unzip.then(function () {
+      log('Uploading ' + images.length + ' image(s)…');
+      var done = 0, matched = 0, failed = 0;
+      var queue = images.slice();
+      function worker() {
+        var img = queue.shift();
+        if (!img) return Promise.resolve();
+        if (img.blob.size > MAX_UPLOAD) {
+          log('Skipped (over 5.8 MB): ' + img.name); failed++;
+          return worker();
+        }
+        return api('/api/admin/import-image', {
+          method: 'POST',
+          headers: { 'Content-Type': img.blob.type || 'image/png', 'X-File-Name': encodeURIComponent(img.name), 'X-File-Date': img.date ? new Date(img.date).toISOString() : '' },
+          body: img.blob
+        }).then(function (res) { return res.json(); }).then(function (d) {
+          if (d.error) { failed++; log('Failed: ' + img.name + ' — ' + d.error); }
+          else if (d.matched) matched++;
+        }).catch(function () { failed++; log('Failed: ' + img.name); }).then(function () {
+          done++;
+          $('importBar').style.width = (done / images.length * 100) + '%';
+          return worker();
+        });
+      }
+      return Promise.all([worker(), worker(), worker()]).then(function () {
+        log('Images finished: ' + (done - failed) + ' uploaded (' + matched + ' matched an existing record), ' + failed + ' failed.');
+        input.value = ''; state.page = 1; load();
+      });
+    }).catch(function (err) { log('Could not read files: ' + err.message); });
+  });
+
+  // ---------- tabs ----------
+  var loadedTabs = { cards: true };
+  $('tabs').addEventListener('click', function (e) {
+    var tab = e.target.getAttribute('data-tab');
+    if (!tab) return;
+    document.querySelectorAll('#tabs [data-tab]').forEach(function (b) { b.classList.toggle('active', b === e.target); });
+    document.querySelectorAll('.tab').forEach(function (s) { s.classList.toggle('hidden', s.id !== 'tab-' + tab); });
+    if (!loadedTabs[tab]) {
+      loadedTabs[tab] = true;
+      if (tab === 'orders') loadOrders();
+      if (tab === 'leads') loadLeads();
+      if (tab === 'templates') loadTemplates();
+    }
+  });
+
+  // ---------- counter ----------
+  function loadCounter() {
+    api('/api/admin/counter').then(function (res) { return res.json(); }).then(function (d) {
+      $('counterValue').textContent = typeof d.total === 'number' ? d.total.toLocaleString() : '–';
+    }).catch(function () {});
+  }
+  $('counterForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var n = parseInt($('counterInput').value, 10);
+    if (!(n >= 0)) return alert('Enter a whole number, e.g. 402.');
+    if (!confirm('Set the counter to ' + n + '? The next card will be number ' + (n + 1) + '.')) return;
+    api('/api/admin/counter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ total: n }) })
+      .then(function (res) { return res.json(); })
+      .then(function (d) {
+        if (d.error) throw new Error(d.error);
+        $('counterInput').value = '';
+        $('counterValue').textContent = d.total.toLocaleString();
+      }).catch(function (err) { alert('Could not set counter: ' + err.message); });
+  });
+
+  // ---------- shared: read a CSV / Excel file into rows keyed by header ----------
+  function readSheetRows(file) {
+    return (window.XLSX ? Promise.resolve() : loadScript('/admin/vendor/xlsx.full.min.js'))
+      .then(function () { return /\.csv$/i.test(file.name) ? file.text() : file.arrayBuffer(); })
+      .then(function (data) {
+        var book = typeof data === 'string'
+          ? XLSX.read(data, { type: 'string', raw: true })
+          : XLSX.read(data, { type: 'array', cellDates: true });
+        return XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]], { defval: '', raw: false, dateNF: 'yyyy-mm-dd hh:mm:ss' });
+      });
+  }
+  function pick(row, names) {
+    var keys = Object.keys(row);
+    for (var i = 0; i < names.length; i++) {
+      var want = names[i].toLowerCase().replace(/\s+/g, '');
+      var key = keys.find(function (k) { return k.toLowerCase().replace(/\s+/g, '') === want; });
+      if (key && String(row[key]).trim()) return String(row[key]).trim();
+    }
+    return '';
+  }
+  function sendInBatches(path, rows, extra, onProgress) {
+    var totals = {}, i = 0, size = 200;
+    function next() {
+      if (i >= rows.length) return Promise.resolve(totals);
+      var body = Object.assign({ rows: rows.slice(i, i + size) }, extra || {});
+      i += size;
+      return api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        .then(function (res) { return res.json(); })
+        .then(function (d) {
+          if (d.error) throw new Error(d.error);
+          Object.keys(d).forEach(function (k) { totals[k] = (totals[k] || 0) + d[k]; });
+          if (onProgress) onProgress(Math.min(i, rows.length), rows.length);
+          return next();
+        });
+    }
+    return next();
+  }
+  function cardThumb(cardId) {
+    return cardId
+      ? '<img loading="lazy" src="/api/admin/image/' + cardId + '" alt="" data-open="' + cardId + '">'
+      : '<div class="noimg">No image on site yet</div>';
+  }
+  function openImage(id, title) {
+    openViewer({ id: id, file_name: title, related: [] });
+  }
+
+  // ---------- orders ----------
+  var orders = { page: 1, total: 0, pageSize: 50, rows: [] };
+  var STATUS_LABELS = { pending_payment: 'Pending payment', paid: 'Paid', printed: 'Printed', shipped: 'Shipped', cancelled: 'Cancelled' };
+  function orderParams() {
+    var p = new URLSearchParams();
+    if ($('oq').value.trim()) p.set('q', $('oq').value.trim());
+    if ($('ostatus').value) p.set('status', $('ostatus').value);
+    if ($('ofrom').value) p.set('from', $('ofrom').value);
+    if ($('oto').value) p.set('to', $('oto').value);
+    return p;
+  }
+  function statusSelect(id, value) {
+    return '<select class="status" data-order="' + id + '" data-v="' + esc(value) + '">' +
+      Object.keys(STATUS_LABELS).map(function (k) {
+        return '<option value="' + k + '"' + (k === value ? ' selected' : '') + '>' + STATUS_LABELS[k] + '</option>';
+      }).join('') + '</select>';
+  }
+  function loadOrders() {
+    var p = orderParams();
+    $('orderCsvBtn').href = '/api/admin/orders.csv?' + p.toString();
+    p.set('page', orders.page);
+    $('orderRows').innerHTML = '<tr><td colspan="6" class="muted">Loading…</td></tr>';
+    api('/api/admin/orders?' + p.toString()).then(function (res) { return res.json(); }).then(function (d) {
+      orders.rows = d.rows || []; orders.total = d.total || 0; orders.pageSize = d.pageSize || 50;
+      var counts = {};
+      (d.stats || []).forEach(function (s) { counts[s.status] = s.count; });
+      $('orderStats').innerHTML = Object.keys(STATUS_LABELS).map(function (k) {
+        return '<div class="stat"><b>' + (counts[k] || 0) + '</b><span>' + STATUS_LABELS[k] + '</span></div>';
+      }).join('');
+      renderOrders();
+    }).catch(function (err) {
+      if (err.message !== 'Not logged in') $('orderRows').innerHTML = '<tr><td colspan="6">Could not load orders: ' + esc(err.message) + '</td></tr>';
+    });
+  }
+  function renderOrders() {
+    $('orderRows').innerHTML = !orders.rows.length ? '<tr><td colspan="6" class="muted">No orders yet.</td></tr>' : orders.rows.map(function (r) {
+      var money = [
+        r.subtotal ? 'Subtotal ' + esc(r.subtotal) : '',
+        (r.shipping_region || r.shipping_fee) ? 'Shipping ' + esc([r.shipping_region, r.shipping_fee].filter(Boolean).join(' · ')) : '',
+        r.total ? '<b>Total ' + esc(r.total) + '</b>' : ''
+      ].filter(Boolean).join('<br>');
+      var links = '<div class="links">' +
+        (r.card_id ? '<a href="/api/admin/image/' + r.card_id + '?download=1">⬇ Card</a>' : '') +
+        (r.invoice_id ? '<a href="#" data-open="' + r.invoice_id + '" data-title="' + esc(r.invoice_file) + '">🧾 Invoice</a>' : '') +
+        '</div>';
+      return '<tr>' +
+        '<td class="date">' + esc(fmtDate(r.created_at)) + '<br><b>' + esc(r.invoice_no || '') + '</b>' +
+          (r.source === 'import' ? '<br><span class="tag">imported</span>' : '') + '</td>' +
+        '<td class="small"><b>' + esc(r.customer_name) + '</b><br>' + esc(r.customer_email) +
+          (r.customer_phone ? '<br>' + esc(r.customer_phone) : '') + '<br><span class="muted">' + esc(r.shipping_address) + '</span></td>' +
+        '<td class="small">' + esc(r.products) + '<br>' + money + '</td>' +
+        '<td class="small">' + (r.original_message ? '💬 ' + esc(r.original_message) : '') +
+          (r.ai_response ? '<br>🤖 ' + esc(r.ai_response) : '') + '</td>' +
+        '<td class="card">' + cardThumb(r.card_id) + '<div class="file">' + esc(r.design_file) + '</div>' + links + '</td>' +
+        '<td class="actions">' + statusSelect(r.id, r.status) +
+          (r.customer_confirmed_at ? '<div class="note">Customer clicked "I\'ve paid"<br>' + esc(fmtDate(r.customer_confirmed_at)) + '</div>' : '') +
+          (r.email_sent ? '<div class="note">Email: ' + esc(r.email_sent) + '</div>' : '') +
+          '<div><button class="danger" data-del-order="' + r.id + '">Delete</button></div></td>' +
+      '</tr>';
+    }).join('');
+    var pages = Math.max(1, Math.ceil(orders.total / orders.pageSize));
+    $('orderPageInfo').textContent = orders.total.toLocaleString() + ' orders · page ' + orders.page + ' of ' + pages;
+    $('orderPrev').disabled = orders.page <= 1;
+    $('orderNext').disabled = orders.page >= pages;
+  }
+  $('orderFilters').addEventListener('submit', function (e) { e.preventDefault(); orders.page = 1; loadOrders(); });
+  $('ostatus').addEventListener('change', function () { orders.page = 1; loadOrders(); });
+  $('orderPrev').addEventListener('click', function () { orders.page--; loadOrders(); window.scrollTo(0, 0); });
+  $('orderNext').addEventListener('click', function () { orders.page++; loadOrders(); window.scrollTo(0, 0); });
+  $('orderRows').addEventListener('change', function (e) {
+    var id = e.target.getAttribute('data-order');
+    if (!id) return;
+    var sel = e.target;
+    api('/api/admin/orders/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: sel.value }) })
+      .then(function (res) { return res.json(); })
+      .then(function (d) { if (d.error) throw new Error(d.error); sel.setAttribute('data-v', d.status); })
+      .catch(function (err) { alert('Could not change status: ' + err.message); loadOrders(); });
+  });
+  $('orderRows').addEventListener('click', function (e) {
+    var open = e.target.getAttribute('data-open');
+    if (open) { e.preventDefault(); return openImage(open, e.target.getAttribute('data-title') || ''); }
+    var del = e.target.getAttribute('data-del-order');
+    if (del && confirm('Delete this order? This cannot be undone.')) api('/api/admin/orders/' + del, { method: 'DELETE' }).then(loadOrders);
+  });
+  $('orderImportFile').addEventListener('change', function () {
+    var input = this;
+    var files = Array.prototype.slice.call(input.files);
+    // Orders first, Invoices second, whatever order they were picked in.
+    files.sort(function (a, b) { return (/invoice/i.test(a.name) ? 1 : 0) - (/invoice/i.test(b.name) ? 1 : 0); });
+    var out = $('orderImportLog');
+    out.textContent = '';
+    files.reduce(function (chain, file) {
+      return chain.then(function () { return readSheetRows(file); }).then(function (rows) {
+        var headers = rows.length ? Object.keys(rows[0]).map(function (k) { return k.toLowerCase().replace(/\s+/g, ''); }) : [];
+        var mode = headers.indexOf('airesponse') >= 0 || headers.indexOf('subtotal') >= 0 ? 'invoices' : 'orders';
+        var mapped = rows.map(function (r) {
+          return {
+            date: pick(r, ['Timestamp', 'Date']), invoiceNo: pick(r, ['Invoice #', 'Invoice']),
+            name: pick(r, ['Customer Name', 'Name']), email: pick(r, ['Email', 'Customer Email']),
+            phone: pick(r, ['Phone']), address: pick(r, ['Shipping Address', 'Address']),
+            products: pick(r, ['Products']), subtotal: pick(r, ['Subtotal']),
+            shippingRegion: pick(r, ['Shipping Region']), shippingFee: pick(r, ['Shipping Fee']),
+            shippingUsd: pick(r, ['Shipping (USD)']), total: pick(r, ['Total']),
+            originalMessage: pick(r, ['Original Message']), aiResponse: pick(r, ['AI Response']),
+            designFile: pick(r, ['Design File']), status: pick(r, ['Payment Status']), emailSent: pick(r, ['Email Sent'])
+          };
+        });
+        out.textContent += file.name + ': importing ' + mapped.length + ' rows as ' + mode + '… ';
+        return sendInBatches('/api/admin/orders/import', mapped, { mode: mode }).then(function (t) {
+          out.textContent += (t.created || 0) + ' added, ' + (t.updated || 0) + ' merged/updated. ';
+        });
+      });
+    }, Promise.resolve()).catch(function (err) { out.textContent += 'Stopped: ' + err.message; })
+      .then(function () { input.value = ''; orders.page = 1; loadOrders(); });
+  });
+
+  // ---------- email leads ----------
+  var leads = { page: 1, total: 0, pageSize: 50, rows: [] };
+  var LEAD_STATUSES = ['new_lead', 'emailed', 'contacted', 'customer', 'unsubscribed'];
+  function leadParams() {
+    var p = new URLSearchParams();
+    if ($('lq').value.trim()) p.set('q', $('lq').value.trim());
+    if ($('lfrom').value) p.set('from', $('lfrom').value);
+    if ($('lto').value) p.set('to', $('lto').value);
+    return p;
+  }
+  function loadLeads() {
+    var p = leadParams();
+    $('leadCsvBtn').href = '/api/admin/leads.csv?' + p.toString();
+    p.set('page', leads.page);
+    $('leadRows').innerHTML = '<tr><td colspan="6" class="muted">Loading…</td></tr>';
+    api('/api/admin/leads?' + p.toString()).then(function (res) { return res.json(); }).then(function (d) {
+      leads.rows = d.rows || []; leads.total = d.total || 0; leads.pageSize = d.pageSize || 50;
+      $('leadRows').innerHTML = !leads.rows.length ? '<tr><td colspan="6" class="muted">No email leads yet.</td></tr>' : leads.rows.map(function (r) {
+        var options = LEAD_STATUSES.indexOf(r.status) < 0 ? [r.status].concat(LEAD_STATUSES) : LEAD_STATUSES;
+        return '<tr>' +
+          '<td class="date">' + esc(fmtDate(r.created_at)) + (r.source === 'import' ? '<br><span class="tag">imported</span>' : '') + '</td>' +
+          '<td><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a></td>' +
+          '<td class="file">' + esc(r.design_file) + '</td>' +
+          '<td class="card">' + cardThumb(r.card_id) + '</td>' +
+          '<td><select class="status" data-lead="' + r.id + '">' + options.map(function (o) {
+            return '<option' + (o === r.status ? ' selected' : '') + ' value="' + esc(o) + '">' + esc(o || '—') + '</option>';
+          }).join('') + '</select></td>' +
+          '<td class="actions"><button class="danger" data-del-lead="' + r.id + '">Delete</button></td>' +
+        '</tr>';
+      }).join('');
+      var pages = Math.max(1, Math.ceil(leads.total / leads.pageSize));
+      $('leadPageInfo').textContent = leads.total.toLocaleString() + ' emails · page ' + leads.page + ' of ' + pages;
+      $('leadPrev').disabled = leads.page <= 1;
+      $('leadNext').disabled = leads.page >= pages;
+    }).catch(function (err) {
+      if (err.message !== 'Not logged in') $('leadRows').innerHTML = '<tr><td colspan="6">Could not load email leads: ' + esc(err.message) + '</td></tr>';
+    });
+  }
+  $('leadFilters').addEventListener('submit', function (e) { e.preventDefault(); leads.page = 1; loadLeads(); });
+  $('leadPrev').addEventListener('click', function () { leads.page--; loadLeads(); window.scrollTo(0, 0); });
+  $('leadNext').addEventListener('click', function () { leads.page++; loadLeads(); window.scrollTo(0, 0); });
+  $('leadRows').addEventListener('change', function (e) {
+    var id = e.target.getAttribute('data-lead');
+    if (!id) return;
+    api('/api/admin/leads/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: e.target.value }) })
+      .then(function (res) { return res.json(); })
+      .then(function (d) { if (d.error) throw new Error(d.error); })
+      .catch(function (err) { alert('Could not change status: ' + err.message); loadLeads(); });
+  });
+  $('leadRows').addEventListener('click', function (e) {
+    var open = e.target.getAttribute('data-open');
+    if (open) return openImage(open, '');
+    var del = e.target.getAttribute('data-del-lead');
+    if (del && confirm('Delete this email lead?')) api('/api/admin/leads/' + del, { method: 'DELETE' }).then(loadLeads);
+  });
+  $('leadImportFile').addEventListener('change', function () {
+    var input = this, file = input.files[0];
+    if (!file) return;
+    var out = $('leadImportLog');
+    out.textContent = 'Reading ' + file.name + '…';
+    readSheetRows(file).then(function (rows) {
+      var mapped = rows.map(function (r) {
+        return { date: pick(r, ['Timestamp', 'Date']), email: pick(r, ['Email']), designFile: pick(r, ['Design File']), status: pick(r, ['Status']) };
+      }).filter(function (r) { return r.email; });
+      out.textContent = 'Importing ' + mapped.length + ' emails… ';
+      return sendInBatches('/api/admin/leads/import', mapped).then(function (t) {
+        out.textContent += (t.created || 0) + ' added, ' + (t.skipped || 0) + ' already there.';
+      });
+    }).catch(function (err) { out.textContent += ' Stopped: ' + err.message; })
+      .then(function () { input.value = ''; leads.page = 1; loadLeads(); });
+  });
+
+  // ---------- templates ----------
+  var templates = [];
+  var CHUNK = 4 * 1024 * 1024;
+  var LIGHT_MAX_WIDTH = 3780; // print width of a card (320 mm at 300 dpi)
+
+  function loadTemplates() {
+    api('/api/admin/templates').then(function (res) { return res.json(); }).then(function (d) {
+      templates = d.rows || [];
+      renderTemplates();
+    }).catch(function (err) {
+      if (err.message !== 'Not logged in') $('tplGrid').innerHTML = '<p>Could not load templates: ' + esc(err.message) + '</p>';
+    });
+  }
+  function areaStyle(t) {
+    return 'left:' + (t.area_x * 100) + '%;top:' + (t.area_y * 100) + '%;width:' + (t.area_width * 100) + '%;height:' + (t.area_height * 100) + '%';
+  }
+  function renderTemplates() {
+    var on = templates.filter(function (t) { return t.enabled; }).length;
+    $('tplCount').textContent = templates.length + ' templates · ' + on + ' switched on';
+    $('tplGrid').innerHTML = !templates.length ? '<p class="muted">No templates uploaded yet — the main page is still using the Google Drive folder.</p>' : templates.map(function (t) {
+      var num = function (field, label, extra) {
+        return '<label class="' + (extra || '') + '">' + label + '<input type="number" step="0.01" min="0" max="1" data-field="' + field + '" value="' + t[field] + '"></label>';
+      };
+      return '<div class="tpl' + (t.enabled ? '' : ' off') + '" data-tpl="' + t.id + '">' +
+        '<div class="tpl-img"><img loading="lazy" src="' + esc(t.url) + '" alt=""><div class="tpl-area" style="' + areaStyle(t) + '">TEXT</div></div>' +
+        '<div class="fields">' +
+          '<label class="full">Name (mood words)<input data-field="name" value="' + esc(t.name) + '"></label>' +
+          num('area_x', 'X') + num('area_y', 'Y') + num('area_width', 'Width') + num('area_height', 'Height') +
+          '<label class="wide">Align<select data-field="align">' + ['left', 'center', 'right'].map(function (a) {
+            return '<option' + (a === t.align ? ' selected' : '') + '>' + a + '</option>';
+          }).join('') + '</select></label>' +
+          '<label class="wide">Font size range<input data-field="font_size_range" placeholder="optional" value="' + esc(t.font_size_range) + '"></label>' +
+        '</div>' +
+        '<div class="row">' +
+          '<label><input type="checkbox" data-field="enabled"' + (t.enabled ? ' checked' : '') + '> On</label>' +
+          (/transparent/i.test(t.name) ? '<span class="tag">transparent</span>' : '') +
+          '<span class="tag">' + (t.image_width ? t.image_width + '×' + t.image_height + ' · ' : '') + fmtBytes(t.image_bytes) + '</span>' +
+        '</div>' +
+        '<div class="row">' +
+          '<button class="primary" data-act="save">Save</button>' +
+          '<button data-act="replace">Replace image</button>' +
+          '<a class="btn" href="' + esc(t.originalUrl) + '" download="' + esc(t.name) + '">⬇ Original</a>' +
+          '<button class="danger" data-act="delete">Delete</button>' +
+          '<span class="note" data-status></span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+  function tplValues(card) {
+    var v = {};
+    card.querySelectorAll('[data-field]').forEach(function (el) {
+      var f = el.getAttribute('data-field');
+      v[f] = el.type === 'checkbox' ? el.checked : el.type === 'number' ? parseFloat(el.value) : el.value;
+    });
+    return v;
+  }
+  $('tplGrid').addEventListener('input', function (e) {
+    var card = e.target.closest('[data-tpl]');
+    if (!card) return;
+    var v = tplValues(card);
+    card.querySelector('.tpl-area').setAttribute('style', areaStyle(v));
+    card.classList.toggle('off', !v.enabled);
+    card.querySelector('[data-status]').textContent = 'Not saved';
+  });
+  $('tplGrid').addEventListener('click', function (e) {
+    var act = e.target.getAttribute('data-act');
+    var card = e.target.closest('[data-tpl]');
+    if (!act || !card) return;
+    var id = card.getAttribute('data-tpl');
+    var status = card.querySelector('[data-status]');
+    if (act === 'save') {
+      status.textContent = 'Saving…';
+      api('/api/admin/templates/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(tplValues(card)) })
+        .then(function (res) { return res.json(); })
+        .then(function (d) {
+          if (d.error) throw new Error(d.error);
+          templates = templates.map(function (t) { return t.id === d.row.id ? d.row : t; });
+          status.textContent = 'Saved ✓';
+          var on = templates.filter(function (t) { return t.enabled; }).length;
+          $('tplCount').textContent = templates.length + ' templates · ' + on + ' switched on';
+        }).catch(function (err) { status.textContent = 'Error: ' + err.message; });
+    }
+    if (act === 'delete' && confirm('Delete this template? The original image is removed too.')) {
+      api('/api/admin/templates/' + id, { method: 'DELETE' }).then(loadTemplates);
+    }
+    if (act === 'replace') {
+      var input = document.createElement('input');
+      input.type = 'file'; input.accept = 'image/*';
+      input.onchange = function () {
+        if (!input.files[0]) return;
+        status.textContent = 'Uploading…';
+        uploadTemplate(input.files[0], Number(id)).then(function () { loadTemplates(); })
+          .catch(function (err) { status.textContent = 'Error: ' + err.message; });
+      };
+      input.click();
+    }
+  });
+
+  function readImage(file) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Not a readable image')); };
+      img.src = url;
+    });
+  }
+  // Lighter copy for visitors: WebP (keeps transparency), no wider than a printed card.
+  function makeLightCopy(img, file) {
+    var scale = Math.min(1, LIGHT_MAX_WIDTH / img.naturalWidth);
+    var canvas = document.createElement('canvas');
+    canvas.width = Math.round(img.naturalWidth * scale);
+    canvas.height = Math.round(img.naturalHeight * scale);
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+    return new Promise(function (resolve) {
+      canvas.toBlob(function (blob) {
+        // Browsers without WebP export hand back PNG; only keep the copy if it really is lighter.
+        resolve(blob && blob.type === 'image/webp' && blob.size < file.size ? blob : null);
+      }, 'image/webp', 0.86);
+    });
+  }
+  function sendChunks(uploadId, part, blob) {
+    var count = Math.max(1, Math.ceil(blob.size / CHUNK));
+    var index = 0;
+    function next() {
+      if (index >= count) return Promise.resolve(count);
+      var piece = blob.slice(index * CHUNK, (index + 1) * CHUNK);
+      var url = '/api/admin/templates/chunk?upload=' + uploadId + '&part=' + part + '&index=' + index;
+      index++;
+      return api(url, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: piece })
+        .then(function (res) { if (!res.ok) throw new Error('Upload failed (' + res.status + ')'); return next(); });
+    }
+    return next();
+  }
+  function uploadTemplate(file, replaceId) {
+    var uploadId = 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+    return readImage(file).then(function (img) {
+      return makeLightCopy(img, file).then(function (light) {
+        URL.revokeObjectURL(img.src);
+        return sendChunks(uploadId, 'original', file).then(function (originalChunks) {
+          return (light ? sendChunks(uploadId, 'light', light) : Promise.resolve(0)).then(function (lightChunks) {
+            return api('/api/admin/templates', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                upload: uploadId, originalChunks: originalChunks, lightChunks: lightChunks,
+                contentType: file.type || 'image/png', lightType: light ? 'image/webp' : '',
+                name: file.name.replace(/\.[^.]+$/, ''), width: img.naturalWidth, height: img.naturalHeight,
+                id: replaceId || undefined
+              })
+            }).then(function (res) { return res.json(); }).then(function (d) {
+              if (d.error) throw new Error(d.error);
+              return d.row;
+            });
+          });
+        });
+      });
+    });
+  }
+  $('tplFiles').addEventListener('change', function () {
+    var input = this;
+    var files = Array.prototype.slice.call(input.files);
+    if (!files.length) return;
+    var done = 0, failed = 0;
+    $('tplProgress').classList.remove('hidden');
+    $('tplBar').style.width = '0';
+    $('tplLog').textContent = 'Uploading ' + files.length + ' template(s)…';
+    var queue = files.slice();
+    function worker() {
+      var file = queue.shift();
+      if (!file) return Promise.resolve();
+      return uploadTemplate(file).catch(function (err) {
+        failed++;
+        $('tplLog').textContent += ' ✗ ' + file.name + ': ' + err.message + '.';
+      }).then(function () {
+        done++;
+        $('tplBar').style.width = (done / files.length * 100) + '%';
+        return worker();
+      });
+    }
+    Promise.all([worker(), worker()]).then(function () {
+      $('tplLog').textContent += ' Finished: ' + (done - failed) + ' uploaded' + (failed ? ', ' + failed + ' failed' : '') + '.';
+      input.value = '';
+      loadTemplates();
+    });
+  });
+
+  // ---------- start ----------
+  api('/api/admin/session').then(function (res) { return res.json(); }).then(function (s) {
+    if (!s.configured) $('loginError').textContent = 'Set ADMIN_PASSWORD in the Netlify dashboard (Project configuration → Environment variables), then redeploy.';
+    s.loggedIn ? showApp() : showLogin();
+  }).catch(showLogin);
+})();
+</script>
+</body>
+</html>
