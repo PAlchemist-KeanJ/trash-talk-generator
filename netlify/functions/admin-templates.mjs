@@ -7,6 +7,7 @@
 //                                                lightType, name, width, height, id? } -> create / replace image
 //   PATCH  /api/admin/templates/:id           edit name, text area, on/off, order
 //   DELETE /api/admin/templates/:id
+//   POST   /api/admin/templates/bulk          { ids, action: "delete" | "enable" | "disable" }
 import { isAdmin, unauthorized } from "../../lib/admin-auth.mjs";
 import { db } from "../../lib/cards.mjs";
 import { lightKey, originalKey, publicTemplate, templateStore } from "../../lib/templates.mjs";
@@ -55,6 +56,26 @@ export default async (req, context) => {
     if (!bytes.length) return bad("Empty upload piece");
     await store.set(chunkKey(upload, part, index), bytes);
     return Response.json({ ok: true });
+  }
+
+  if (url.pathname.endsWith("/bulk")) {
+    if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
+    const body = await req.json().catch(() => null);
+    const ids = Array.isArray(body?.ids) ? [...new Set(body.ids.map(Number).filter(Number.isInteger))].slice(0, 1000) : [];
+    if (!ids.length) return bad("No templates selected");
+    if (body.action === "delete") {
+      const { rows } = await pool.query("DELETE FROM templates WHERE id = ANY($1::int[]) RETURNING id", [ids]);
+      await Promise.all(rows.flatMap((r) => [store.delete(originalKey(r.id)), store.delete(lightKey(r.id))]).map((p) => p.catch(() => {})));
+      return Response.json({ deleted: rows.length });
+    }
+    if (body.action === "enable" || body.action === "disable") {
+      const { rows } = await pool.query(
+        "UPDATE templates SET enabled = $1, updated_at = NOW() WHERE id = ANY($2::int[]) RETURNING id",
+        [body.action === "enable", ids],
+      );
+      return Response.json({ updated: rows.length });
+    }
+    return bad("Unknown action");
   }
 
   const id = context.params.id ? Number(context.params.id) : null;
@@ -145,5 +166,5 @@ export default async (req, context) => {
 };
 
 export const config = {
-  path: ["/api/admin/templates", "/api/admin/templates/chunk", "/api/admin/templates/:id"],
+  path: ["/api/admin/templates", "/api/admin/templates/chunk", "/api/admin/templates/bulk", "/api/admin/templates/:id"],
 };

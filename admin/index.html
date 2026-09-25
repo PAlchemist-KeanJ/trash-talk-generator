@@ -51,7 +51,40 @@
   .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #f0ece4; color: var(--muted); margin-top: 4px; }
   .file { font-size: 12px; color: var(--muted); word-break: break-all; }
   .noimg { width: 96px; height: 120px; display: grid; place-items: center; text-align: center; font-size: 11px; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; }
+  td.pick, th.pick { width: 34px; padding-right: 0; }
+  td.pick input, th.pick input { width: 18px; height: 18px; cursor: pointer; }
+  tr.selected td { background: #fff4fb; }
+  .bulkbar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--ink); color: #fff; border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+  .bulkbar button { background: #fff; }
+  .bulkbar label { color: #ddd; }
   .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  td.pick { user-select: none; cursor: pointer; }
+  #rows img { -webkit-user-drag: none; }
+  td.cap { display: none; }
+  .viewbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .viewbar .hint { font-size: 12px; }
+  .viewtoggle { display: inline-flex; }
+  .viewtoggle button { border-radius: 0; }
+  .viewtoggle button:first-child { border-radius: 8px 0 0 8px; }
+  .viewtoggle button:last-child { border-radius: 0 8px 8px 0; margin-left: -1px; }
+  .viewtoggle button.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+  /* Image view: the same table rows shown as picture tiles. */
+  table.gridview, table.gridview tbody { display: block; background: none; border: none; }
+  table.gridview thead { display: none; }
+  table.gridview tbody { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  table.gridview tr { position: relative; display: flex; flex-direction: column; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+  table.gridview td { display: none; padding: 0; border: none; background: none !important; }
+  table.gridview td.card, table.gridview td.cap, table.gridview td[colspan] { display: block; }
+  table.gridview tr:has(td[colspan]) { grid-column: 1 / -1; }
+  table.gridview td.card img, table.gridview .noimg { width: 100%; height: auto; aspect-ratio: 4 / 5; }
+  table.gridview td.card .file, table.gridview td.card .links { display: none; }
+  table.gridview td.pick { display: block; position: absolute; top: 12px; left: 12px; z-index: 1; width: auto; }
+  table.gridview td.pick input { width: 22px; height: 22px; }
+  table.gridview td.cap { font-size: 12px; word-break: break-word; }
+  table.gridview td.cap select { margin-top: 4px; max-width: 100%; }
+  table.gridview tr.selected { outline: 3px solid var(--accent); background: #fff4fb; }
+  #cardTable.gridview tr { cursor: pointer; user-select: none; }
 
   dialog { border: none; border-radius: 14px; padding: 0; max-width: min(960px, 96vw); width: 100%; }
   dialog::backdrop { background: rgba(0,0,0,.6); }
@@ -93,6 +126,11 @@
   .tpl .fields .wide { grid-column: span 2; }
   .tpl .fields .full { grid-column: 1 / -1; }
   .tpl .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .tpl-img { user-select: none; cursor: pointer; }
+  .tpl-img img { -webkit-user-drag: none; }
+  .tpl-pick { position: absolute; top: 8px; left: 8px; z-index: 1; width: 22px; height: 22px; cursor: pointer; }
+  .tpl.selected { outline: 3px solid var(--accent); background: #fff4fb; }
+  #tab-templates.dropping .tpl-grid { outline: 3px dashed var(--accent); outline-offset: 6px; border-radius: 12px; }
 
   @media (max-width: 760px) {
     thead { display: none; }
@@ -152,13 +190,18 @@
           <option value="invoice">Invoices</option>
           <option value="all">Everything</option>
         </select>
+        <select id="order" title="Sort by date">
+          <option value="desc">Newest first ↓</option>
+          <option value="asc">Oldest first ↑</option>
+        </select>
         <button type="submit">Search</button>
       </form>
       <div class="toolbar" style="margin-top:10px">
         <a class="btn" id="csvBtn" href="#">⬇ Download records (Excel CSV)</a>
-        <button id="zipBtn">⬇ Download images (ZIP)</button>
+        <button id="zipBtn">⬇ Download all images (ZIP)</button>
         <label><input type="checkbox" id="zipMockups"> include mockups</label>
         <span class="grow"></span>
+        <label class="btn" title="Upload many card PNGs (or a ZIP) at once. Each image is matched to its record by file name; new file names become new records.">⬆ Bulk upload images <input type="file" id="bulkImageFiles" accept="image/*,.zip" multiple hidden></label>
         <button id="importToggle">⬆ Import old history</button>
       </div>
       <div id="zipStatus" class="muted hidden" style="margin-top:10px">
@@ -199,9 +242,24 @@
       <div id="importLog" style="margin-top:10px" class="hidden"></div>
     </div>
 
-    <table>
+    <div class="viewbar">
+      <button id="selectPage">☑ Select all on page</button>
+      <button id="selectAll">☑ Select all matching</button>
+      <span class="muted hint">Tip: drag down the checkboxes (or across the pictures in image view) to pick many · Shift-click picks a range</span>
+      <span class="grow" style="flex:1"></span>
+      <div class="viewtoggle" data-table="cardTable"><button data-mode="list">☰ List</button><button data-mode="grid">▦ Images</button></div>
+    </div>
+    <div class="bulkbar hidden" id="bulkBar">
+      <b id="bulkCount">0 selected</b>
+      <button id="bulkZip">⬇ Download selected (ZIP)</button>
+      <button id="bulkDelete" class="danger">🗑 Remove selected</button>
+      <label><input type="checkbox" id="bulkMockups" checked> include their mockups</label>
+      <span class="grow" style="flex:1"></span>
+      <button id="bulkClear">Clear selection</button>
+    </div>
+    <table id="cardTable">
       <thead>
-        <tr><th>Date</th><th>User message</th><th>AI reply</th><th>Card</th><th></th></tr>
+        <tr><th class="pick"><input type="checkbox" id="pickAll" title="Select all on this page"></th><th>Date</th><th>User message</th><th>AI reply</th><th>Card</th><th></th></tr>
       </thead>
       <tbody id="rows"></tbody>
     </table>
@@ -237,7 +295,11 @@
         <p class="note">Importing the old sheets: choose <b>Orders.csv</b> first, then <b>Invoices.csv</b> (the invoice rows add the subtotal, shipping, message and AI reply to the matching orders). Importing twice is safe.</p>
         <div id="orderImportLog" class="note"></div>
       </div>
-      <table>
+      <div class="viewbar">
+        <span class="grow" style="flex:1"></span>
+        <div class="viewtoggle" data-table="orderTable"><button data-mode="list">☰ List</button><button data-mode="grid">▦ Images</button></div>
+      </div>
+      <table id="orderTable">
         <thead><tr><th>Date / Invoice</th><th>Customer</th><th>Products &amp; total</th><th>Message &amp; AI reply</th><th>Card</th><th>Status</th></tr></thead>
         <tbody id="orderRows"></tbody>
       </table>
@@ -263,7 +325,11 @@
         </div>
         <div id="leadImportLog" class="note"></div>
       </div>
-      <table>
+      <div class="viewbar">
+        <span class="grow" style="flex:1"></span>
+        <div class="viewtoggle" data-table="leadTable"><button data-mode="list">☰ List</button><button data-mode="grid">▦ Images</button></div>
+      </div>
+      <table id="leadTable">
         <thead><tr><th>Date</th><th>Email</th><th>Design file</th><th>Card</th><th>Status</th><th></th></tr></thead>
         <tbody id="leadRows"></tbody>
       </table>
@@ -292,6 +358,18 @@
         <div class="progress hidden" id="tplProgress" style="margin-top:8px"><div id="tplBar"></div></div>
         <div id="tplLog" class="note"></div>
       </div>
+      <div class="viewbar">
+        <button id="tplSelectAll">☑ Select all</button>
+        <span class="muted hint">Tip: click or drag across the pictures to pick many · Shift-click picks a range · drop image files anywhere here to upload</span>
+      </div>
+      <div class="bulkbar hidden" id="tplBulkBar">
+        <b id="tplBulkCount">0 selected</b>
+        <button id="tplBulkOn">Switch on</button>
+        <button id="tplBulkOff">Switch off</button>
+        <button id="tplBulkDelete" class="danger">🗑 Delete selected</button>
+        <span class="grow" style="flex:1"></span>
+        <button id="tplBulkClear">Clear selection</button>
+      </div>
       <div class="tpl-grid" id="tplGrid"></div>
     </section>
   </main>
@@ -314,7 +392,7 @@
 
 <script>
 (function () {
-  var state = { page: 1, total: 0, pageSize: 30, rows: [] };
+  var state = { page: 1, total: 0, pageSize: 30, rows: [], selected: {} };
   var $ = function (id) { return document.getElementById(id); };
 
   function api(path, opts) {
@@ -389,14 +467,16 @@
     if ($('from').value) p.set('from', $('from').value);
     if ($('to').value) p.set('to', $('to').value);
     p.set('kind', $('kind').value);
+    p.set('order', $('order').value);
     return p;
   }
 
   function load() {
+    lastPick = null;
     var p = filterParams();
     p.set('page', state.page);
     $('csvBtn').href = '/api/admin/export.csv?' + filterParams().toString();
-    $('rows').innerHTML = '<tr><td colspan="5" class="muted">Loading…</td></tr>';
+    $('rows').innerHTML = '<tr><td colspan="6" class="muted">Loading…</td></tr>';
     api('/api/admin/cards?' + p.toString()).then(function (res) { return res.json(); }).then(function (data) {
       state.rows = data.rows || [];
       state.total = data.total || 0;
@@ -408,26 +488,32 @@
       $('statInvoices').textContent = (s.invoices || 0).toLocaleString();
       render();
     }).catch(function (err) {
-      if (err.message !== 'Not logged in') $('rows').innerHTML = '<tr><td colspan="5">Could not load records: ' + esc(err.message) + '</td></tr>';
+      if (err.message !== 'Not logged in') $('rows').innerHTML = '<tr><td colspan="6">Could not load records: ' + esc(err.message) + '</td></tr>';
     });
   }
 
   function render() {
+    if (lastPick != null && lastPick >= state.rows.length) lastPick = null;
     if (!state.rows.length) {
-      $('rows').innerHTML = '<tr><td colspan="5" class="muted">No records yet.</td></tr>';
+      $('rows').innerHTML = '<tr><td colspan="6" class="muted">No records yet.</td></tr>';
     } else {
       $('rows').innerHTML = state.rows.map(function (r, i) {
         var img = r.image_bytes
-          ? '<img loading="lazy" src="/api/admin/image/' + r.id + '" alt="" data-view="' + i + '">'
+          ? '<img loading="lazy" src="' + imageUrl(r) + '" alt="" data-view="' + i + '">'
           : '<div class="noimg">' + (r.drive_url ? '<a href="' + esc(r.drive_url) + '" target="_blank" rel="noopener">View on Drive</a>' : 'No image') + '</div>';
         var related = (r.related || []).length ? '<span class="tag">' + r.related.length + ' mockup' + (r.related.length > 1 ? 's' : '') + '</span> ' : '';
-        return '<tr>' +
+        var picked = !!state.selected[r.id];
+        var share = shareLink(r);
+        return '<tr data-i="' + i + '"' + (picked ? ' class="selected"' : '') + '>' +
+          '<td class="pick"><input type="checkbox" data-pick="' + r.id + '"' + (picked ? ' checked' : '') + '></td>' +
           '<td class="date">' + esc(fmtDate(r.created_at)) + '<br><span class="tag">' + esc(r.kind) + '</span>' + (r.source === 'import' ? ' <span class="tag">imported</span>' : '') + '</td>' +
           '<td class="msg">' + esc(r.original_message) + '</td>' +
           '<td class="msg">' + esc(r.reply) + '</td>' +
           '<td class="card">' + img + '</td>' +
+          '<td class="cap"><b>' + esc(r.file_name || r.kind) + '</b><br><span class="muted">' + esc(fmtDate(r.created_at)) + '</span><br>' + related + '</td>' +
           '<td class="actions">' +
-            (r.image_bytes ? '<a class="btn" href="/api/admin/image/' + r.id + '?download=1">⬇ Original</a>' : '') +
+            (r.image_bytes ? '<a class="btn" href="' + imageUrl(r, true) + '">⬇ Original</a>' : '') +
+            (share ? '<button data-share="' + esc(share) + '" title="Copy a public link to this card for social media">🔗 Share link</button>' : '') +
             '<button data-upload="' + r.id + '">⬆ ' + (r.image_bytes ? 'Replace image' : 'Upload image') + '</button>' +
             '<button class="danger" data-del="' + r.id + '">Delete</button>' +
             '<div class="file">' + esc(r.file_name || '') + '</div>' + related +
@@ -439,14 +525,174 @@
     $('pageInfo').textContent = state.total.toLocaleString() + ' records · page ' + state.page + ' of ' + pages;
     $('prevBtn').disabled = state.page <= 1;
     $('nextBtn').disabled = state.page >= pages;
+    $('selectAll').textContent = '☑ Select all ' + state.total.toLocaleString() + ' matching';
+    updateBulkBar();
   }
+
+  // Re-saving a card keeps its id, so the version stops the browser from
+  // showing the cached copy of the old image.
+  function imageUrl(r, download) {
+    var v = r.updated_at ? new Date(r.updated_at).getTime() : '';
+    var q = [];
+    if (v) q.push('v=' + v);
+    if (download) q.push('download=1');
+    return '/api/admin/image/' + r.id + (q.length ? '?' + q.join('&') : '');
+  }
+
+  // Public page for a finished card (/c/403), used for sharing on social media.
+  function shareLink(r) {
+    var m = r.kind === 'card' && r.image_bytes && /^RecycledTrashTalk(\d+)\.png$/i.exec(r.file_name || '');
+    return m ? location.origin + '/c/' + m[1] : '';
+  }
+
+  // ---------- bulk selection ----------
+  function selectedIds() {
+    return Object.keys(state.selected).map(Number);
+  }
+  function updateBulkBar() {
+    var n = selectedIds().length;
+    $('bulkBar').classList.toggle('hidden', n === 0);
+    $('bulkCount').textContent = n + ' selected';
+    var onPage = state.rows.filter(function (r) { return state.selected[r.id]; }).length;
+    $('pickAll').checked = state.rows.length > 0 && onPage === state.rows.length;
+    $('pickAll').indeterminate = onPage > 0 && onPage < state.rows.length;
+  }
+  function selectPage(on) {
+    state.rows.forEach(function (r) { if (on) state.selected[r.id] = r; else delete state.selected[r.id]; });
+    render();
+  }
+  $('pickAll').addEventListener('change', function () { selectPage(this.checked); });
+  $('selectPage').addEventListener('click', function () { selectPage(true); });
+  $('selectAll').addEventListener('click', function () {
+    var btn = this;
+    var p = filterParams(); p.set('all', '1');
+    btn.disabled = true;
+    api('/api/admin/cards?' + p.toString()).then(function (res) { return res.json(); }).then(function (data) {
+      (data.rows || []).forEach(function (r) { state.selected[r.id] = r; });
+      render();
+    }).catch(function (err) { alert('Could not select all: ' + err.message); }).then(function () { btn.disabled = false; });
+  });
+  $('bulkClear').addEventListener('click', function () { state.selected = {}; render(); });
+  $('bulkDelete').addEventListener('click', function () {
+    var ids = selectedIds();
+    if (!ids.length) return;
+    var withMockups = $('bulkMockups').checked;
+    if (!confirm('Remove ' + ids.length + ' record(s)' + (withMockups ? ' and their product mockups' : '') + ' with their images? This cannot be undone.')) return;
+    var btn = this; btn.disabled = true;
+    api('/api/admin/cards/bulk-delete', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: ids, includeMockups: withMockups })
+    }).then(function (res) { return res.json(); }).then(function (d) {
+      if (d.error) throw new Error(d.error);
+      state.selected = {};
+      load();
+    }).catch(function (err) { alert('Remove failed: ' + err.message); }).then(function () { btn.disabled = false; });
+  });
+  $('bulkZip').addEventListener('click', function () {
+    var rows = selectedIds().map(function (id) { return state.selected[id]; });
+    downloadZip(rows, $('bulkMockups').checked, this, 'trash-talk-selected-');
+  });
 
   $('filters').addEventListener('submit', function (e) { e.preventDefault(); state.page = 1; load(); });
   $('kind').addEventListener('change', function () { state.page = 1; load(); });
+  $('order').addEventListener('change', function () { state.page = 1; load(); });
   $('prevBtn').addEventListener('click', function () { state.page--; load(); window.scrollTo(0, 0); });
   $('nextBtn').addEventListener('click', function () { state.page++; load(); window.scrollTo(0, 0); });
 
+  $('rows').addEventListener('change', function (e) {
+    var pick = e.target.getAttribute('data-pick');
+    if (pick == null) return;
+    var r = state.rows.find(function (x) { return String(x.id) === pick; });
+    if (e.target.checked && r) state.selected[r.id] = r; else delete state.selected[pick];
+    e.target.closest('tr').classList.toggle('selected', e.target.checked);
+    lastPick = state.rows.indexOf(r);
+    updateBulkBar();
+  });
+
+  // Drag down the checkboxes (or across the tiles in image view) to pick many
+  // rows at once; Shift-click picks everything between the last pick and this one.
+  var drag = null, lastPick = null, swallowClick = false;
+  function syncPicks() {
+    document.querySelectorAll('#rows tr[data-i]').forEach(function (tr) {
+      var r = state.rows[Number(tr.getAttribute('data-i'))];
+      var on = !!(r && state.selected[r.id]);
+      tr.classList.toggle('selected', on);
+      var box = tr.querySelector('[data-pick]');
+      if (box) box.checked = on;
+    });
+    updateBulkBar();
+  }
+  function applyDrag() {
+    state.selected = Object.assign({}, drag.before);
+    var a = Math.min(drag.from, drag.to), b = Math.max(drag.from, drag.to);
+    for (var k = a; k <= b; k++) {
+      var r = state.rows[k];
+      if (!r) continue;
+      if (drag.on) state.selected[r.id] = r; else delete state.selected[r.id];
+    }
+    syncPicks();
+  }
+  $('rows').addEventListener('dragstart', function (e) { e.preventDefault(); });
+  $('rows').addEventListener('pointerdown', function (e) {
+    if (e.button !== 0) return;
+    var tr = e.target.closest('tr[data-i]');
+    if (!tr || e.target.closest('button, a, select')) return;
+    var grid = $('cardTable').classList.contains('gridview');
+    if (!grid && !e.target.closest('td.pick')) return;
+    var i = Number(tr.getAttribute('data-i'));
+    drag = {
+      from: e.shiftKey && lastPick != null ? lastPick : i,
+      to: i,
+      on: !state.selected[state.rows[i].id],
+      before: Object.assign({}, state.selected),
+      moved: false,
+      touch: e.pointerType === 'touch',
+      // A plain click on a picture still opens it; dragging from it selects.
+      onImage: !e.shiftKey && !!e.target.closest('[data-view]')
+    };
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!drag || drag.touch) return;
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var tr = el && el.closest('#rows tr[data-i]');
+    if (tr) {
+      var i = Number(tr.getAttribute('data-i'));
+      if (i !== drag.to) { drag.to = i; drag.moved = true; applyDrag(); }
+    }
+    if (drag.moved) {
+      var sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+      if (e.clientY < 40) window.scrollBy(0, -20);
+      else if (e.clientY > window.innerHeight - 40) window.scrollBy(0, 20);
+    }
+  });
+  document.addEventListener('pointerup', function () {
+    if (!drag) return;
+    if (!(drag.onImage && !drag.moved)) {
+      applyDrag();
+      lastPick = drag.to;
+      swallowClick = true;
+      setTimeout(function () { swallowClick = false; syncPicks(); }, 0);
+    }
+    drag = null;
+  });
+  document.addEventListener('pointercancel', function () { drag = null; });
   $('rows').addEventListener('click', function (e) {
+    if (!swallowClick) return;
+    swallowClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  $('rows').addEventListener('click', function (e) {
+    var shareUrl = e.target.getAttribute('data-share');
+    if (shareUrl) {
+      var btn = e.target;
+      var done = function () { btn.textContent = '✓ Link copied'; setTimeout(function () { btn.textContent = '🔗 Share link'; }, 2000); };
+      if (navigator.clipboard) navigator.clipboard.writeText(shareUrl).then(done, function () { prompt('Share link:', shareUrl); });
+      else prompt('Share link:', shareUrl);
+      return;
+    }
     var view = e.target.getAttribute('data-view');
     if (view != null) return openViewer(state.rows[Number(view)]);
     var up = e.target.getAttribute('data-upload');
@@ -480,7 +726,7 @@
   // ---------- viewer ----------
   function openViewer(r) {
     $('viewerTitle').textContent = r.file_name || ('Card #' + r.id);
-    $('viewerDownload').href = '/api/admin/image/' + r.id + '?download=1';
+    $('viewerDownload').href = imageUrl(r, true);
     $('viewerSize').textContent = 'Loading…';
     var img = $('viewerImg');
     img.onload = function () {
@@ -488,9 +734,9 @@
       $('viewerSize').textContent = w + ' × ' + h + ' px · ' + fmtBytes(r.image_bytes) +
         ' · prints up to ' + (w / 300 * 2.54).toFixed(1) + ' × ' + (h / 300 * 2.54).toFixed(1) + ' cm at 300 dpi';
     };
-    img.src = '/api/admin/image/' + r.id;
+    img.src = imageUrl(r);
     $('viewerRelated').innerHTML = (r.related || []).map(function (m) {
-      return '<a class="btn" href="/api/admin/image/' + m.id + '?download=1">⬇ ' + esc(m.file_name) + '</a>';
+      return '<a class="btn" href="' + imageUrl(m, true) + '">⬇ ' + esc(m.file_name) + '</a>';
     }).join('');
     $('viewer').showModal();
   }
@@ -498,51 +744,54 @@
   $('viewer').addEventListener('click', function (e) { if (e.target === $('viewer')) $('viewer').close(); });
 
   // ---------- ZIP download ----------
-  $('zipBtn').addEventListener('click', function () {
-    var btn = $('zipBtn');
-    var p = filterParams(); p.set('all', '1');
+  function downloadZip(rows, includeMockups, btn, prefix) {
     btn.disabled = true;
     $('zipStatus').classList.remove('hidden');
     $('zipText').textContent = 'Preparing…';
     $('zipBar').style.width = '0';
-    Promise.all([
-      window.JSZip ? null : loadScript('/admin/vendor/jszip.min.js'),
-      api('/api/admin/cards?' + p.toString()).then(function (res) { return res.json(); })
-    ]).then(function (out) {
-      var rows = out[1].rows || [];
+    (window.JSZip ? Promise.resolve() : loadScript('/admin/vendor/jszip.min.js')).then(function () {
       var items = [];
       rows.forEach(function (r) {
-        if (r.image_bytes) items.push({ id: r.id, name: r.file_name || ('card-' + r.id + '.png') });
-        if ($('zipMockups').checked) (r.related || []).forEach(function (m) { items.push({ id: m.id, name: 'mockups/' + m.file_name }); });
+        if (r.image_bytes) items.push({ url: imageUrl(r), name: (r.kind === 'mockup' ? 'mockups/' : '') + (r.file_name || ('card-' + r.id + '.png')) });
+        if (includeMockups) (r.related || []).forEach(function (m) { items.push({ url: imageUrl(m), name: 'mockups/' + m.file_name }); });
       });
-      if (!items.length) throw new Error('No images in the current filter.');
+      if (!items.length) throw new Error('No images to download.');
       var zip = new JSZip();
       var done = 0;
       var queue = items.slice();
       function worker() {
         var item = queue.shift();
         if (!item) return Promise.resolve();
-        return api('/api/admin/image/' + item.id).then(function (res) { return res.blob(); }).then(function (blob) {
+        return api(item.url).then(function (res) { return res.blob(); }).then(function (blob) {
           zip.file(item.name, blob);
           done++;
           $('zipBar').style.width = (done / items.length * 100) + '%';
           $('zipText').textContent = 'Downloading ' + done + ' / ' + items.length + '…';
         }).then(worker);
       }
-      return Promise.all([worker(), worker(), worker()]).then(function () {
+      return Promise.all([worker(), worker(), worker(), worker()]).then(function () {
         $('zipText').textContent = 'Creating ZIP…';
         return zip.generateAsync({ type: 'blob' });
       });
     }).then(function (blob) {
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'trash-talk-cards-' + new Date().toISOString().slice(0, 10) + '.zip';
+      a.download = prefix + new Date().toISOString().slice(0, 10) + '.zip';
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 10000);
       $('zipText').textContent = 'Done.';
     }).catch(function (err) {
       $('zipText').textContent = err.message;
     }).then(function () { btn.disabled = false; });
+  }
+
+  $('zipBtn').addEventListener('click', function () {
+    var btn = this;
+    var p = filterParams(); p.set('all', '1');
+    btn.disabled = true;
+    api('/api/admin/cards?' + p.toString()).then(function (res) { return res.json(); }).then(function (data) {
+      downloadZip(data.rows || [], $('zipMockups').checked, btn, 'trash-talk-cards-');
+    }).catch(function (err) { btn.disabled = false; alert(err.message); });
   });
 
   // ---------- import: records ----------
@@ -632,8 +881,12 @@
 
   // ---------- import: images ----------
   var MAX_UPLOAD = 5.8 * 1024 * 1024;
-  $('imageFiles').addEventListener('change', function () {
+  $('imageFiles').addEventListener('change', uploadImages);
+  $('bulkImageFiles').addEventListener('change', uploadImages);
+  function uploadImages() {
     var input = this;
+    $('importLog').textContent = '';
+    if (input.id === 'bulkImageFiles') $('importPanel').classList.remove('hidden');
     var files = Array.prototype.slice.call(input.files);
     if (!files.length) return;
     var zips = files.filter(function (f) { return /\.zip$/i.test(f.name); });
@@ -688,6 +941,24 @@
         input.value = ''; state.page = 1; load();
       });
     }).catch(function (err) { log('Could not read files: ' + err.message); });
+  }
+
+  // ---------- list / image view (remembered per tab) ----------
+  document.querySelectorAll('.viewtoggle').forEach(function (box) {
+    var table = $(box.getAttribute('data-table'));
+    var key = 'ttAdminView:' + table.id;
+    function setMode(mode) {
+      table.classList.toggle('gridview', mode === 'grid');
+      box.querySelectorAll('[data-mode]').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-mode') === mode); });
+      try { localStorage.setItem(key, mode); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem(key); } catch (e) {}
+    setMode(saved === 'grid' ? 'grid' : 'list');
+    box.addEventListener('click', function (e) {
+      var mode = e.target.getAttribute('data-mode');
+      if (mode) setMode(mode);
+    });
   });
 
   // ---------- tabs ----------
@@ -829,6 +1100,7 @@
           (r.customer_confirmed_at ? '<div class="note">Customer clicked "I\'ve paid"<br>' + esc(fmtDate(r.customer_confirmed_at)) + '</div>' : '') +
           (r.email_sent ? '<div class="note">Email: ' + esc(r.email_sent) + '</div>' : '') +
           '<div><button class="danger" data-del-order="' + r.id + '">Delete</button></div></td>' +
+        '<td class="cap"><b>' + esc(r.invoice_no || fmtDate(r.created_at)) + '</b><br>' + esc(r.customer_name) + '<br>' + statusSelect(r.id, r.status) + '</td>' +
       '</tr>';
     }).join('');
     var pages = Math.max(1, Math.ceil(orders.total / orders.pageSize));
@@ -846,7 +1118,10 @@
     var sel = e.target;
     api('/api/admin/orders/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: sel.value }) })
       .then(function (res) { return res.json(); })
-      .then(function (d) { if (d.error) throw new Error(d.error); sel.setAttribute('data-v', d.status); })
+      .then(function (d) {
+        if (d.error) throw new Error(d.error);
+        document.querySelectorAll('#orderRows [data-order="' + id + '"]').forEach(function (s) { s.value = d.status; s.setAttribute('data-v', d.status); });
+      })
       .catch(function (err) { alert('Could not change status: ' + err.message); loadOrders(); });
   });
   $('orderRows').addEventListener('click', function (e) {
@@ -906,15 +1181,17 @@
       leads.rows = d.rows || []; leads.total = d.total || 0; leads.pageSize = d.pageSize || 50;
       $('leadRows').innerHTML = !leads.rows.length ? '<tr><td colspan="6" class="muted">No email leads yet.</td></tr>' : leads.rows.map(function (r) {
         var options = LEAD_STATUSES.indexOf(r.status) < 0 ? [r.status].concat(LEAD_STATUSES) : LEAD_STATUSES;
+        var status = '<select class="status" data-lead="' + r.id + '">' + options.map(function (o) {
+          return '<option' + (o === r.status ? ' selected' : '') + ' value="' + esc(o) + '">' + esc(o || '—') + '</option>';
+        }).join('') + '</select>';
         return '<tr>' +
           '<td class="date">' + esc(fmtDate(r.created_at)) + (r.source === 'import' ? '<br><span class="tag">imported</span>' : '') + '</td>' +
           '<td><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a></td>' +
           '<td class="file">' + esc(r.design_file) + '</td>' +
           '<td class="card">' + cardThumb(r.card_id) + '</td>' +
-          '<td><select class="status" data-lead="' + r.id + '">' + options.map(function (o) {
-            return '<option' + (o === r.status ? ' selected' : '') + ' value="' + esc(o) + '">' + esc(o || '—') + '</option>';
-          }).join('') + '</select></td>' +
+          '<td>' + status + '</td>' +
           '<td class="actions"><button class="danger" data-del-lead="' + r.id + '">Delete</button></td>' +
+          '<td class="cap"><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a><br><span class="muted">' + esc(fmtDate(r.created_at)) + '</span><br>' + status + '</td>' +
         '</tr>';
       }).join('');
       var pages = Math.max(1, Math.ceil(leads.total / leads.pageSize));
@@ -931,9 +1208,13 @@
   $('leadRows').addEventListener('change', function (e) {
     var id = e.target.getAttribute('data-lead');
     if (!id) return;
-    api('/api/admin/leads/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: e.target.value }) })
+    var value = e.target.value;
+    api('/api/admin/leads/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: value }) })
       .then(function (res) { return res.json(); })
-      .then(function (d) { if (d.error) throw new Error(d.error); })
+      .then(function (d) {
+        if (d.error) throw new Error(d.error);
+        document.querySelectorAll('#leadRows [data-lead="' + id + '"]').forEach(function (s) { s.value = value; });
+      })
       .catch(function (err) { alert('Could not change status: ' + err.message); loadLeads(); });
   });
   $('leadRows').addEventListener('click', function (e) {
@@ -961,6 +1242,7 @@
 
   // ---------- templates ----------
   var templates = [];
+  var tplSelected = {};
   var CHUNK = 4 * 1024 * 1024;
   var LIGHT_MAX_WIDTH = 3780; // print width of a card (320 mm at 300 dpi)
 
@@ -978,12 +1260,17 @@
   function renderTemplates() {
     var on = templates.filter(function (t) { return t.enabled; }).length;
     $('tplCount').textContent = templates.length + ' templates · ' + on + ' switched on';
-    $('tplGrid').innerHTML = !templates.length ? '<p class="muted">No templates uploaded yet — the main page is still using the Google Drive folder.</p>' : templates.map(function (t) {
+    var ids = {};
+    templates.forEach(function (t) { ids[t.id] = true; });
+    Object.keys(tplSelected).forEach(function (id) { if (!ids[id]) delete tplSelected[id]; });
+    if (tplLast != null && tplLast >= templates.length) tplLast = null;
+    $('tplGrid').innerHTML = !templates.length ? '<p class="muted">No templates uploaded yet — the main page is still using the Google Drive folder.</p>' : templates.map(function (t, i) {
       var num = function (field, label, extra) {
         return '<label class="' + (extra || '') + '">' + label + '<input type="number" step="0.01" min="0" max="1" data-field="' + field + '" value="' + t[field] + '"></label>';
       };
-      return '<div class="tpl' + (t.enabled ? '' : ' off') + '" data-tpl="' + t.id + '">' +
-        '<div class="tpl-img"><img loading="lazy" src="' + esc(t.url) + '" alt=""><div class="tpl-area" style="' + areaStyle(t) + '">TEXT</div></div>' +
+      var picked = !!tplSelected[t.id];
+      return '<div class="tpl' + (t.enabled ? '' : ' off') + (picked ? ' selected' : '') + '" data-tpl="' + t.id + '" data-i="' + i + '">' +
+        '<div class="tpl-img"><input type="checkbox" class="tpl-pick" data-tpl-pick title="Select"' + (picked ? ' checked' : '') + '><img loading="lazy" src="' + esc(t.url) + '" alt=""><div class="tpl-area" style="' + areaStyle(t) + '">TEXT</div></div>' +
         '<div class="fields">' +
           '<label class="full">Name (mood words)<input data-field="name" value="' + esc(t.name) + '"></label>' +
           num('area_x', 'X') + num('area_y', 'Y') + num('area_width', 'Width') + num('area_height', 'Height') +
@@ -1006,6 +1293,7 @@
         '</div>' +
       '</div>';
     }).join('');
+    updateTplBulkBar();
   }
   function tplValues(card) {
     var v = {};
@@ -1017,7 +1305,7 @@
   }
   $('tplGrid').addEventListener('input', function (e) {
     var card = e.target.closest('[data-tpl]');
-    if (!card) return;
+    if (!card || e.target.hasAttribute('data-tpl-pick')) return;
     var v = tplValues(card);
     card.querySelector('.tpl-area').setAttribute('style', areaStyle(v));
     card.classList.toggle('off', !v.enabled);
@@ -1056,6 +1344,103 @@
       input.click();
     }
   });
+
+  // Selecting templates: click or drag across the pictures, Shift-click for a range.
+  var tplDrag = null, tplLast = null, tplSwallowClick = false;
+  function updateTplBulkBar() {
+    var n = Object.keys(tplSelected).length;
+    $('tplBulkBar').classList.toggle('hidden', n === 0);
+    $('tplBulkCount').textContent = n + ' selected';
+  }
+  function syncTplPicks() {
+    document.querySelectorAll('#tplGrid [data-tpl]').forEach(function (card) {
+      var on = !!tplSelected[card.getAttribute('data-tpl')];
+      card.classList.toggle('selected', on);
+      card.querySelector('[data-tpl-pick]').checked = on;
+    });
+    updateTplBulkBar();
+  }
+  function applyTplDrag() {
+    tplSelected = Object.assign({}, tplDrag.before);
+    var a = Math.min(tplDrag.from, tplDrag.to), b = Math.max(tplDrag.from, tplDrag.to);
+    for (var k = a; k <= b; k++) {
+      var t = templates[k];
+      if (!t) continue;
+      if (tplDrag.on) tplSelected[t.id] = true; else delete tplSelected[t.id];
+    }
+    syncTplPicks();
+  }
+  $('tplGrid').addEventListener('dragstart', function (e) { e.preventDefault(); });
+  $('tplGrid').addEventListener('pointerdown', function (e) {
+    if (e.button !== 0 || !e.target.closest('.tpl-img')) return;
+    var card = e.target.closest('[data-tpl]');
+    var i = Number(card.getAttribute('data-i'));
+    tplDrag = {
+      from: e.shiftKey && tplLast != null ? tplLast : i,
+      to: i,
+      on: !tplSelected[card.getAttribute('data-tpl')],
+      before: Object.assign({}, tplSelected),
+      touch: e.pointerType === 'touch'
+    };
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!tplDrag || tplDrag.touch) return;
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var card = el && el.closest('#tplGrid [data-tpl]');
+    if (card) {
+      var i = Number(card.getAttribute('data-i'));
+      if (i !== tplDrag.to) { tplDrag.to = i; applyTplDrag(); }
+    }
+    var sel = window.getSelection();
+    if (sel && tplDrag.to !== tplDrag.from) sel.removeAllRanges();
+    if (e.clientY < 40) window.scrollBy(0, -20);
+    else if (e.clientY > window.innerHeight - 40) window.scrollBy(0, 20);
+  });
+  document.addEventListener('pointerup', function () {
+    if (!tplDrag) return;
+    applyTplDrag();
+    tplLast = tplDrag.to;
+    tplDrag = null;
+    tplSwallowClick = true;
+    setTimeout(function () { tplSwallowClick = false; syncTplPicks(); }, 0);
+  });
+  document.addEventListener('pointercancel', function () { tplDrag = null; });
+  $('tplGrid').addEventListener('click', function (e) {
+    if (!tplSwallowClick) return;
+    tplSwallowClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+  $('tplGrid').addEventListener('change', function (e) {
+    // Keyboard toggling of a checkbox (mouse and touch go through the pointer handlers).
+    if (!e.target.hasAttribute('data-tpl-pick')) return;
+    var card = e.target.closest('[data-tpl]');
+    if (e.target.checked) tplSelected[card.getAttribute('data-tpl')] = true; else delete tplSelected[card.getAttribute('data-tpl')];
+    tplLast = Number(card.getAttribute('data-i'));
+    syncTplPicks();
+  });
+  $('tplSelectAll').addEventListener('click', function () {
+    templates.forEach(function (t) { tplSelected[t.id] = true; });
+    syncTplPicks();
+  });
+  $('tplBulkClear').addEventListener('click', function () { tplSelected = {}; syncTplPicks(); });
+  function tplBulk(action, btn) {
+    var ids = Object.keys(tplSelected).map(Number);
+    if (!ids.length) return;
+    if (action === 'delete' && !confirm('Delete ' + ids.length + ' template(s)? Their original images are removed too. This cannot be undone.')) return;
+    btn.disabled = true;
+    api('/api/admin/templates/bulk', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: ids, action: action }) })
+      .then(function (res) { return res.json(); })
+      .then(function (d) {
+        if (d.error) throw new Error(d.error);
+        if (action === 'delete') tplSelected = {};
+        loadTemplates();
+      }).catch(function (err) { alert('Could not update templates: ' + err.message); })
+      .then(function () { btn.disabled = false; });
+  }
+  $('tplBulkOn').addEventListener('click', function () { tplBulk('enable', this); });
+  $('tplBulkOff').addEventListener('click', function () { tplBulk('disable', this); });
+  $('tplBulkDelete').addEventListener('click', function () { tplBulk('delete', this); });
 
   function readImage(file) {
     return new Promise(function (resolve, reject) {
@@ -1119,7 +1504,29 @@
   }
   $('tplFiles').addEventListener('change', function () {
     var input = this;
-    var files = Array.prototype.slice.call(input.files);
+    uploadTemplateFiles(Array.prototype.slice.call(input.files), function () { input.value = ''; });
+  });
+  // Drop image files anywhere on the Templates tab to upload them.
+  function draggingFiles(e) {
+    return e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0;
+  }
+  $('tab-templates').addEventListener('dragover', function (e) {
+    if (!draggingFiles(e)) return;
+    e.preventDefault();
+    this.classList.add('dropping');
+  });
+  $('tab-templates').addEventListener('dragleave', function (e) {
+    if (!this.contains(e.relatedTarget)) this.classList.remove('dropping');
+  });
+  $('tab-templates').addEventListener('drop', function (e) {
+    if (!draggingFiles(e)) return;
+    e.preventDefault();
+    this.classList.remove('dropping');
+    var files = Array.prototype.filter.call(e.dataTransfer.files, function (f) { return /^image\//.test(f.type); });
+    if (!files.length) return alert('Drop image files (PNG, JPG or WebP).');
+    uploadTemplateFiles(files);
+  });
+  function uploadTemplateFiles(files, onDone) {
     if (!files.length) return;
     var done = 0, failed = 0;
     $('tplProgress').classList.remove('hidden');
@@ -1140,10 +1547,10 @@
     }
     Promise.all([worker(), worker()]).then(function () {
       $('tplLog').textContent += ' Finished: ' + (done - failed) + ' uploaded' + (failed ? ', ' + failed + ' failed' : '') + '.';
-      input.value = '';
+      if (onDone) onDone();
       loadTemplates();
     });
-  });
+  }
 
   // ---------- start ----------
   api('/api/admin/session').then(function (res) { return res.json(); }).then(function (s) {
