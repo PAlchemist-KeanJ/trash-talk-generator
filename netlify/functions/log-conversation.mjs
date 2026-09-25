@@ -31,6 +31,16 @@ export default async (req, context) => {
         RETURNING id`;
       if (created) return Response.json({ id: created.id });
 
+      // The visitor re-submitted during the same visit: they keep their edition
+      // number, so only the latest version of the conversation is kept.
+      if (body.replace === true) {
+        const [replaced] = await sql`
+          UPDATE cards SET original_message = ${message}, reply = ${reply}, updated_at = NOW()
+          WHERE file_name = ${fileName}
+          RETURNING id`;
+        if (replaced) return Response.json({ id: replaced.id });
+      }
+
       // Same file name already recorded: fill in the reply if it is the same
       // conversation, otherwise (counter clash between two visitors) keep both.
       const [updated] = await sql`
