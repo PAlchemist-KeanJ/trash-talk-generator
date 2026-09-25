@@ -88,7 +88,9 @@ export default async (req, context) => {
   // 2) Backup copy to Google Drive (server-side, so it works for visitors whose
   //    browsers cannot reach Google). When the site copy succeeded we answer
   //    straight away and let the Drive upload finish in the background.
-  const forwardToDrive = async () => {
+  //    Apps Script often turns away one of several uploads that land at once
+  //    (a card plus its five mockups), so a failed attempt is retried.
+  const forwardOnce = async () => {
     try {
       const resp = await fetch(DRIVE_UPLOAD_URL, {
         method: "POST",
@@ -98,20 +100,30 @@ export default async (req, context) => {
         signal: AbortSignal.timeout(25_000),
       });
       const text = await resp.text();
-      if (resp.ok) return parseDriveLink(text);
+      // Apps Script reports its own failures with a 200 (an error page or success:false).
+      const failed = /"success"\s*:\s*false|<title>Error<\/title>/i.test(text);
+      if (resp.ok && !failed) return parseDriveLink(text);
       console.error("upload-to-drive: Apps Script rejected upload", resp.status);
     } catch (err) {
       console.error("upload-to-drive: Drive backup failed", err && err.message ? err.message : err);
     }
     return null;
   };
+  const forwardToDrive = async (attempts) => {
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      if (attempt) await new Promise((resolve) => setTimeout(resolve, 1500 * attempt + Math.random() * 1000));
+      const link = await forwardOnce();
+      if (link) return link;
+    }
+    return null;
+  };
 
   if (savedHere) {
-    context.waitUntil(forwardToDrive());
+    context.waitUntil(forwardToDrive(3));
     return Response.json({ success: true, savedHere: true });
   }
 
-  const driveLink = await forwardToDrive();
+  const driveLink = await forwardToDrive(1);
   if (!driveLink) {
     return Response.json({ success: false, error: "Upload failed" }, { status: 502 });
   }

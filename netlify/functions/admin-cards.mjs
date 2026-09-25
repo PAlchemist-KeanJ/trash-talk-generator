@@ -1,4 +1,4 @@
-// Lists, exports and deletes saved conversations for the admin page.
+// Lists, exports and deletes (one or many) saved conversations for the admin page.
 import { isAdmin, unauthorized } from "../../lib/admin-auth.mjs";
 import { db, imageStore } from "../../lib/cards.mjs";
 
@@ -28,6 +28,25 @@ function buildFilter(params) {
   return { sql: where.length ? `WHERE ${where.join(" AND ")}` : "", values };
 }
 
+function sortOrder(params) {
+  return params.get("order") === "asc" ? "ASC" : "DESC";
+}
+
+// Deletes the rows and their stored images. With includeMockups, a card's
+// product mockups go too.
+async function deleteRecords(pool, ids, includeMockups) {
+  const { rows } = await pool.query(
+    `DELETE FROM cards
+     WHERE id = ANY($1::int[])
+        OR ($2 AND parent_file_name IN (SELECT file_name FROM cards WHERE id = ANY($1::int[]) AND file_name IS NOT NULL))
+     RETURNING blob_key`,
+    [ids, includeMockups],
+  );
+  const store = imageStore();
+  await Promise.all(rows.filter((r) => r.blob_key).map((r) => store.delete(r.blob_key).catch(() => {})));
+  return rows.length;
+}
+
 function csvCell(value) {
   const text = value == null ? "" : value instanceof Date ? value.toISOString() : String(value);
   return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
@@ -41,9 +60,14 @@ export default async (req) => {
   if (req.method === "DELETE") {
     const id = Number(url.pathname.split("/").pop());
     if (!Number.isInteger(id)) return Response.json({ error: "Bad id" }, { status: 400 });
-    const { rows } = await pool.query("DELETE FROM cards WHERE id = $1 RETURNING blob_key", [id]);
-    if (rows[0] && rows[0].blob_key) await imageStore().delete(rows[0].blob_key);
-    return Response.json({ deleted: rows.length });
+    return Response.json({ deleted: await deleteRecords(pool, [id], false) });
+  }
+
+  if (req.method === "POST" && url.pathname.endsWith("/bulk-delete")) {
+    const body = await req.json().catch(() => null);
+    const ids = (Array.isArray(body && body.ids) ? body.ids : []).map(Number).filter(Number.isInteger).slice(0, 1000);
+    if (!ids.length) return Response.json({ error: "Nothing selected" }, { status: 400 });
+    return Response.json({ deleted: await deleteRecords(pool, ids, body.includeMockups === true) });
   }
 
   const filter = buildFilter(url.searchParams);
@@ -51,7 +75,7 @@ export default async (req) => {
   if (url.pathname.endsWith("/export.csv")) {
     const { rows } = await pool.query(
       `SELECT id, created_at, kind, file_name, original_message, reply, drive_url, source, image_bytes
-       FROM cards ${filter.sql} ORDER BY created_at DESC`,
+       FROM cards ${filter.sql} ORDER BY created_at ${sortOrder(url.searchParams)}`,
       filter.values,
     );
     const header = ["id", "date", "type", "file_name", "user_message", "ai_reply", "drive_url", "source", "has_image"];
@@ -78,11 +102,11 @@ export default async (req) => {
   const [{ rows }, { rows: countRows }, { rows: stats }] = await Promise.all([
     pool.query(
       `SELECT c.id, c.created_at, c.kind, c.file_name, c.parent_file_name, c.original_message, c.reply,
-              c.image_bytes, c.drive_url, c.source,
-              (SELECT COALESCE(json_agg(json_build_object('id', m.id, 'file_name', m.file_name, 'kind', m.kind) ORDER BY m.file_name), '[]')
+              c.image_bytes, c.drive_url, c.source, c.updated_at,
+              (SELECT COALESCE(json_agg(json_build_object('id', m.id, 'file_name', m.file_name, 'kind', m.kind, 'updated_at', m.updated_at) ORDER BY m.file_name), '[]')
                  FROM cards m WHERE m.parent_file_name = c.file_name AND m.image_bytes IS NOT NULL) AS related
        FROM cards c ${filter.sql}
-       ORDER BY c.created_at DESC LIMIT ${limit} OFFSET ${offset}`,
+       ORDER BY c.created_at ${sortOrder(url.searchParams)}, c.id ${sortOrder(url.searchParams)} LIMIT ${limit} OFFSET ${offset}`,
       filter.values,
     ),
     pool.query(`SELECT COUNT(*)::int AS total FROM cards ${filter.sql}`, filter.values),
@@ -99,5 +123,5 @@ export default async (req) => {
 };
 
 export const config = {
-  path: ["/api/admin/cards", "/api/admin/cards/:id", "/api/admin/export.csv"],
+  path: ["/api/admin/cards", "/api/admin/cards/bulk-delete", "/api/admin/cards/:id", "/api/admin/export.csv"],
 };
